@@ -1,0 +1,73 @@
+// When width is more than 992px
+@media (min-width: 992px) {
+    .layout-wrapper {
+        .sidebar {
+            transform: translateX(-100%);
+            left: 0;
+            top: 6rem;
+        }
+
+        .layout-main-container {
+            margin-left: 0;
+        }
+
+        &.sidebar-open {
+            .sidebar {
+                transform: translateX(0);
+                left: 2rem;
+            }
+
+            .layout-main-container {
+                margin-left: 22rem;
+            }
+        }
+
+    }
+
+}
+
+// When width is less than 991px
+@media (max-width: 991px) {
+    .blocked-scroll {
+        overflow: hidden;
+    }
+
+    .layout-wrapper {
+        .sidebar {
+            transform: translateX(-100%);
+            left: 0;
+            height: 100vh;
+        }
+
+        .layout-main-container {
+            margin-left: 0;
+        }
+
+        .layout-mask {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 998;
+            width: 100%;
+            height: 100%;
+            background-color: var(--maskbg);
+        }
+
+        &.mobile-active {
+            .sidebar {
+                transform: translateX(0);
+                left: 0;
+                
+                border-radius: 0;
+                transition:
+                    transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99),
+                    left 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+            }
+
+            .layout-mask {
+                display: block;
+            }
+        }
+    }
+}

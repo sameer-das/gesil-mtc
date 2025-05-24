@@ -1,0 +1,30 @@
+html {
+    height: 100%;
+    font-size: 14px;
+}
+
+body {
+    color: var(--text-color);
+    background-color: var(--surface-ground);
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.2;
+
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+.layout-wrapper {
+    min-height: 100vh;
+}
+
+.p-panelmenu-item-link.p-panelmenu-item-link-active {
+    color: var(--primary-color);
+}

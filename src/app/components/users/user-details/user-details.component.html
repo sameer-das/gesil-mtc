@@ -1,0 +1,75 @@
+<app-page-header title="User Details" [backButton]="true"></app-page-header>
+<div class="gesil-card mt-4">
+  <!-- <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-4 absolute r-0 t-0" severity="help"
+    [routerLink]="['..','edit', `${userDetail.userId}`]" pTooltip="Edit"></a> -->
+
+  @if(!userDetail) {
+  <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
+  } @else {
+  <div class="flex flex-col sm:flex-row sm:items-start">
+    <!-- Image -->
+    <div class="w-full sm:w-[150px] flex justify-center sm:justify-start mb-4 sm:mb-0">
+      <img src="assets/avatar.png" alt="Image" class="w-[150px] h-auto object-cover" />
+    </div>
+
+    <!-- Paragraph -->
+    <div class="flex-1 ml-8">
+      <div class="pb-4 flex flex-row my-2 name-designation">
+        <div class="flex-1">
+          <p class="text-xl">{{userDetail.firstName}} {{userDetail.middleName}} {{userDetail.lastName}}</p>
+          <p class="text-sm italic">{{userDetail.userTypeName}}</p>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm italic">Reports to :</p>
+          @if(userDetail.parentName !== '') {
+          <p class="text-sm">{{userDetail.parentName}}</p>
+          } @else {
+          <p style="color: var(--p-red-500)" class="text-xs">The user is not mapped to anyone.</p>
+          }
+        </div>
+
+
+      </div>
+
+      <div class="flex flex-row justify-between mt-4">
+        <div class="flex-1">
+          <p class="text-sm">Email : {{userDetail.emailId}}</p>
+          <p class="text-sm">Phone : {{userDetail.mobile}}</p>
+          <p class="text-sm">Gender : {{userDetail.gender}}</p>
+          <p class="text-sm">Date of Birth : {{userDetail.dob | date : 'mediumDate'}}</p>
+        </div>
+        <p-divider type="dotted" layout="vertical" />
+        <div class="flex-1">
+          <p class="text-base italic underline">Address :</p>
+          <p class="text-sm">{{userDetail.address}}</p>
+          <p class="text-sm">State :
+            @if(stateName === '') {
+            <i class="pi pi-spin pi-spinner"></i>
+            } @else {
+            {{stateName}}
+            }
+          </p>
+
+          <p class="text-sm">District:
+            @if(districtName === '') {
+            <i class="pi pi-spin pi-spinner"></i>
+            } @else {
+            {{districtName}}
+            }
+          </p>
+
+          <p class="text-sm">Pin: {{userDetail.pin}}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  }
+
+
+
+  <!-- <p-divider type="solid" layout="horizontal" />
+  <div></div> -->
+
+
+</div>

@@ -1,0 +1,43 @@
+<app-page-header title="Edit User" [backButton]="true"></app-page-header>
+
+
+
+<p-tabs class="mt-4" value="0">
+    <p-tablist>
+        <p-tab value="0">User Basic Details</p-tab>
+        <p-tab value="1">User Documents</p-tab>
+        <p-tab value="2">User Reporting</p-tab>
+        <p-tab value="3">Wards Assignment</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+            <app-user-create [editMode]="true" [editUser]="userBasicDetail"></app-user-create>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+            <div class="mt-4">
+                <div class="font-semibold text-xl">Documents</div>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="2">
+            <div class="flex flex-col mt-4 gap-6">
+                <div class="font-semibold text-xl">User Reporting Details</div>
+                <div class="flex justify-center">
+                    <div class="flex flex-col w-full md:w-1/2 mt-6 gap-2">
+                        <label for="gender">Reports to</label>
+                        <p-select id="gender" [options]="parentOptions" [(ngModel)]="selectedParent" optionLabel="optionLabel" placeholder="Select Whom to Report"
+                            class="w-full" ></p-select>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 justify-end">
+                    <p-button raised="true" type="button" [disabled]="!selectedParent" (click)="updateUserParentMapping()">Update User Reporting</p-button>
+                </div>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="3">
+            <div class="mt-4">
+                <div class="font-semibold text-xl">Wards</div>
+            </div>
+        </p-tabpanel>
+    </p-tabpanels>
+</p-tabs>

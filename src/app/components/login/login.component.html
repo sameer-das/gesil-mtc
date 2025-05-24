@@ -1,0 +1,26 @@
+
+<div class="gesil-card flex flex-col login-box">
+
+    <h1 class="text-xl font-semibold login-header">Login</h1>
+
+    <form class="flex flex-col mt-8 gap-8" #f="ngForm" (ngSubmit)="login(f)">
+        <div class="w-full">
+            <p-floatlabel variant="on">
+                <input required="true" pInputText id="username" [(ngModel)]="username" name="username"
+                    autocomplete="off" fluid="true" />
+                <label for="username">Username</label>
+            </p-floatlabel>
+        </div>
+
+        <div class="w-full">
+            <p-floatlabel variant="on">
+                <p-password required="true" id="password" [(ngModel)]="password" name="password" [feedback]="false"
+                    fluid="true" [toggleMask]="true"/>
+                <label for="password">Password</label>
+            </p-floatlabel>
+        </div>
+
+        <p-button fluid="true" [disabled]="f.invalid" type="submit">Login</p-button>
+    </form>
+    
+</div>

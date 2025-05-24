@@ -1,0 +1,30 @@
+<nav class="topbar">
+    <div class="topbar-logo-container">
+        <button class="topbar-menu" #toggleBtn (click)="layoutService.onMenuToggle()">
+            <i class="pi pi-bars"></i>
+        </button>
+        <a class="topbar-logo" routerLink="/">
+            <span>GESIL</span>
+        </a>
+    </div>
+
+    <div class="topbar-actions">
+        <p-button class="layout-topbar-action layout-topbar-action-highlight" 
+            pStyleClass=".right-menu-area" 
+            enterFromClass="my-hidden"
+            enterActiveClass="my-fadein"
+            leaveToClass="my-hidden" 
+            leaveActiveClass="my-fadeout"
+            [hideOnOutsideClick]="true">
+            <i class="pi pi-cog"></i>
+        </p-button>
+
+        <div class="right-menu-area my-hidden">
+           <ul class="right-menu-lists">
+                <li class="dark-mode"><span>{{isDarkMode ? "Disable" : "Enable"}} Dark Mode</span><p-toggleswitch [(ngModel)]="isDarkMode" (onChange)="onToggleTheme($event)" /></li>
+                <!-- <li><p-button fluid="true"><i class="pi pi-sign-out"></i>Profile</p-button></li> -->
+                <li><p-button fluid="true" (click)="logout()"><i class="pi pi-sign-out"></i>Logout</p-button></li>
+           </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,123 @@
+.topbar {
+    position: fixed;
+    height: 4rem;
+    left: 0;
+    top: 0;
+    z-index: 997;
+    width: 100%;
+    padding: 0 2rem;
+    background-color: var(--surface-card);
+    transition: left var(--layout-section-transition-duration);
+    display: flex;
+    align-items: center;
+
+
+
+    .topbar-logo-container {
+        width: 20rem;
+        display: flex;
+        align-items: center;
+
+        .topbar-menu {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color-secondary);
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: var(--text-color);
+            background-color: var(--surface-card);
+            transition: background-color var(--element-transition-duration);
+            cursor: pointer;
+            margin-right: 1rem;
+            border: none;
+            outline: none;
+
+            &:hover {
+                background-color: var(--surface-hover);
+            }
+
+            i {
+                font-size: 1.25rem;
+            }
+        }
+
+        .topbar-logo {
+            display: inline-flex;
+            align-items: center;
+            font-size: 1.5rem;
+            border-radius: var(--content-border-radius);
+            color: var(--text-color);
+            font-weight: 500;
+            gap: 0.5rem;
+        }
+    }
+
+
+
+    .topbar-actions {
+        margin-left: auto;
+        display: flex;
+    }
+}
+
+.right-menu-area {
+    position: absolute;
+    width: 220px;
+    top: 4rem;
+    right: 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--surface-border);
+    border-radius: var(--content-border-radius);
+    background-color: var(--surface-card);
+    .right-menu-lists {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        gap: 1rem;
+        padding: 0.5rem;
+        margin: 0;
+
+        li.dark-mode {
+            display: inline-flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+    }
+}
+
+.my-hidden {
+    display: none;
+}
+
+.my-fadein {
+    animation: my-fadein 150ms linear;
+}
+
+.my-fadeout {
+    animation: my-fadeout 150ms linear;
+}
+
+@keyframes my-fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes my-fadeout {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

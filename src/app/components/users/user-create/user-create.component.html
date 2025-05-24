@@ -1,0 +1,109 @@
+@if(!editMode) {
+<app-page-header title="Create New User"></app-page-header>
+}
+
+<p-fluid>
+    <form [formGroup]="userForm">
+
+        <!-- User Details Card -->
+        <div class="flex mt-4">
+            <div class="flex flex-col gap-6 w-full" [ngClass]="{'gesil-card': !editMode}">
+
+
+                <div class="font-semibold text-xl">User Basic Details</div>
+
+
+                <!-- Row 1 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="firstname">First name</label>
+                        <input pInputText id="firstname" type="text" placeholder="First name"
+                            formControlName="firstName" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="middlename">Middle name</label>
+                        <input pInputText id="middlename" type="text" placeholder="Middle name"
+                            formControlName="middleName" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname">Last name</label>
+                        <input pInputText id="lastname" type="text" placeholder="Last name"
+                            formControlName="lastName" />
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="userType">User Type</label>
+                        <p-select id="userType" [options]="childUserTypes()" optionLabel="childUserTypeName" placeholder="Select User Type"
+                            class="w-full" formControlName="userType"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="gender">Gender</label>
+                        <p-select id="gender" [options]="genders" optionLabel="name" placeholder="Select Gender"
+                            class="w-full" formControlName="gender"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="dob">Date of Birth</label>
+                        <p-datepicker placeholder="Choose Date of Birth" id="dob" class="w-full"
+                            formControlName="dob" />
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="mobile">Mobile No</label>
+                        <input pInputText id="mobile" placeholder="Enter Mobile No." type="text"
+                            formControlName="mobile" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full md:w-2/3 ">
+                        <label for="email">Email</label>
+                        <input pInputText id="email" placeholder="Enter Email ID" type="text"
+                            formControlName="emailId" />
+                    </div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="state">State</label>
+                        <p-select id="state" [options]="states()" optionLabel="name" placeholder="Select State"
+                            class="w-full" formControlName="state"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="district">District</label>
+                        <p-select id="district" [options]="districts()" optionLabel="name" placeholder="Select District"
+                            class="w-full" formControlName="district"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="pin">Pin</label>
+                        <input pInputText id="pin" placeholder="Enter Postal Code" type="text" formControlName="pin" />
+                    </div>
+                </div>
+
+                <!-- Row 5 -->
+                <div class="flex flex-wrap">
+                    <label for="address">Address</label>
+                    <textarea pTextarea id="address" placeholder="Enter other details of address" rows="3"
+                        formControlName="address"></textarea>
+                </div>
+
+
+
+                <!-- Row 6 -->
+                <div class="flex gap-2 justify-end">
+                    @if(!editMode) {
+                    <p-button raised="true" severity="secondary" (click)="userForm.reset()">Reset</p-button>
+                    }
+
+                    <p-button raised="true" type="button" [disabled]="userForm.invalid"
+                        (click)="onSaveUpdateUser()">{{editMode() ? 'Update': 'Save'}} User Details</p-button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</p-fluid>
