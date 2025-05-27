@@ -1,0 +1,22 @@
+<app-page-header [title]=" editMode() ? 'Edit Zone' : 'Create New Zone' " [backButton]="true" />
+<form class="gesil-card mt-8 flex flex-col gap-6" [formGroup]="zoneForm">
+    <div class="font-semibold text-xl">Zone Details</div>
+
+    <div class="flex flex-col gap-6">
+
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="zoneName">Zone Name</label>
+                <input pInputText id="zoneName" class="w-full" type="text" placeholder="Zone Name"
+                    formControlName="zoneName" />
+            </div>           
+        </div>
+    </div>
+
+
+    <div class="flex gap-2 justify-end ">
+        <p-button raised="true" severity="secondary" (click)="zoneForm.reset()">Reset</p-button>
+        <p-button raised="true" type="button" [disabled]="zoneForm.invalid" (click)="onSaveZone()">{{ editMode() ?
+            'Update' : 'Save'}} Zone</p-button>
+    </div>
+</form>

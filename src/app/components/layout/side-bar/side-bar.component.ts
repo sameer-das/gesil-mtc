@@ -60,13 +60,23 @@ export class SideBarComponent {
       ]
     },
     {
-      label: 'Property Master',
+      label: 'Master Data',
       icon: 'fa fa-city',
       items: [
         {
+          label: 'Zone List',
+          icon: 'pi pi-list',
+          routerLink: '/master/zones-list',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e);
+            // this.router.navigate(['/user/create'])
+          }
+        },
+        {
           label: 'Ward List',
           icon: 'pi pi-list',
-          routerLink: '',
+          routerLink: '/master/ward-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e);
@@ -74,19 +84,9 @@ export class SideBarComponent {
           }
         },
         {
-          label: 'Floor List',
+          label: 'Category List',
           icon: 'pi pi-list',
-          routerLink: '',
-          routerLinkActiveOptions: { exact: true },
-          command: (e: MenuItemCommandEvent) => {
-            // console.log(e);
-            // this.router.navigate(['/user/create'])
-          }
-        },
-        {
-          label: 'Road Type List',
-          icon: 'pi pi-list',
-          routerLink: '',
+          routerLink: '/master/category-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
@@ -94,9 +94,9 @@ export class SideBarComponent {
           }
         },
         {
-          label: 'Construction Type List',
+          label: 'Sub-category List',
           icon: 'pi pi-list',
-          routerLink: '',
+          routerLink: '/master/sub-category-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
@@ -104,29 +104,26 @@ export class SideBarComponent {
           }
         },
         {
-          label: 'Property Type List',
+          label: 'Financial Year List',
           icon: 'pi pi-list',
-          routerLink: '',
+          routerLink: '/master/fy-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
             // this.router.navigate([''])
           }
         },
+        
+      ],
+
+    }, {
+      label: 'Citizens',
+      icon: 'pi pi-users',
+      items: [
         {
-          label: 'Occupancy Type List',
+          label: 'Citizen Entry',
           icon: 'pi pi-list',
-          routerLink: '',
-          routerLinkActiveOptions: { exact: true },
-          command: (e: MenuItemCommandEvent) => {
-            // console.log(e)
-            // this.router.navigate([''])
-          }
-        },
-        {
-          label: 'Usage Type Detail List',
-          icon: 'pi pi-list',
-          routerLink: '',
+          routerLink: '/citizen',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
@@ -134,6 +131,6 @@ export class SideBarComponent {
           }
         },
       ]
-    },
+    }
   ];
 }

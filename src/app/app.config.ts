@@ -1,8 +1,8 @@
-import { ApplicationConfig, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
@@ -11,6 +11,11 @@ import { loaderInterceptor } from './services/interceptors/loader.interceptor';
 import { authInterceptor } from './services/interceptors/auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
+import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) =>
+    new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,15 +25,22 @@ export const appConfig: ApplicationConfig = {
       console.log('App initializer ran')
     }),
     provideHttpClient(withInterceptors([loaderInterceptor, authInterceptor])),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),
     MessageService,
     Location,
+    importProvidersFrom([TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient],
+      },
+    })]),
     providePrimeNG({
       theme: {
         preset: definePreset(Aura, {
           semantic: {
-            primary: Aura.primitive?.purple,
+            primary: Aura.primitive?.emerald,
             colorScheme: {
               light: {
                 primary: {

@@ -1,0 +1,121 @@
+<app-page-header title="Citizen Entry" />
+
+
+<p-fluid>
+    <form [formGroup]="citizenForm">
+
+        <!-- User Details Card -->
+        <div class="flex mt-4">
+            <div class="flex flex-col gap-6 w-full gesil-card">
+                <div class="font-semibold text-xl">Citizen Details</div>
+
+                <!-- Row 1 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="zone">Zone</label>
+                        <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone"
+                            class="w-full" formControlName="zone"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ward">Ward</label>
+                        <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Ward"
+                            class="w-full" formControlName="ward"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="wardName">Ward Name</label>
+                        <input pInputText id="wardName" type="text" placeholder="Ward Name"
+                            formControlName="wardName" />
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="houseNo">House No</label>
+                        <input pInputText id="houseNo" placeholder="Enter House No." type="text"
+                            formControlName="houseNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="name">Name of Owner</label>
+                        <input pInputText id="name" placeholder="Enter Name of Owner" type="text"
+                            formControlName="name" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="guardianName">Father/Mother/Husband/Wife Name</label>
+                        <input pInputText id="guardianName" placeholder="Father/Mother/Husband/Wife Name" type="text"
+                            formControlName="guardianName" />
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="mobile">Mobile No</label>
+                        <input pInputText id="mobile" placeholder="Enter Mobile No." type="text"
+                            formControlName="mobile" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full md:w-2/3 ">
+                        <label for="address">Address </label>
+                        <textarea pTextarea id="address" placeholder="Enter Address of Property" type="text"
+                            formControlName="address" rows="1"> </textarea>
+                    </div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="buildingNo">Building No</label>
+                        <input pInputText id="buildingNo" placeholder="Enter Building No." type="text"
+                            formControlName="buildingNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="noOfFloor">No Of Floors</label>
+                        <input pInputText id="noOfFloor" placeholder="Enter no of Floors" type="text"
+                            formControlName="noOfFloor" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="floor">Specify the floor</label>
+                        <input pInputText id="floor" placeholder="Specify the floor." type="text"
+                            formControlName="floor" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 ">
+                        <label for="floorSize">Floor Size</label>
+                        <input pInputText id="floorSize" placeholder="Floor Size" type="text"
+                            formControlName="floorSize" />
+                    </div>
+                </div>
+
+                <!-- Row 5 -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="category">Category</label>
+                        <p-select id="category" [options]="categories" optionLabel="categoryName"
+                            placeholder="Select Category" class="w-full" formControlName="category"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="subCategory">Sub-Category</label>
+                        <p-select id="subCategory" [options]="subCategories" optionLabel="subCategoryName"
+                            placeholder="Select Sub-Categroy" class="w-full" formControlName="subCategory"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyType">Proerty Type</label>
+                        <p-select id="propertyType" [options]="propertyTypes" optionLabel="propertyTypeName"
+                            placeholder="Select Property Type" class="w-full" formControlName="propertyType"></p-select>
+                    </div>
+                </div>
+
+
+                <!-- Row 6 -->
+                <div class="flex gap-2 justify-end">
+
+                    <p-button raised="true" severity="secondary" (click)="citizenForm.reset()">Reset</p-button>
+
+
+                    <p-button raised="true" type="button" [disabled]="citizenForm.invalid">Save Details</p-button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</p-fluid>

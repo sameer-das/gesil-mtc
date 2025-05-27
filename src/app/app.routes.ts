@@ -12,8 +12,8 @@ export const routes: Routes = [
         children: [
             { path: '', component: DashboardComponent },
             { path: 'user', loadChildren: () => import('./components/users/user.routes') },
-            // { path: 'documentation', component: Documentation },
-            // { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
+            { path: 'master', loadChildren: () => import('./components/master-menu/master-menu.routes') },
+            { path: 'citizen', loadChildren: () => import('./components/citizen/citizen.routes') },
         ]
     },
     {path: 'login', component: LoginComponent}

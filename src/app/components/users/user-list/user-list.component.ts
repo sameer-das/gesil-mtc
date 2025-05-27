@@ -11,6 +11,7 @@ import { TABLE_CONFIG } from '../../../models/tableConfig';
 import { APIResponseForUserList, UserList } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from '../../utils/page-header/page-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-user-list',
   imports: [TableModule,
@@ -20,7 +21,8 @@ import { PageHeaderComponent } from '../../utils/page-header/page-header.compone
     PageHeaderComponent,
     ButtonModule,
     TooltipModule,
-    RouterModule],
+    RouterModule, 
+    TranslateModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })

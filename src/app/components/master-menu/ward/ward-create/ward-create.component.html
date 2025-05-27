@@ -1,0 +1,40 @@
+<app-page-header [title]=" editMode() ? 'Edit Ward' : 'Create New Ward' " [backButton]="true" />
+
+<form class="gesil-card mt-8 flex flex-col gap-6" [formGroup]="wardForm">
+    <div class="font-semibold text-xl">Ward Details</div>
+
+    <div class="flex flex-col gap-6">
+
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="wardName">Ward Name</label>
+                <input pInputText id="wardName" class="w-full" type="text" placeholder="Ward Name"
+                    formControlName="wardName" />
+            </div>
+        </div>
+
+         <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="wardNumber">Ward Name</label>
+                <input pInputText id="wardNumber" class="w-full" type="text" placeholder="Ward Number"
+                    formControlName="wardNumber" />
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="gender">Zone</label>
+                <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone" class="w-full"
+                    formControlName="zone"></p-select>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="flex gap-2 justify-end ">
+        <p-button raised="true" severity="secondary" (click)="wardForm.reset()">Reset</p-button>
+        <p-button raised="true" type="button" [disabled]="wardForm.invalid" (click)="onSaveWard()">{{ editMode() ?
+            'Update' : 'Save'}} Ward</p-button>
+    </div>
+</form>

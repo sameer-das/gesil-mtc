@@ -1,0 +1,36 @@
+<app-page-header [title]=" editMode() ? 'Edit Sub-Category' : 'Create New Sub-Category' " [backButton]="true" />
+<form class="gesil-card mt-8 flex flex-col gap-6" [formGroup]="subCategoryForm">
+    <div class="font-semibold text-xl">Sub-Category Details</div>
+
+    <div class="flex flex-col gap-6">
+
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="subCategoryName">Sub-Category Name</label>
+                <input pInputText id="subCategoryName" class="w-full" type="text" placeholder="Sub-Category Name"
+                    formControlName="subCategoryName" />
+            </div>           
+        </div>
+        <div class="flex justify-center">
+           <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="category">Category</label>
+                <p-select id="category" [options]="categories" optionLabel="categoryName" placeholder="Select Category" class="w-full"
+                    formControlName="category"></p-select>
+            </div>          
+        </div>
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="taxAmountPerMonth">Sub-Category Name</label>
+                <input pInputText id="taxAmountPerMonth" class="w-full" type="text" placeholder="Tax amount per month"
+                    formControlName="taxAmountPerMonth" />
+            </div>           
+        </div>
+    </div>
+
+
+    <div class="flex gap-2 justify-end ">
+        <p-button raised="true" severity="secondary" (click)="subCategoryForm.reset()">Reset</p-button>
+        <p-button raised="true" type="button" [disabled]="subCategoryForm.invalid" (click)="onSaveSubCategory()">{{ editMode() ?
+            'Update' : 'Save'}} Sub-Category</p-button>
+    </div>
+</form>
