@@ -161,5 +161,9 @@ export interface District {
 }
 
 
-
-
+export interface UpdateUserAadharPan {
+  userId: number;
+  aadharNo: string;
+  pan: string;
+  type: string;
+}

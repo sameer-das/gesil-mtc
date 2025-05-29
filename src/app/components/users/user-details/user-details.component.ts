@@ -8,6 +8,9 @@ import { Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { APIResponse, District, State, UserDetail } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
+import { TooltipModule } from 'primeng/tooltip';
+import { environment } from '../../../../environments/environment';
+
 
 @Component({
   selector: 'app-user-details',
@@ -16,11 +19,12 @@ import { PageHeaderComponent } from "../../utils/page-header/page-header.compone
     DatePipe,
     ButtonModule,
     RouterModule,
-    ProgressBarModule],
+    ProgressBarModule, TooltipModule],
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.scss'
 })
 export class UserDetailsComponent implements OnInit {
+  env = environment;
 
   private $destroy: Subject<null> = new Subject();
   userDetail!: UserDetail;

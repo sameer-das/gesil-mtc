@@ -1,15 +1,23 @@
 <app-page-header title="User Details" [backButton]="true"></app-page-header>
 <div class="gesil-card mt-4">
-  <!-- <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-4 absolute r-0 t-0" severity="help"
-    [routerLink]="['..','edit', `${userDetail.userId}`]" pTooltip="Edit"></a> -->
 
   @if(!userDetail) {
   <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
   } @else {
+  <div class="flex justify-end w-full">
+    <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-2" severity="help"
+      [routerLink]="['/user','edit', `${userDetail.userId}`]" tooltipPosition="top" pTooltip="Edit details"></a>
+  </div>
   <div class="flex flex-col sm:flex-row sm:items-start">
     <!-- Image -->
     <div class="w-full sm:w-[150px] flex justify-center sm:justify-start mb-4 sm:mb-0">
-      <img src="assets/avatar.png" alt="Image" class="w-[150px] h-auto object-cover" />
+      @if(userDetail.photo) {
+      <img [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.photo}`" alt="User Pic" lazy="true"
+        class="w-[150px] h-auto object-cover" />
+      } @else {
+      <img src="assets/avatar.png" alt="User Avatar" class="w-[150px] h-auto object-cover" />
+      }
+
     </div>
 
     <!-- Paragraph -->
@@ -37,6 +45,16 @@
           <p class="text-sm">Phone : {{userDetail.mobile}}</p>
           <p class="text-sm">Gender : {{userDetail.gender}}</p>
           <p class="text-sm">Date of Birth : {{userDetail.dob | date : 'mediumDate'}}</p>
+          @if(userDetail.aadharNo) {
+          <!-- <p-divider /> -->
+          <p class="text-sm mt-4">Aadhar : {{userDetail.aadharNo }}</p>
+          }
+
+          @if(userDetail.pan) {
+          <p class="text-sm">PAN : {{userDetail.pan }}</p>
+          }
+
+
         </div>
         <p-divider type="dotted" layout="vertical" />
         <div class="flex-1">
@@ -65,11 +83,58 @@
     </div>
   </div>
   }
+</div>
 
 
 
-  <!-- <p-divider type="solid" layout="horizontal" />
-  <div></div> -->
 
+<div class="flex flex-col mt-4 gap-2 gesil-card">
+  <h3 class="text-xl">Documents List</h3>
+  @if(!userDetail) {
+    <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
+  } 
+  @else {
+    @if(userDetail.aadharFrontPhoto) {
+    <div class="flex justify-center">
+      <div class="flex justify-between items-center w-full md:w-1/2">
+        <p>Aadhar Front-side Pic</p>
+        <a pButton icon="pi pi-eye" [rounded]="true"
+          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.aadharFrontPhoto}`" target="_blank"
+          pTooltip="View Document"></a>
+      </div>
+    </div>
+    }
+    @if(userDetail.aadharBackPhoto) {
+    <div class="flex justify-center">
+      <div class="flex justify-between items-center w-full md:w-1/2">
+        <p>Aadhar Back-side Pic</p>
+        <a pButton icon="pi pi-eye" [rounded]="true"
+          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.aadharBackPhoto}`" target="_blank"
+          pTooltip="View Document"></a>
+      </div>
+    </div>
 
+    }
+    @if(userDetail.panPhoto) {
+    <div class="flex justify-center">
+      <div class="flex justify-between items-center w-full md:w-1/2">
+        <p>PAN</p>
+        <a pButton icon="pi pi-eye" [rounded]="true"
+          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.panPhoto}`" target="_blank"
+          pTooltip="View Document"></a>
+      </div>
+    </div>
+
+    }
+    @if(userDetail.highestQualificationDoc) {
+    <div class="flex justify-center">
+      <div class="flex justify-between items-center w-full md:w-1/2">
+        <p>Heighest Education Certificate</p>
+        <a pButton icon="pi pi-eye" [rounded]="true"
+          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.highestQualificationDoc}`"
+          target="_blank" pTooltip="View Document"></a>
+      </div>
+    </div>
+    }
+  }
 </div>

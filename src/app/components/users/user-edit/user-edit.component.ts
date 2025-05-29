@@ -5,12 +5,15 @@ import { TabsModule } from 'primeng/tabs';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
-import { APIResponse, ParentOptions, ParentUserTypeForMapping, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserBasicDetails, UserDetail } from '../../../models/user.model';
+import { APIResponse, ParentOptions, ParentUserTypeForMapping, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserBasicDetails, UserDetail } from '../../../models/user.model';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { UsersService } from '../../../services/users.service';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { FileUpload, FileUploadEvent, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
+import { DividerModule } from 'primeng/divider';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-user-edit',
   imports: [PageHeaderComponent, UserCreateComponent,
@@ -18,7 +21,8 @@ import { MessageService } from 'primeng/api';
     InputTextModule,
     ButtonModule,
     SelectModule,
-    FormsModule],
+    FormsModule,
+    FileUploadModule, DividerModule, ReactiveFormsModule, TooltipModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.scss'
 })
@@ -38,6 +42,10 @@ export class UserEditComponent implements OnInit {
   parentOptions: ParentOptions[] = [];
   selectedParent!: ParentOptions | undefined;
 
+  aadharNo: FormControl = new FormControl('', [Validators.pattern('^[0-9]{12}$')]);
+  pan: FormControl = new FormControl('', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]$/)]);
+
+
   ngOnInit(): void {
     this.fetchUserDetails();
   }
@@ -46,13 +54,13 @@ export class UserEditComponent implements OnInit {
 
   updateUserParentMapping() {
     console.log(this.selectedParent);
-    if(this.selectedParent) {
+    if (this.selectedParent) {
       const updateUserMappingPayload: UpdateUserParentTypePayload = {
-        userId:  this.currentUserId,
+        userId: this.currentUserId,
         parentUserType: this.selectedParent.parentUserType,
         parentUser: this.selectedParent.parentUserId
       }
-  
+
       this.usersService.updateUserParentDetails(updateUserMappingPayload).pipe(takeUntil(this.$destroy))
         .subscribe({
           next: (updateResp: APIResponse) => {
@@ -99,7 +107,11 @@ export class UserEditComponent implements OnInit {
             this.currentUserId = this.userDetail.userId;
             this.currentUserType = this.userDetail.userType;
 
-            this.fetchParentTypesForCurrentUserType(this.userDetail.userType)
+            this.aadharNo.setValue(this.userDetail.aadharNo);
+            this.pan.setValue(this.userDetail.pan)
+
+            this.fetchParentTypesForCurrentUserType(this.userDetail.userType);
+
           }
         }))
       .subscribe()
@@ -116,7 +128,7 @@ export class UserEditComponent implements OnInit {
             this.parentOptions = (resp.data as ParentUserTypeForMapping[])
               .map((curr: ParentUserTypeForMapping) => ({ ...curr, optionLabel: `${curr.parentFirstName} ${curr.parentMiddleName} ${curr.parentLastName} (${curr.parentUserTypeName})` }))
 
-            if(this.userDetail.parentUserId > 0) {
+            if (this.userDetail.parentUserId > 0) {
               // set selectedParent as the user is already mapped to parent
 
               this.selectedParent = this.parentOptions.find((curr: ParentOptions) => {
@@ -129,4 +141,59 @@ export class UserEditComponent implements OnInit {
   }
 
 
+  onUpload(e: FileUploadHandlerEvent, type: string, element?: FileUpload) {
+    const file = e.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const payload = {
+        "userID": this.currentUserId,
+        "documentType": type,
+        "documentName": e.files[0].name,
+        "documentNumber": "",
+        "documentBase64data": reader.result
+      }
+      console.log(payload)
+      this.usersService.uploadUserDocument(payload).pipe(takeUntil(this.$destroy))
+        .subscribe({
+          next: (resp: APIResponse) => {
+            if (resp.code === 200) {
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: `Document uploaded successfully.`, life: 3000 });
+              element?.clear();
+            }
+          }
+        })
+    };
+  }
+
+
+
+  updateAadharPan(type: 'aadhar' | 'pan') {
+    console.log(type);
+    const payload: UpdateUserAadharPan = {
+      userId: this.currentUserId,
+      aadharNo: '',
+      pan: '',
+      type: type
+    };
+
+    if (type === 'aadhar') {
+      payload.aadharNo = this.aadharNo.value;
+    } else if (type === 'pan') {
+      payload.pan = this.pan.value;
+    }
+
+
+
+    this.usersService.updateUserAadharPan(payload).pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: (resp: APIResponse) => {
+          if (resp.code === 200 && resp.data === 'S') {
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `User ${type} updated successfully.`, life: 3000 })
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Update Failed!`, life: 3000 })
+          }
+        }
+      })
+  }
 }

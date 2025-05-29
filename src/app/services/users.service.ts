@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { APIResponse, APIResponseForUserList, CreateUserTypePayload, UpdateUserBasicDetails, UpdateUserParentTypePayload, UpdateUserTypePayload, UserBasicDetails } from '../models/user.model';
+import { APIResponse, APIResponseForUserList, CreateUserTypePayload, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UpdateUserTypePayload, UserBasicDetails } from '../models/user.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   updateUserParentDetails(userParentMappingPayload: UpdateUserParentTypePayload): Observable<APIResponse> {
-        return this.http.post<APIResponse>(`${this.API_URL}${environment.updateUserParentDetails}`, userParentMappingPayload);
+    return this.http.post<APIResponse>(`${this.API_URL}${environment.updateUserParentDetails}`, userParentMappingPayload);
   }
 
   getStates(): Observable<APIResponse> {
@@ -38,7 +38,7 @@ export class UsersService {
     return this.http.get<APIResponseForUserList>(`${this.API_URL}${environment.getUserList}?userType=${userType}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
-  getUserDetails(userId: number): Observable<APIResponseForUserList>{
+  getUserDetails(userId: number): Observable<APIResponseForUserList> {
     return this.http.get<APIResponseForUserList>(`${this.API_URL}${environment.getUserDetails}${userId}`);
   }
 
@@ -63,4 +63,12 @@ export class UsersService {
     return this.http.post<APIResponse>(`${this.API_URL}${environment.updateUserType}`, payload);
   }
   // ==========================================================================================
+
+  uploadUserDocument(payload: any): Observable<APIResponse> {
+    return this.http.post<APIResponse>(`${this.API_URL}${environment.userDocumentUpload}`, payload);
+  }
+
+  updateUserAadharPan(payload: UpdateUserAadharPan): Observable<APIResponse> {
+        return this.http.post<APIResponse>(`${this.API_URL}${environment.updateUserAadharPan}`, payload);
+  }
 }

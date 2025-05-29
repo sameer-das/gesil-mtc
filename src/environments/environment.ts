@@ -22,6 +22,9 @@ export const environment = {
     getUserList:'/Admin/UserList',
     getUserDetails:'/Admin/userDetails?userId=',
     updateUserBasicDetails: '/Admin/updateUserBasicDetails',
-    updateUserParentDetails: '/Admin/updateUserParent'
+    updateUserParentDetails: '/Admin/updateUserParent',
+    userDocumentUpload: '/Admin/userDocumentUpload',
+    updateUserAadharPan: '/Admin/updateUserAadharPan',
+    userDownloadDocument: '/Admin/userDocumentDownload',
     
 };

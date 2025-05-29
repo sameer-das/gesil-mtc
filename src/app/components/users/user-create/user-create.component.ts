@@ -100,6 +100,7 @@ export class UserCreateComponent implements OnInit {
   ngOnInit(): void {
     this.initialize();
     this.populateDistrictsAccordingToStateChange();
+    console.log(this.editMode())
   }
 
 
