@@ -6,7 +6,7 @@
   } @else {
   <div class="flex justify-end w-full">
     <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-2" severity="help"
-      [routerLink]="['/user','edit', `${userDetail.userId}`]" tooltipPosition="top" pTooltip="Edit details"></a>
+      [routerLink]="['/user','edit', `${userDetail.userId}`]" [queryParams]="{tab: 'basic-details'}" tooltipPosition="top" pTooltip="Edit details"></a>
   </div>
   <div class="flex flex-col sm:flex-row sm:items-start">
     <!-- Image -->
@@ -22,7 +22,7 @@
 
     <!-- Paragraph -->
     <div class="flex-1 ml-8">
-      <div class="pb-4 flex flex-row my-2 name-designation">
+      <div class="pb-4 flex flex-col my-2 name-designation md:flex-row">
         <div class="flex-1">
           <p class="text-xl">{{userDetail.firstName}} {{userDetail.middleName}} {{userDetail.lastName}}</p>
           <p class="text-sm italic">{{userDetail.userTypeName}}</p>
@@ -32,14 +32,12 @@
           @if(userDetail.parentName !== '') {
           <p class="text-sm">{{userDetail.parentName}}</p>
           } @else {
-          <p style="color: var(--p-red-500)" class="text-xs">The user is not mapped to anyone.</p>
+          <p class="text-xs text-red-500">The user is not mapped to anyone.</p>
           }
         </div>
-
-
       </div>
 
-      <div class="flex flex-row justify-between mt-4">
+      <div class="flex flex-col md:flex-row justify-between mt-4">
         <div class="flex-1">
           <p class="text-sm">Email : {{userDetail.emailId}}</p>
           <p class="text-sm">Phone : {{userDetail.mobile}}</p>
@@ -48,10 +46,14 @@
           @if(userDetail.aadharNo) {
           <!-- <p-divider /> -->
           <p class="text-sm mt-4">Aadhar : {{userDetail.aadharNo }}</p>
+          } @else {
+            <p class="text-sm mt-4 text-red-500" >Aadhar No. not updated</p>
           }
 
           @if(userDetail.pan) {
           <p class="text-sm">PAN : {{userDetail.pan }}</p>
+          } @else {
+            <p class="text-sm text-red-500" >PAN not updated</p>
           }
 
 
@@ -92,7 +94,10 @@
   <h3 class="text-xl">Documents List</h3>
   @if(!userDetail) {
     <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
-  } 
+  } @else if (!userDetail.aadharFrontPhoto && !userDetail.aadharBackPhoto && !userDetail.panPhoto && !userDetail.highestQualificationDoc) {
+    <p class="text-xs text-red-500">No documents found for the user. Please upload documents.</p>
+    <p class="text-xs text-blue-500">Path to upload: User List > Edit User > Document Upload Tab</p>
+  }
   @else {
     @if(userDetail.aadharFrontPhoto) {
     <div class="flex justify-center">

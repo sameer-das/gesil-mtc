@@ -82,7 +82,7 @@
                     <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
                         [routerLink]="['..','details', `${user.userId}`]" pTooltip="View"></a>
                     <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-4" severity="help"
-                        [routerLink]="['..','edit', `${user.userId}`]" pTooltip="Edit"></a>
+                        [routerLink]="['..','edit', `${user.userId}`]" [queryParams]="{tab: 'basic-details'}" pTooltip="Edit"></a>
                     <!-- <p-button icon="pi pi-trash" [rounded]="true" class="" severity="danger"
                         (click)="deleteUser(user)" pTooltip="Delete"></p-button> -->
                 </td>
