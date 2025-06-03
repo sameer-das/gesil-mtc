@@ -1,22 +1,22 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { filter, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { ActivatedRoute, Params, Router, RouterModule, UrlSegment } from '@angular/router';
-import { SelectModule } from 'primeng/select';
-import { InputTextModule } from 'primeng/inputtext';
-import { FluidModule } from 'primeng/fluid';
-import { UsersService } from '../../../services/users.service';
-import { APIResponse, CreateUserTypePayload, UpdateUserTypePayload, UserType } from '../../../models/user.model';
-import { MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { FluidModule } from 'primeng/fluid';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectModule } from 'primeng/select';
+import { filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { APIResponse, CreateUserTypePayload, UpdateUserTypePayload, UserType } from '../../../models/user.model';
+import { UsersService } from '../../../services/users.service';
+import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 
 @Component({
   selector: 'app-user-type-create',
   imports: [PageHeaderComponent, ReactiveFormsModule, SelectModule, ButtonModule,
-    InputTextModule, FluidModule
+    InputTextModule, FluidModule, MultiSelectModule
   ],
   templateUrl: './user-type-create.component.html',
   styleUrl: './user-type-create.component.scss',
@@ -32,9 +32,17 @@ export class UserTypeCreateComponent implements OnInit, OnDestroy {
 
   userTypeForm: FormGroup = new FormGroup({
     userType: new FormControl('', [Validators.required]),
+    parentReportingUserType: new FormControl<UserType[]>([], [Validators.required])
   })
 
-  userTypeDetails!: UserType;;
+  userTypeDetails!: UserType;
+
+  allUserTypes: UserType[] = [
+    { userType: 2, userTypeName: 'Project Manager' },
+    { userType: 3, userTypeName: 'Municipalty Admin' },
+    { userType: 4, userTypeName: 'Project Lead' },
+    { userType: 5, userTypeName: 'Team Lead' },
+  ]
 
 
   ngOnDestroy(): void {

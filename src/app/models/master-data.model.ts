@@ -44,3 +44,10 @@ export interface Fy {
     fyName: string;
     active?: number;
 }
+
+export interface DueFormatOption {
+    label: string;
+    value: number;
+}
+
+

@@ -13,13 +13,17 @@
             </div>           
         </div>
 
-        <!-- <div class="flex justify-center">
+        <div class="flex justify-center">
              <div class="flex flex-col w-full md:w-1/2 gap-2">
                 <label for="uerFor">User Type</label>
-                <p-select id="uerFor" [options]="userFor" optionLabel="name" placeholder="Select User For"
-                    class="w-full" formControlName="userFor"></p-select>
+                    <p-multiselect [options]="allUserTypes" 
+                        formControlName="parentReportingUserType"
+                        filter="false"
+                        optionLabel="userTypeName" placeholder="Select Reporting User Type" 
+                        [maxSelectedLabels]="2" [selectionLimit]="2" />
+
             </div> 
-        </div> -->
+        </div>
     </div>
 
 

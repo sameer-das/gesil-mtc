@@ -1,34 +1,44 @@
 <app-page-header title="Dashboard"></app-page-header>
 <div class="grid grid-cols-12 gap-8 mt-4">
-    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+
+    <div class="col-span-12 lg:col-span-6 xl:col-span-4">
         <div class="gesil-card">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, expedita?
+            <h2 class="text-xl font-bold">Total Demand</h2>
+            <p class="amount mt-2 text-blue-500">25000000</p>
         </div>
     </div>
 
-    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-4">
         <div class="gesil-card">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. A neque distinctio nobis. Dolorum eos architecto
-            sint necessitatibus, omnis laboriosam culpa suscipit tenetur hic harum blanditiis.
+            <h2 class="text-xl font-bold">Total Collection</h2>
+            <p class="amount mt-2 text-green-500">20000000</p>
         </div>
     </div>
 
-    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-4">
         <div class="gesil-card">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. A neque distinctio nobis. Dolorum eos architecto
-            sint necessitatibus, omnis laboriosam culpa suscipit tenetur hic harum blanditiis.
+            <h2 class="text-xl font-bold">Total Due Demand</h2>
+            <p class="amount mt-2 text-orange-500">5000000</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-12 gap-8 mt-4">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-6">
+        <div class="gesil-card">
+               <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+        </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6 xl:col-span-6">
+        <div class="gesil-card">
+                <p-chart type="pie" [data]="pieData" [options]="pieOptions"></p-chart>
         </div>
     </div>
 
-    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-        <div class="gesil-card">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. A neque distinctio nobis. Dolorum eos architecto
-            sint necessitatibus, omnis laboriosam culpa suscipit tenetur hic harum blanditiis.
-        </div>
-    </div>
 
 
-    <div class="col-span-12  xl:col-span-6">
+    <!-- <div class="col-span-12  xl:col-span-6">
         <div class="gesil-card">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam veniam quasi vitae, voluptates soluta
             accusamus fugit, voluptate iure voluptatum modi commodi laudantium tempore, saepe quae? Vero recusandae
@@ -43,5 +53,5 @@
             itaque commodi! At, ut quaerat. Vitae quisquam, at accusamus laboriosam aut, consequatur maiores dignissimos
             necessitatibus ex, nihil fugiat ab placeat magnam ducimus explicabo.
         </div>
-    </div>
+    </div> -->
 </div>

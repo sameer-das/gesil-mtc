@@ -18,7 +18,7 @@
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ward">Ward</label>
-                        <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Ward"
+                        <p-select id="ward" [options]="wards" optionLabel="wardNumber" placeholder="Select Ward"
                             class="w-full" formControlName="ward"></p-select>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
@@ -104,6 +104,46 @@
                             placeholder="Select Property Type" class="w-full" formControlName="propertyType"></p-select>
                     </div>
                 </div>
+
+                <p-divider />
+                <!-- Row for Adding Pending Dues -->
+                <div class="flex flex-col justify-between md:flex-row gap-2">
+                    <div class="font-semibold text-xl flex-1">Pending Dues</div>
+                    <p-select id="dueFormat" [options]="pendingDueFormatOptions" optionLabel="label"
+                        placeholder="Select Due Amount Format" class="flex-1" formControlName="pendingDueFormat"
+                        (onChange)="onDueFormatChange($event)"></p-select>
+                </div>
+
+                @if(citizenForm.get('pendingDueFormat')?.value?.value === 1) {
+                <div formArrayName="pendingDues">
+                    @for(item of pendingDues.controls; track index; let index = $index) {
+                    <div class="flex flex-col md:flex-row gap-6 mt-4" [formGroupName]="index">
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="fyYear">Financial Year</label>
+                            <p-select id="fyYear" [options]="fyList" optionLabel="fyName"
+                                placeholder="Select Financial Year" class="w-full" formControlName="fy"></p-select>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="dueAmount">Due Amount</label>
+                            <input pInputText id="dueAmount" placeholder="Due Amount" type="text"
+                                formControlName="dueAmount" />
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full items-end justify-center">
+                            <p-button  (click)="addPendingDueControls()" severity="secondary">Add more rows</p-button>
+                            <p-button variant="outlined" (click)="removePendingDueControl(index)" severity="danger"
+                                [disabled]="pendingDues.controls.length === 1">Remove Row</p-button>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                } @else {
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="dueAmountLumpsum">Due Amount (Nigam has given lumpsum amount as due)</label>
+                    <input pInputText id="dueAmountLumpsum" placeholder="Due Amount" type="text"
+                        formControlName="pendingDue" />
+                </div>
+                }
 
 
                 <!-- Row 6 -->
