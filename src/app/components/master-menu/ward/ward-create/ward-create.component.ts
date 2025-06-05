@@ -1,12 +1,17 @@
-import { Component, computed, input, OnDestroy, OnInit } from '@angular/core';
-import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
+import { Zone } from './../../../../models/master-data.model';
+import { Component, computed, inject, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { Zone } from '../../../../models/master-data.model';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { MessageDuaraion, MessageSeverity } from '../../../../models/config.enum';
+import { CreateUpdateWard, Ward} from '../../../../models/master-data.model';
+import { MasterDataService } from '../../../../services/master-data.service';
+import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
+import { APIResponse } from './../../../../models/user.model';
 
 @Component({
   selector: 'app-ward-create',
@@ -21,19 +26,19 @@ export class WardCreateComponent implements OnInit, OnDestroy {
   editMode = computed(() => !!this.wardId());
   $destroy: Subject<null> = new Subject();
 
+  wardDetails = signal<Ward | null>(null);
+  zones = signal<Zone[]>([]);
+
+
+  masterDataService: MasterDataService = inject(MasterDataService);
+  messageService: MessageService = inject(MessageService);
 
   wardForm = new FormGroup({
-    wardNumber: new FormControl('', [Validators.required]),
-    wardName: new FormControl(''),
-    zone: new FormControl('', [Validators.required])
+    wardNumber: new FormControl<string>('', [Validators.required]),
+    wardName: new FormControl<string>('', [Validators.required]),
+    zone: new FormControl<Zone | null>(null, [Validators.required])
   });
 
-  zones: Zone[] = [
-    { zoneName: 'Zone 1', zoneId: 1 },
-    { zoneName: 'Zone 2', zoneId: 2 },
-    { zoneName: 'Zone 3', zoneId: 3 },
-    { zoneName: 'Zone 4', zoneId: 4 },
-  ]
 
 
 
@@ -44,11 +49,94 @@ export class WardCreateComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log(this.editMode())
+
+    if (this.editMode()) {
+      forkJoin([
+        this.masterDataService.wardDetails(this.wardId() || 0), 
+        this.masterDataService.zoneList(0, 0)
+      ])
+        .pipe(takeUntil(this.$destroy))
+        .subscribe({
+          next: ([wardDetailsResp, zoneListResp]) => {
+            if (wardDetailsResp.code === 200 && zoneListResp.code === 200) {
+              this.zones.set(zoneListResp.data.zones);
+              this.wardDetails.set(wardDetailsResp.data);
+              const selectedZone = zoneListResp.data.zones.find((z: Zone) => z.zoneId === wardDetailsResp.data.zoneId);
+              
+              this.wardForm.patchValue({
+                wardName: wardDetailsResp.data.wardName,
+                wardNumber: wardDetailsResp.data.wardNumber,
+                zone: selectedZone
+              })
+            }
+          }
+        })
+    } else {
+      this.populateZones();
+    }
   }
+
 
 
   onSaveWard() {
     console.log(this.wardForm.value)
+    if (!this.editMode()) {
+      // Create Mode
+      const createWard: CreateUpdateWard = {
+        wardName: this.wardForm.value.wardName || '',
+        wardNumber: this.wardForm.value.wardNumber || '',
+        zoneId: this.wardForm.value.zone?.zoneId || 0
+      }
+      this.masterDataService.createWard(createWard)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe({
+          next: (resp: APIResponse<string>) => {
+            console.log(resp)
+            if (resp.code === 200 && resp.data === 'S') {
+              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Zone created successfully.', life: MessageDuaraion.STANDARD });
+              this.wardForm.reset();
+            } else {
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Zone creation failed.', life: MessageDuaraion.STANDARD })
+            }
+          }
+        })
+    } else {
+      // edit/modify mode
+      const updateWard: CreateUpdateWard = {
+        wardId: this.wardId(),
+        wardName: this.wardForm.value.wardName || '',
+        wardNumber: this.wardForm.value.wardNumber || '',
+        zoneId: this.wardForm.value.zone?.zoneId || 0
+      }
+      this.masterDataService.updateWard(updateWard)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: (resp: APIResponse<string>) => {
+          if (resp.code === 200) {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Ward updated successfully.', life: MessageDuaraion.STANDARD });
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Ward update failed.', life: MessageDuaraion.STANDARD })
+          }
+        }
+      })
+    }
+  }
+
+
+
+  populateZones() {
+    this.masterDataService.zoneList(0, 0)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: (resp: APIResponse<{ zones: Zone[], totalCount: number }>) => {
+          console.log(resp)
+          if (resp.code === 200 && resp.status === 'Success') {
+            this.zones.set(resp.data.zones)
+          } else {
+            this.zones.set([]);
+          }
+
+        }
+      })
   }
 }

@@ -12,6 +12,7 @@ import { filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { APIResponse, CreateUserTypePayload, UpdateUserTypePayload, UserType } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
+import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 
 @Component({
   selector: 'app-user-type-create',
@@ -59,9 +60,9 @@ export class UserTypeCreateComponent implements OnInit, OnDestroy {
       switchMap((x) => this.route.params),
       filter(x => !!x['userId'] ),
       switchMap((params: Params) => this.usersService.getUserType(+params['userId'])),
-      tap((userTypeResp: APIResponse) => {
+      tap((userTypeResp: APIResponse<UserType[]>) => {
         if (userTypeResp.code === 200) {
-          this.userTypeDetails = (userTypeResp.data as UserType[])[0];
+          this.userTypeDetails = (userTypeResp.data)[0];
           this.userTypeForm.patchValue({ userType: this.userTypeDetails.userTypeName });
         }
       }),
@@ -78,10 +79,10 @@ export class UserTypeCreateComponent implements OnInit, OnDestroy {
       }
       this.usersService.createUserType(payload)
         .pipe(takeUntil(this.$destroy))
-        .subscribe((resp: APIResponse) => {
+        .subscribe((resp: APIResponse<string>) => {
           console.log(resp)
           if (resp.code === 200 && resp.data === 'S') {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User type created successfully.', life: 3000 });
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'User type created successfully.', life: MessageDuaraion.STANDARD });
             this.userTypeForm.reset();
           }
         })
@@ -94,9 +95,9 @@ export class UserTypeCreateComponent implements OnInit, OnDestroy {
       }
       this.usersService.updateUserType(payload).pipe(takeUntil(this.$destroy))
         .subscribe({
-          next: (updateResp: APIResponse) => {
+          next: (updateResp: APIResponse<string>) => {
             if (updateResp.code === 200) {
-              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User type updated successfully.', life: 3000 });
+              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'User type updated successfully.', life: MessageDuaraion.STANDARD });
               this._location.back();
             }
           }

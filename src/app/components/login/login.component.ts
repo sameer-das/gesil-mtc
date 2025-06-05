@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthUser } from '../../models/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
 
 @Component({
   selector: 'app-login',
@@ -62,7 +63,7 @@ export class LoginComponent implements OnDestroy {
       }, error: (err: HttpErrorResponse) => {
         console.log(err)
         if (err.status === 401) {
-          this.messageService.add({ severity: 'error', summary: 'Unauthorized', detail: 'Invalid credentials.', life: 3000 })
+          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Unauthorized', detail: 'Invalid credentials.', life: MessageDuaraion.STANDARD })
         }
       }
     })

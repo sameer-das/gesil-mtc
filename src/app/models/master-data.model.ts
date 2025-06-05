@@ -16,8 +16,16 @@ export interface Ward {
     wardNumber: string;
     wardName: string;
     zoneId: number;
-    zoneName:string;
+    zoneName: string;
     active?: number;
+}
+
+
+export interface CreateUpdateWard {
+    wardId?: number;
+    wardName: string;
+    wardNumber: string;
+    zoneId: number;
 }
 
 

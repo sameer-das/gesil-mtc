@@ -47,10 +47,11 @@ export class CitizenEntryComponent implements OnInit, OnDestroy {
 
     buildingNo: new FormControl('', [Validators.required]),
     noOfFloor: new FormControl('', [Validators.required]),
-    floor: new FormControl('', [Validators.required]),
+    ownership: new FormControl('', [Validators.required]),
     floorSize: new FormControl('', [Validators.required]),
 
     propertyType: new FormControl('', [Validators.required]),
+    roadType: new FormControl('', [Validators.required]),
     category: new FormControl('', [Validators.required]),
     subCategory: new FormControl('', [Validators.required]),
 

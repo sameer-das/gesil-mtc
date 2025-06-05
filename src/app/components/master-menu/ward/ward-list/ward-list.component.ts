@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { Ward } from '../../../../models/master-data.model';
 import { TABLE_CONFIG } from '../../../../models/tableConfig';
 import { RouterModule } from '@angular/router';
+import { MasterDataService } from '../../../../services/master-data.service';
+import { Subject, takeUntil } from 'rxjs';
+import { APIResponse } from '../../../../models/user.model';
 
 
 @Component({
@@ -13,20 +16,50 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ward-list.component.html',
   styleUrl: './ward-list.component.scss'
 })
-export class WardListComponent {
+export class WardListComponent implements OnInit,OnDestroy{
 
-  tableLoading: boolean = false;
+
+  $destroy: Subject<null> = new Subject();
   TABLE_CONFIG = TABLE_CONFIG;
-  wards: Ward[] = [
-    { wardId: 1, wardName: 'Mukta Nagar', wardNumber: 'W1', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 2, wardName: 'Amarpali Nagar', wardNumber: 'W2', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 3, wardName: 'Soubhagya Nagar', wardNumber: 'W3', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 4, wardName: 'Smurti Nagar', wardNumber: 'W4', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 5, wardName: 'Gopal Nagar', wardNumber: 'W5', zoneId: 1, zoneName: 'Zone 1' },
-  ]
+  totalRecords = 0;
+  wards: Ward[] = [];
+
+  masterDataService: MasterDataService = inject(MasterDataService);
 
 
-  loadWardsData(e: TableLazyLoadEvent) {
+    
+  ngOnDestroy(): void {
+    this.$destroy.next(null);
+    this.$destroy.complete();
+  }
+
+
+
+  ngOnInit(): void {
+    this.loadWardList(1, 5);
+  }
+
+
+  onPaginate(e: TableLazyLoadEvent) {
     console.log(e)
+    let pageNumber = 1;
+    if (e.first) {
+      pageNumber = (e.first / (e.rows || 5)) + 1
+    }
+    this.loadWardList(pageNumber, (e.rows || 5));
+  }
+
+  loadWardList(pageNumber: number, pageSize:number) {
+    this.masterDataService.wardList(0, pageNumber, pageSize)
+    .pipe(takeUntil(this.$destroy))
+    .subscribe({
+      next: (resp:APIResponse<{wards: Ward[], totalCount: number}>) => {
+        console.log(resp)
+        if(resp.code === 200) {
+          this.totalRecords = resp.data.totalCount;
+          this.wards = resp.data.wards;
+        }
+      }
+    })
   }
 }

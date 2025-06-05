@@ -3,14 +3,15 @@
 <div class="gesil-card mt-4">
     <p-table [value]="zones"
         dataKey="zoneId" 
-        [loading]="tableLoading" 
         [rows]="TABLE_CONFIG.rows"
         [rowHover]="TABLE_CONFIG.rowHover"
         [showGridlines]="TABLE_CONFIG.showGridlines" 
         [paginator]="TABLE_CONFIG.paginator" 
         responsiveLayout="TABLE_CONFIG.responsiveLayout"
         [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        (onPage)="loadZoneData($event)">
+        [totalRecords]="totalRecords"
+        [lazy]="true"
+        (onPage)="onPaginate($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
                 <a [routerLink]="['../','zone-create']" class="p-button ml-auto">

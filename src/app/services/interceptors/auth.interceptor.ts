@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
 
 
 
@@ -105,7 +106,7 @@ const handleOtherHttpError = (error: HttpErrorResponse, messageService: MessageS
     }
   }
 
-  messageService.add({ severity: 'error', summary: 'Http Error', detail: errorMessage, life: 3000 })
+  messageService.add({ severity: MessageSeverity.ERROR, summary: 'Http Error', detail: errorMessage, life: MessageDuaraion.LONG })
 
   return throwError(() => error);
 }

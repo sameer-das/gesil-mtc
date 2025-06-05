@@ -48,7 +48,7 @@ export class UserDetailsComponent implements OnInit {
       .pipe(takeUntil(this.$destroy),
         tap((param: Params) => console.log(param)),
         switchMap((param: Params) => this.usersService.getUserDetails(+param['userId'])),
-        tap((resp: APIResponse) => {
+        tap((resp: APIResponse<UserDetail>) => {
           console.log(resp);
 
           if (resp.code === 200) {
@@ -65,11 +65,11 @@ export class UserDetailsComponent implements OnInit {
   populateStateName() {
     this.usersService.getStates().pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse) => {
+        next: (resp: APIResponse<State[]>) => {
           console.log(resp);
           // this.states = resp.data;
           if (resp.code === 200) {
-            const foundState = (resp.data as State[]).find((curr: State) => {
+            const foundState = (resp.data).find((curr: State) => {
               return curr.id === this.userDetail.state;
             });
             if (foundState) {
@@ -86,11 +86,11 @@ export class UserDetailsComponent implements OnInit {
   populateDistrictName(stateId: number) {
     this.usersService.getDistrict(stateId).pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse) => {
+        next: (resp: APIResponse<District[]>) => {
           console.log(resp);
           // this.states = resp.data;
           if (resp.code === 200) {
-            const foundDistrict = (resp.data as District[]).find((curr: District) => {
+            const foundDistrict = (resp.data).find((curr: District) => {
               return curr.id === this.userDetail.district;
             });
             if (foundDistrict) {

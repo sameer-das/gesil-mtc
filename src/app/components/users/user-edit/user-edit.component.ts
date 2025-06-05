@@ -1,19 +1,20 @@
-import { Component, inject, numberAttribute, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
+import { FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { TabsModule } from 'primeng/tabs';
+import { TooltipModule } from 'primeng/tooltip';
+import { Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
+import { APIResponse, ParentOptions, ParentUserTypeForMapping, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserDetail } from '../../../models/user.model';
+import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { UserCreateComponent } from "../user-create/user-create.component";
-import { TabsModule } from 'primeng/tabs';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { APIResponse, ParentOptions, ParentUserTypeForMapping, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserBasicDetails, UserDetail } from '../../../models/user.model';
-import { ActivatedRoute, Params, RouterModule } from '@angular/router';
-import { Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { UsersService } from '../../../services/users.service';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { FileUpload, FileUploadEvent, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
-import { DividerModule } from 'primeng/divider';
-import { TooltipModule } from 'primeng/tooltip';
 export enum TABTYPE {
   BASIC_DETAIL = 'basic-details',
   DOCUMENTS = 'documents',
@@ -82,10 +83,10 @@ export class UserEditComponent implements OnInit {
 
       this.usersService.updateUserParentDetails(updateUserMappingPayload).pipe(takeUntil(this.$destroy))
         .subscribe({
-          next: (updateResp: APIResponse) => {
+          next: (updateResp: APIResponse<string>) => {
             console.log(updateResp);
             if (updateResp.code === 200) {
-              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User details updated successfully.', life: 3000 })
+              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'User details updated successfully.', life: MessageDuaraion.STANDARD })
             }
           }
         })
@@ -99,11 +100,11 @@ export class UserEditComponent implements OnInit {
       .pipe(takeUntil(this.$destroy),
         tap((param: Params) => console.log(param)),
         switchMap((param: Params) => this.usersService.getUserDetails(+param['userId'])),
-        tap((resp: APIResponse) => {
+        tap((resp: APIResponse<UserDetail>) => {
           console.log(resp);
 
           if (resp.code === 200) {
-            this.userDetail = resp.data as UserDetail;
+            this.userDetail = resp.data;
             // this.populateStateName();
             this.userBasicDetail = {
               userId: this.userDetail.userId,
@@ -141,10 +142,10 @@ export class UserEditComponent implements OnInit {
   fetchParentTypesForCurrentUserType(userType: number) {
     this.usersService.getParentUserType(userType).pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse) => {
+        next: (resp: APIResponse<ParentUserTypeForMapping[]>) => {
           console.log(resp)
           if (resp.code === 200) {
-            this.parentOptions = (resp.data as ParentUserTypeForMapping[])
+            this.parentOptions = (resp.data)
               .map((curr: ParentUserTypeForMapping) => ({ ...curr, optionLabel: `${curr.parentFirstName} ${curr.parentMiddleName} ${curr.parentLastName} (${curr.parentUserTypeName})` }))
 
             if (this.userDetail.parentUserId > 0) {
@@ -176,9 +177,9 @@ export class UserEditComponent implements OnInit {
       console.log(payload)
       this.usersService.uploadUserDocument(payload).pipe(takeUntil(this.$destroy))
         .subscribe({
-          next: (resp: APIResponse) => {
+          next: (resp: APIResponse<string>) => {
             if (resp.code === 200) {
-              this.messageService.add({ severity: 'success', summary: 'Success', detail: `Document uploaded successfully.`, life: 3000 });
+              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `Document uploaded successfully.`, life: MessageDuaraion.STANDARD });
               element?.clear();
             }
           }
@@ -207,11 +208,11 @@ export class UserEditComponent implements OnInit {
 
     this.usersService.updateUserAadharPan(payload).pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse) => {
+        next: (resp: APIResponse<string>) => {
           if (resp.code === 200 && resp.data === 'S') {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: `User ${type} updated successfully.`, life: 3000 })
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `User ${type} updated successfully.`, life: MessageDuaraion.STANDARD})
           } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Update Failed!`, life: 3000 })
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: `Update Failed!`, life: MessageDuaraion.STANDARD })
           }
         }
       })

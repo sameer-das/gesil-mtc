@@ -13,6 +13,7 @@ import { filter, first, forkJoin, Subject, switchMap, take, takeUntil, tap } fro
 import { APIResponse, ChildUserType, District, UserBasicDetails, State, UpdateUserBasicDetails } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from '../../utils/page-header/page-header.component';
+import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 
 @Component({
   selector: 'app-user-create',
@@ -43,9 +44,9 @@ export class UserCreateComponent implements OnInit {
         if (state) {
           this.usersService.getDistrict(state.id)
             .pipe(takeUntil(this.destroy$),
-              tap((districtResp: APIResponse) => {
+              tap((districtResp: APIResponse<District[]>) => {
                 if (districtResp.code === 200) {
-                  district = (districtResp.data as District[]).find((curr: District) => curr.id === this.editUser()?.district);
+                  district = (districtResp.data).find((curr: District) => curr.id === this.editUser()?.district);
                   this.patchUserFormForEdit(state, district, currentUserType);
 
                 }
@@ -180,10 +181,10 @@ export class UserCreateComponent implements OnInit {
     this.usersService.saveNewUserBasicDetails(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (resp: APIResponse) => {
+        next: (resp: APIResponse<string>) => {
           console.log(resp)
           if (resp.code === 200) {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User added successfully.', life: 3000 })
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'User added successfully.', life: MessageDuaraion.STANDARD })
             this.userForm.reset();
           }
 
@@ -218,10 +219,10 @@ export class UserCreateComponent implements OnInit {
     this.usersService.updateUserBasicDetails(updateUserPayload)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (updateResp: APIResponse) => {
+      next: (updateResp: APIResponse<string>) => {
         console.log(updateResp);
         if (updateResp.code === 200) {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User details updated successfully.', life: 3000 })
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'User details updated successfully.', life: MessageDuaraion.STANDARD })
             // this.userForm.reset();
           }
       }
@@ -238,10 +239,10 @@ export class UserCreateComponent implements OnInit {
         takeUntil(this.destroy$),
         filter(state => !!state),
         switchMap((state: State) => this.usersService.getDistrict(state.id)),
-        tap((distResp: APIResponse) => {
+        tap((distResp: APIResponse<District[]>) => {
           console.log(distResp)
           if (distResp.code === 200) {
-            this.districts.set(distResp.data as District[]);
+            this.districts.set(distResp.data);
           } else {
             this.districts.set([]);
           }

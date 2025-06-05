@@ -39,10 +39,10 @@ export class UserTypeListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
       this.usersService.getChildrenUserType(this.currentLoggedUserType).pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse) => {
+        next: (resp: APIResponse<ChildUserType[]>) => {
           console.log(resp)
           if(resp.code === 200) {
-            this.childUserType = resp.data as ChildUserType[];
+            this.childUserType = resp.data;
           }
         }, 
         error: (err) => {

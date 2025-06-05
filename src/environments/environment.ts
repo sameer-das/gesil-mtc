@@ -26,5 +26,16 @@ export const environment = {
     userDocumentUpload: '/Admin/userDocumentUpload',
     updateUserAadharPan: '/Admin/updateUserAadharPan',
     userDownloadDocument: '/Admin/userDocumentDownload',
+
+    // ***************** MASTER DATA Related API URLs *****************
+
+    createZone: '/Master/createZone',
+    zoneList: '/Master/zoneList',
+    zoneDetails: '/Master/zoneDetails',
+    updateZone: '/Master/updateZone',
+    createWard: '/Master/createWard',
+    wardList: '/Master/wardList',
+    wardDetails: '/Master/wardDetails',
+    updateWard: '/Master/updateWard',
     
 };

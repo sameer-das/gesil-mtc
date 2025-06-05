@@ -15,7 +15,7 @@
 
          <div class="flex justify-center">
             <div class="flex flex-col w-full md:w-1/2 gap-2">
-                <label for="wardNumber">Ward Name</label>
+                <label for="wardNumber">Ward Number</label>
                 <input pInputText id="wardNumber" class="w-full" type="text" placeholder="Ward Number"
                     formControlName="wardNumber" />
             </div>
@@ -24,7 +24,7 @@
         <div class="flex justify-center">
             <div class="flex flex-col w-full md:w-1/2 gap-2">
                 <label for="gender">Zone</label>
-                <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone" class="w-full"
+                <p-select id="zone" [options]="zones()" optionLabel="zoneName" placeholder="Select Zone" class="w-full"
                     formControlName="zone"></p-select>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { APIResponse } from './../../../models/user.model';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -8,7 +9,7 @@ import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { TABLE_CONFIG } from '../../../models/tableConfig';
-import { APIResponseForUserList, UserList } from '../../../models/user.model';
+import { UserList } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from '../../utils/page-header/page-header.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -65,11 +66,11 @@ export class UserListComponent implements OnInit {
     this.usersService.getUserList(this.currentLoggedUserType, pageNumber, pageSize)
       .pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponseForUserList) => {
+        next: (resp: APIResponse<{userLists: UserList[], totalCount: number}>) => {
 
           if (resp.code === 200) {
             this.totalRecords = resp.data.totalCount;
-            this.userList = (resp.data?.userLists).map((curr: UserList) => {
+            this.userList = resp.data?.userLists.map((curr: UserList) => {
               return {
                 ...curr, firstName: curr.firstName + ' ' + curr.middleName + ' ' + curr.lastName
               }

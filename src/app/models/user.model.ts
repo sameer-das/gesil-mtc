@@ -48,16 +48,10 @@ export interface UpdateUserBasicDetails extends UserBasicDetails {
 }
 
 
-export interface APIResponse {
+export interface APIResponse<T> {
   status: string;
   code: number;
-  data: string | any[] | {}
-}
-
-export interface APIResponseForUserList {
-  status: string;
-  code: number;
-  data: { totalCount: number; userLists: UserList[] }
+  data: T
 }
 
 
