@@ -116,7 +116,7 @@ export class SideBarComponent {
         {
           label: 'Ownership Type List',
           icon: 'pi pi-list',
-          routerLink: '/master/fy-list',
+          routerLink: '/master/ownership-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
@@ -126,7 +126,7 @@ export class SideBarComponent {
         {
           label: 'Road Type List',
           icon: 'pi pi-list',
-          routerLink: '/master/fy-list',
+          routerLink: '/master/roadtype-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)

@@ -10,6 +10,10 @@ import { SubCategoryCreateComponent } from './category/sub-category-create/sub-c
 import { FyListComponent } from './fy/fy-list/fy-list.component';
 import { FyCreateComponent } from './fy/fy-create/fy-create.component';
 import { ZoneDetailsComponent } from './zones/zone-details/zone-details.component';
+import { OwnershipTypeListComponent } from './ownership-type/ownership-type-list/ownership-type-list.component';
+import { OwnershipTypeCreateComponent } from './ownership-type/ownership-type-create/ownership-type-create.component';
+import { RoadTypeListComponent } from './road-type/road-type-list/road-type-list.component';
+import { RoadTypeCreateComponent } from './road-type/road-type-create/road-type-create.component';
 
 
 
@@ -31,5 +35,13 @@ export default [
     { path: 'fy-list', component: FyListComponent },
     { path: 'fy-create', component: FyCreateComponent },
     { path: 'fy-edit/:fyId', component: FyCreateComponent },
+
+    { path: 'ownership-list', component: OwnershipTypeListComponent },
+    { path: 'ownership-create', component: OwnershipTypeCreateComponent },
+    { path: 'ownership-edit/ownershipId', component: OwnershipTypeCreateComponent },
+    { path: 'roadtype-list', component: RoadTypeListComponent },
+    { path: 'roadtype-create', component: RoadTypeCreateComponent },
+    { path: 'roadtype-edit/roadtypeId', component: RoadTypeCreateComponent },
+
 
 ] as Routes;
