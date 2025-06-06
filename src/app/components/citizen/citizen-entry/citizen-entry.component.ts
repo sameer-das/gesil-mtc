@@ -1,14 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { FluidModule } from 'primeng/fluid';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectChangeEvent, SelectModule } from 'primeng/select';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
-import { Category, DueFormatOption, Fy, SubCategory, Ward, Zone } from '../../../models/master-data.model';
+import { Category, DueFormatOption, Fy, RoadType, SubCategory, Ward, Zone } from '../../../models/master-data.model';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
-import { Subject, takeUntil, tap } from 'rxjs';
+import { forkJoin, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { TooltipModule } from 'primeng/tooltip';
+import { MasterDataService } from '../../../services/master-data.service';
 @Component({
   selector: 'app-citizen-entry',
   imports: [PageHeaderComponent,
@@ -18,7 +21,9 @@ import { Subject, takeUntil, tap } from 'rxjs';
     InputTextModule,
     TextareaModule,
     ButtonModule,
-    DividerModule],
+    DividerModule,
+    InputNumberModule,
+    TooltipModule],
   templateUrl: './citizen-entry.component.html',
   styleUrl: './citizen-entry.component.scss'
 })
@@ -32,6 +37,7 @@ export class CitizenEntryComponent implements OnInit, OnDestroy {
     { label: 'Financial Year Wise (Nigam has given financial year wise dues)', value: 1 },
   ];
 
+  masterDataService: MasterDataService = inject(MasterDataService);
 
   citizenForm: FormGroup = new FormGroup({
     zone: new FormControl('', [Validators.required]),
@@ -60,22 +66,10 @@ export class CitizenEntryComponent implements OnInit, OnDestroy {
 
   });
 
-  
 
-  zones: Zone[] = [
-    { zoneName: 'Zone 1', zoneId: 1 },
-    { zoneName: 'Zone 2', zoneId: 2 },
-    { zoneName: 'Zone 3', zoneId: 3 },
-    { zoneName: 'Zone 4', zoneId: 4 },
-  ];
 
-  wards: Ward[] = [
-    { wardId: 1, wardName: 'Mukta Nagar', wardNumber: 'W1', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 2, wardName: 'Amarpali Nagar', wardNumber: 'W2', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 3, wardName: 'Soubhagya Nagar', wardNumber: 'W3', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 4, wardName: 'Smurti Nagar', wardNumber: 'W4', zoneId: 1, zoneName: 'Zone 1' },
-    { wardId: 5, wardName: 'Gopal Nagar', wardNumber: 'W5', zoneId: 1, zoneName: 'Zone 1' },
-  ]
+  zones: Zone[] = [];
+  wards: Ward[] = [];
 
   categories: Category[] = [
     { categoryId: 1, categoryName: 'Below Poverty Line' },
@@ -104,6 +98,14 @@ export class CitizenEntryComponent implements OnInit, OnDestroy {
   ]
 
 
+  roadType: RoadType[] = [
+    { roadTypeId: 1, roadTypeName: '200 Feet Road' },
+    { roadTypeId: 2, roadTypeName: '100 Feet Road' },
+    { roadTypeId: 3, roadTypeName: 'Service Road' },
+    { roadTypeId: 4, roadTypeName: 'Village Kaccha Road' },
+  ]
+
+
   constructor() { }
 
   ngOnDestroy(): void {
@@ -112,10 +114,35 @@ export class CitizenEntryComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    // Handle Zone Change  
+    this.citizenForm.get('zone')?.valueChanges
+      .pipe(takeUntil(this.$destroy),
+        switchMap((zone: Zone) => this.masterDataService.wardList(zone.zoneId)),
+        tap((wardResp) => {
+          if (wardResp.code === 200) {
+            this.wards = wardResp.data.wards;
+          } else {
+            this.wards = []
+          }
+        })).subscribe();
+
+    // Handle Ward Change
     this.citizenForm.get('ward')?.valueChanges
-    .pipe(takeUntil(this.$destroy), tap((ward:Ward) => {
-      this.citizenForm.get('wardName')?.setValue(ward.wardName, { emitEvent: false })
-    })).subscribe();
+      .pipe(takeUntil(this.$destroy), tap((ward: Ward) => {
+        this.citizenForm.get('wardName')?.setValue(ward.wardName, { emitEvent: false })
+      })).subscribe();
+
+
+    // Fetch Initial Data
+    forkJoin([this.masterDataService.zoneList()])
+      .pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: ([zoneListResp]) => {
+          if (zoneListResp.code === 200) {
+            this.zones = zoneListResp.data.zones;
+          }
+        }
+      })
   }
 
 
@@ -150,7 +177,7 @@ export class CitizenEntryComponent implements OnInit, OnDestroy {
     if (value.value === 1) {
       this.citizenForm.addControl('pendingDues', new FormArray([this.createPendingDueFormGroup()]))
       this.citizenForm.removeControl('pendingDue')
-    } else if(value.value === 0) {
+    } else if (value.value === 0) {
       this.citizenForm.addControl('pendingDue', new FormControl('', [Validators.required, Validators.pattern(/^\d{1,8}(\.\d{1,2})?$/)]))
       this.citizenForm.removeControl('pendingDues')
     }

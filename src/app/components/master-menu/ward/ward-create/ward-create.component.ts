@@ -126,7 +126,7 @@ export class WardCreateComponent implements OnInit, OnDestroy {
 
 
   populateZones() {
-    this.masterDataService.zoneList(0, 0)
+    this.masterDataService.zoneList()
       .pipe(takeUntil(this.$destroy))
       .subscribe({
         next: (resp: APIResponse<{ zones: Zone[], totalCount: number }>) => {

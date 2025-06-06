@@ -59,3 +59,8 @@ export interface DueFormatOption {
 }
 
 
+export interface RoadType {
+    roadTypeId: number; 
+    roadTypeName: string;
+}
+

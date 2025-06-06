@@ -20,7 +20,7 @@ export class MasterDataService {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.createZone}`, createZonePayload);
   }
 
-  zoneList(pageNumber: number, pageSize: number): Observable<APIResponse<{ zones: Zone[], totalCount: number }>> {
+  zoneList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ zones: Zone[], totalCount: number }>> {
     return this.http.get<APIResponse<{ zones: Zone[], totalCount: number }>>(`${this.API_URL}${environment.zoneList}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
@@ -39,7 +39,7 @@ export class MasterDataService {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.createWard}`, createWardPayload);
   }
 
-  wardList(zoneId: number, pageNumber: number, pageSize: number): Observable<APIResponse<{ wards: Ward[], totalCount: number }>> {
+  wardList(zoneId: number, pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ wards: Ward[], totalCount: number }>> {
     return this.http.get<APIResponse<{ wards: Ward[], totalCount: number }>>(`${this.API_URL}${environment.wardList}?zoneId=${zoneId}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
