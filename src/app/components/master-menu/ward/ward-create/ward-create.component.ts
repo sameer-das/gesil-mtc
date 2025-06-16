@@ -30,16 +30,15 @@ export class WardCreateComponent implements OnInit, OnDestroy {
   zones = signal<Zone[]>([]);
 
 
-  masterDataService: MasterDataService = inject(MasterDataService);
-  messageService: MessageService = inject(MessageService);
-  route: ActivatedRoute = inject(ActivatedRoute);
+  private masterDataService: MasterDataService = inject(MasterDataService);
+  private messageService: MessageService = inject(MessageService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
 
   wardForm = new FormGroup({
     wardNumber: new FormControl<string>('', [Validators.required]),
     wardName: new FormControl<string>('', [Validators.required]),
     zone: new FormControl<Zone | null>(null, [Validators.required])
   });
-
 
 
 
@@ -79,8 +78,7 @@ export class WardCreateComponent implements OnInit, OnDestroy {
 
 
 
-  onSaveWard() {
-    // console.log(this.wardForm.value)
+  onSaveWard() { 
     if (!this.editMode()) {
       // Create Mode
       const createWard: CreateUpdateWard = {
@@ -92,7 +90,6 @@ export class WardCreateComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.$destroy))
         .subscribe({
           next: (resp: APIResponse<string>) => {
-            console.log(resp)
             if (resp.code === 200 && resp.data === 'S') {
               this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Zone created successfully.', life: MessageDuaraion.STANDARD });
               this.wardForm.reset();
@@ -113,7 +110,7 @@ export class WardCreateComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.$destroy))
         .subscribe({
           next: (resp: APIResponse<string>) => {
-            if (resp.code === 200) {
+            if (resp.code === 200 && resp.data === 'S') {
               this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Ward updated successfully.', life: MessageDuaraion.STANDARD });
             } else {
               this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Ward update failed.', life: MessageDuaraion.STANDARD })
@@ -130,12 +127,12 @@ export class WardCreateComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.$destroy))
       .subscribe({
         next: (resp: APIResponse<{ zones: Zone[], totalCount: number }>) => {
-          // console.log(resp)
+
           if (resp.code === 200 && resp.status === 'Success') {
             this.zones.set(resp.data.zones)
 
             const preSelectZoneId = this.route.snapshot.queryParams?.['zoneId'];
-            // console.log(this.route.snapshot.queryParams)
+            
             if (preSelectZoneId) {
               const foundZone = resp.data.zones.find(z => z.zoneId === +preSelectZoneId);
               this.wardForm.patchValue({ zone: foundZone }, { emitEvent: false });

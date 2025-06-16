@@ -35,8 +35,25 @@ export const environment = {
     zoneList: '/Master/zoneList',
     zoneDetails: '/Master/zoneDetails',
     updateZone: '/Master/updateZone',
+    
     createWard: '/Master/createWard',
     wardList: '/Master/wardList',
     wardDetails: '/Master/wardDetails',
     updateWard: '/Master/updateWard',
+
+    createCategory: '/Master/createCategory',
+    categoryList: '/Master/categoryList',
+    categoryDetail: '/Master/categoryDetail',
+    updateCategory: '/Master/updateCategory',
+
+    createSubCategory: '/Master/createSubCategory',
+    subCategoryList: '/Master/subCategoryList',
+    subCategoryDetail: '/Master/subCategoryDetail',
+    updateSubCategory: '/Master/updateSubCategory',
+    subCategoriesOfCategory: '/Master/subCategoriesOfCategory',
+
+    createFy: '/Master/createFy',
+    fyList: '/Master/fyList',
+    fyDetail: '/Master/fyDetail',
+    updateFyMaster: '/Master/updateFyMaster',
 };

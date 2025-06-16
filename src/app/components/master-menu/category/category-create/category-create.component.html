@@ -9,14 +9,19 @@
                 <label for="categoryName">Category Name</label>
                 <input pInputText id="categoryName" class="w-full" type="text" placeholder="category Name"
                     formControlName="categoryName" />
-            </div>           
+            </div>
         </div>
     </div>
 
 
     <div class="flex gap-2 justify-end ">
         <p-button raised="true" severity="secondary" (click)="categoryForm.reset()">Reset</p-button>
-        <p-button raised="true" type="button" [disabled]="categoryForm.invalid" (click)="onSaveCategory()">{{ editMode() ?
+        <p-button raised="true" type="button" [disabled]="categoryForm.invalid" (click)="onSaveCategory()">{{ editMode()
+            ?
             'Update' : 'Save'}} Category</p-button>
     </div>
 </form>
+
+@if(editMode() && categoryDetail) {
+<app-sub-category-list [categoryId]="categoryDetail.categoryId" [categoryName]="categoryDetail.categoryName" />
+}

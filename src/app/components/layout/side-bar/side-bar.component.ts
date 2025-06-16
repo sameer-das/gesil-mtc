@@ -113,26 +113,26 @@ export class SideBarComponent {
             // this.router.navigate([''])
           }
         },
-        {
-          label: 'Ownership Type List',
-          icon: 'pi pi-list',
-          routerLink: '/master/ownership-list',
-          routerLinkActiveOptions: { exact: true },
-          command: (e: MenuItemCommandEvent) => {
-            // console.log(e)
-            // this.router.navigate([''])
-          }
-        },
-        {
-          label: 'Road Type List',
-          icon: 'pi pi-list',
-          routerLink: '/master/roadtype-list',
-          routerLinkActiveOptions: { exact: true },
-          command: (e: MenuItemCommandEvent) => {
-            // console.log(e)
-            // this.router.navigate([''])
-          }
-        },
+        // {
+        //   label: 'Ownership Type List',
+        //   icon: 'pi pi-list',
+        //   routerLink: '/master/ownership-list',
+        //   routerLinkActiveOptions: { exact: true },
+        //   command: (e: MenuItemCommandEvent) => {
+        //     // console.log(e)
+        //     // this.router.navigate([''])
+        //   }
+        // },
+        // {
+        //   label: 'Road Type List',
+        //   icon: 'pi pi-list',
+        //   routerLink: '/master/roadtype-list',
+        //   routerLinkActiveOptions: { exact: true },
+        //   command: (e: MenuItemCommandEvent) => {
+        //     // console.log(e)
+        //     // this.router.navigate([''])
+        //   }
+        // },
         
       ],
 

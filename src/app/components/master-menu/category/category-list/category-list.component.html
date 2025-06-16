@@ -3,14 +3,15 @@
 <div class="gesil-card mt-4">
     <p-table [value]="categories"
         dataKey="categoryId" 
-        [loading]="tableLoading" 
         [rows]="TABLE_CONFIG.rows"
         [rowHover]="TABLE_CONFIG.rowHover"
         [showGridlines]="TABLE_CONFIG.showGridlines" 
         [paginator]="TABLE_CONFIG.paginator" 
         responsiveLayout="TABLE_CONFIG.responsiveLayout"
         [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        (onPage)="loadCategoryData($event)">
+        [totalRecords]="totalRecords"
+        [lazy]="true"
+        (onPage)="onPaginate($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
                 <a [routerLink]="['../','category-create']" class="p-button ml-auto">
@@ -49,7 +50,8 @@
                     {{ item.categoryName }}
                 </td>
                 <td>
-                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'category-edit', item.categoryId]" [rounded]="true" class="mr-2" severity="help"
+                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'category-edit', item.categoryId]" 
+                    [rounded]="true" class="mr-2" severity="help"
                      pTooltip="Edit"></a>
                      <!-- <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
                         [routerLink]="['../','category-details', item.categoryId]" pTooltip="View"></a> -->

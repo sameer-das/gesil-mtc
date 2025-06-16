@@ -1,21 +1,31 @@
-<app-page-header title="Sub-Category List" /> 
+@if(!categoryId()) {
+<app-page-header title="Sub-Category List" />
+}
+
 
 <div class="gesil-card mt-4">
-    <p-table [value]="subCategories"
-        dataKey="subCategoriesId" 
-        [loading]="tableLoading" 
-        [rows]="TABLE_CONFIG.rows"
-        [rowHover]="TABLE_CONFIG.rowHover"
-        [showGridlines]="TABLE_CONFIG.showGridlines" 
-        [paginator]="TABLE_CONFIG.paginator" 
-        responsiveLayout="TABLE_CONFIG.responsiveLayout"
-        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        (onPage)="loadSubCategoryData($event)">
+
+    <p-table [value]="subCategories" dataKey="subCategoriesId" [rows]="TABLE_CONFIG.rows"
+        [rowHover]="TABLE_CONFIG.rowHover" [showGridlines]="TABLE_CONFIG.showGridlines"
+        [paginator]="TABLE_CONFIG.paginator" responsiveLayout="TABLE_CONFIG.responsiveLayout"
+        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions" [totalRecords]="totalRecords" [lazy]="true"
+        (onPage)="onPaginate($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
+                @if(categoryId()) {
+                <h2 class="font-semibold text-lg"> Sub-categoies of Category : <span class="table-header">{{categoryName()}}</span></h2>
+                }
+                @if(categoryId()) {
+                <a [routerLink]="['/master','sub-category-create']" [queryParams]="{catId:categoryId()}"
+                    class="p-button">
+                    <i class="pi pi-plus-circle"></i>Add New Sub Category
+                </a>
+                } @else {
                 <a [routerLink]="['../','sub-category-create']" class="p-button ml-auto">
                     <i class="pi pi-plus-circle"></i>Add New Sub-Category
                 </a>
+                }
+
             </div>
         </ng-template>
 
@@ -65,9 +75,15 @@
                     {{ item.taxAmountPerMonth }}
                 </td>
                 <td>
-                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'sub-category-edit', item.categoryId]" [rounded]="true" class="mr-2" severity="help"
-                     pTooltip="Edit"></a>
-                     <!-- <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
+                    @if(categoryId())
+                    {
+                        <a pButton icon="pi pi-pencil" [routerLink]="['/master', 'sub-category-edit', item.subCategoryId]"
+                        [rounded]="true" class="mr-2" severity="help" pTooltip="Edit"></a>
+                    } @else {
+                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'sub-category-edit', item.subCategoryId]"
+                        [rounded]="true" class="mr-2" severity="help" pTooltip="Edit"></a>
+                    } 
+                    <!-- <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
                         [routerLink]="['../','category-details', item.categoryId]" pTooltip="View"></a> -->
                 </td>
 

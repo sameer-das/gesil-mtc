@@ -42,7 +42,7 @@ export interface SubCategory {
     subCategoryName: string;
     categoryId: number;
     categoryName: string;
-    taxAmountPerMonth: number;
+    taxAmountPerMonth?: number;
     active?: number;
 }
 
@@ -60,7 +60,20 @@ export interface DueFormatOption {
 
 
 export interface RoadType {
-    roadTypeId: number; 
+    roadTypeId: number;
     roadTypeName: string;
 }
 
+
+export interface CreateUpdateCategory {
+    categoryId?: number;
+    categoryName: string;
+}
+
+
+export interface CreateUpdateSubCategory {
+    subCategoryId?: number;
+    categoryId: number;
+    subCategoryName: string;
+    taxAmountPerMonth: number;
+}

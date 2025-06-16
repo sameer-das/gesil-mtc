@@ -2,15 +2,16 @@
 
 <div class="gesil-card mt-4">
     <p-table [value]="fys"
-        dataKey="fyId" 
-        [loading]="tableLoading" 
+        dataKey="fyId"
         [rows]="TABLE_CONFIG.rows"
         [rowHover]="TABLE_CONFIG.rowHover"
         [showGridlines]="TABLE_CONFIG.showGridlines" 
         [paginator]="TABLE_CONFIG.paginator" 
         responsiveLayout="TABLE_CONFIG.responsiveLayout"
         [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        (onPage)="loadFyData($event)">
+        [totalRecords]="totalRecords"
+        [lazy]="true"
+        (onPage)="onPaginate($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
                 <a [routerLink]="['../','fy-create']" class="p-button ml-auto">

@@ -24,7 +24,7 @@ export class WardListComponent implements OnInit,OnDestroy{
   totalRecords = 0;
   wards: Ward[] = [];
 
-  masterDataService: MasterDataService = inject(MasterDataService);
+  private masterDataService: MasterDataService = inject(MasterDataService);
 
 
     
@@ -41,7 +41,6 @@ export class WardListComponent implements OnInit,OnDestroy{
 
 
   onPaginate(e: TableLazyLoadEvent) {
-    console.log(e)
     let pageNumber = 1;
     if (e.first) {
       pageNumber = (e.first / (e.rows || 5)) + 1
