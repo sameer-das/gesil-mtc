@@ -1,0 +1,384 @@
+<app-page-header [title]="'Property Details'" [backButton]="true" />
+
+<p-fluid>
+    <form [formGroup]="propertyForm" class="mt-4">
+        <div class="flex flex-col w-full ">
+            <div class="gesil-card">
+
+                <!-- Row 1 -->
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="householdNo">Household No</label>
+                        <input pInputText id="householdNo" placeholder="Enter Household No" type="text"
+                            formControlName="householdNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="zone">Zone</label>
+                        <p-select id="zone" [options]="zones" optionLabel="name" placeholder="Select Zone"
+                            class="w-full" formControlName="zone"></p-select>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ward">Ward</label>
+                        <p-select id="ward" [options]="wards" optionLabel="name" placeholder="Select Ward"
+                            class="w-full" formControlName="ward"></p-select>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="wardName">Ward Name</label>
+                        <input pInputText id="wardName" placeholder="Name of Selected Ward" readonly type="text"
+                            formControlName="wardName" />
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyType">Property Type</label>
+                        <p-select id="propertyType" [options]="propertyTypes" optionLabel="propertyTypeName"
+                            placeholder="Select Property Type" class="w-full" formControlName="propertyType"></p-select>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="widthOfRoad">Width of Road sorrunding the plot</label>
+                        <input pInputText id="widthOfRoad" placeholder="Enter Width of Road" type="text"
+                            formControlName="widthOfRoad" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="areaOfPlot">Area of Plot (Decimil)</label>
+                        <input pInputText id="areaOfPlot" placeholder="Enter Area of Plot" type="text"
+                            formControlName="areaOfPlot" />
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <label for="typeOfOwnership">Type of Ownership</label>
+                        <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="typeOfOwnershipName"
+                            placeholder="Select Type of Ownership" class="w-full"
+                            formControlName="typeOfOwnership"></p-select>
+                    </div>
+                    @if(propertyForm.get('typeOfOwnership')?.value?.typeOfOwnershipId === 13) {
+
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <label for="otherTypeOfOwnerShip">Specify Ownership Type</label>
+                        <input pInputText id="otherTypeOfOwnerShip" placeholder="Specify Ownership Type" type="text"
+                            formControlName="otherTypeOfOwnerShip" />
+                    </div>
+                    }
+                </div>
+            </div>
+
+            @if(enableFlatType) {
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Provide Flat Details</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="buildingNo">Building No</label>
+                        <input pInputText id="buildingNo" placeholder="Enter Building No" type="text"
+                            formControlName="buildingNo" [readonly]="!enableFlatType" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="flatNo">Flat No</label>
+                        <input pInputText id="flatNo" placeholder="Enter Flat No" type="text" formControlName="flatNo"
+                            [readonly]="!enableFlatType" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="flatSize">Flat Size(Sq. Ft.)</label>
+                        <input pInputText id="flatSize" placeholder="Enter Flat Size" type="text"
+                            formControlName="flatSize" [readonly]="!enableFlatType" />
+                    </div>
+                </div>
+            </div>
+
+            }
+
+            @if(enableIndividualBuildingType) {
+
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Provide data for individual building</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full sm:w-1/4">
+                        <label for="noOfFloors">No of Floors</label>
+                        <p-inputnumber [readonly]="!enableIndividualBuildingType" id="noOfFloors" [min]="minFloorValue"
+                            [max]="10" placeholder="Enter no of floors that building has" type="text"
+                            formControlName="noOfFloors" />
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Floor Wise data -->
+            @if(floorWiseDataFormArray.controls.length > 0) {
+            <div class="gesil-card">
+                <h2 class="text-base text-center underline font-semibold">Provide floorwise data for the building</h2>
+                <div formArrayName="floorWiseData">
+                    @for(ctrl of floorWiseDataFormArray.controls;track ctrl; let i = $index) {
+                    <div class="flex flex-col md:flex-row gap-6 my-4" [formGroupName]="i">
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="floorNo">Floor No</label>
+                            <input pInputText id="floorNo" placeholder="Enter Floor No" type="text"
+                                formControlName="floorNo" />
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="builtUpArea">Builtup Area</label>
+                            <input pInputText id="builtUpArea" placeholder="Enter Builtup Area" type="text"
+                                formControlName="builtUpArea" />
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="constructionType">Construction Type</label>
+                            <input pInputText id="constructionType" placeholder="Enter Construction Type" type="text"
+                                formControlName="constructionType" />
+                        </div>
+
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- Row 3 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Electricity Connection Details</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="elctricityCustomerId">Customer Id/No</label>
+                        <input pInputText id="elctricityCustomerId" placeholder="Enter Customer Id/No" type="text"
+                            formControlName="elctricityCustomerId" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="electricityAccountNo">Account No</label>
+                        <input pInputText id="electricityAccountNo" placeholder="Enter Account No" type="text"
+                            formControlName="electricityAccountNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="electricityBookNo">Book No</label>
+                        <input pInputText id="electricityBookNo" placeholder="Enter Book No" type="text"
+                            formControlName="electricityBookNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="electricityCategory">Electricity Category</label>
+                        <p-select id="electricityCategory" [options]="electricityCagtegory"
+                            optionLabel="electricityCagtegoryName" placeholder="Choose Electricity Category"
+                            class="w-full" formControlName="electricityCategory"></p-select>
+                    </div>
+                </div>
+                <div class="flex gap-2 w-full my-4">
+                    <div>
+                        <label for="identityProof">Upload Electricity Bill</label>
+                        <p-fileupload class="my-4" #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                            maxFileSize="000000" customUpload="true"
+                            (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+                    </div>
+                    <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
+                        [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload Electricity Bill" />
+                </div>
+            </div>
+
+            <!-- Row 4 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Building Plan/Water Connection Details</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="buildingPlanApprovalNo">Building Approval No</label>
+                        <input pInputText id="buildingPlanApprovalNo" placeholder="Enter Building Approval No"
+                            type="text" formControlName="buildingPlanApprovalNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="buildingPlanApprovalDate">Building Plan Approval Date</label>
+                        <p-datepicker placeholder="Choose Building Plan Approval Date" id="buildingPlanApprovalDate"
+                            class="w-full" formControlName="buildingPlanApprovalDate" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="waterConsumerNo">Water Connection Consumer No</label>
+                        <input pInputText id="waterConsumerNo" placeholder="Enter Water Connection Consumer No"
+                            type="text" formControlName="waterConsumerNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="waterConnectionDate">Date of Water Connection</label>
+                        <p-datepicker placeholder="Choose Water Connection Date" id="waterConnectionDate" class="w-full"
+                            formControlName="waterConnectionDate" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 5 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Plot Details as per Patta/Tahasil Record</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="district">District</label>
+                        <input pInputText id="district" placeholder="Enter District" type="text"
+                            formControlName="district" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="tahasil">Tahasil</label>
+                        <input pInputText id="tahasil" placeholder="Enter Tahasil" type="text"
+                            formControlName="tahasil" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="villageName">Village/Mauja Name</label>
+                        <input pInputText id="villageName" placeholder="Enter Village/Mauja Name" type="text"
+                            formControlName="villageName" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="khataNo">Khata No</label>
+                        <input pInputText id="khataNo" placeholder="Enter Khata No" type="text"
+                            formControlName="khataNo" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="plotNo">Plot No</label>
+                        <input pInputText id="plotNo" placeholder="Enter Plot No" type="text"
+                            formControlName="plotNo" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 6 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Address of Property</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddress">Address</label>
+                        <input pInputText id="propertyAddress" placeholder="Enter Address" type="text"
+                            formControlName="propertyAddress" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressDistrict">District</label>
+                        <input pInputText id="propertyAddressDistrict" placeholder="Enter District" type="text"
+                            formControlName="propertyAddressDistrict" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressCity">City</label>
+                        <input pInputText id="propertyAddressCity" placeholder="Enter City" type="text"
+                            formControlName="propertyAddressCity" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressPin">PIN </label>
+                        <input pInputText id="propertyAddressPin" placeholder="Enter PIN" type="text"
+                            formControlName="propertyAddressPin" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 7 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Correspondence address of the Owner</h2>
+                <div class="flex items-center gap-2 w-full md:w-1/2 my-4">
+                    <p-checkbox formControlName="isOwnerAddressSame" value="false" inputId="isOwnerAddressSame" />
+                    <label for="isOwnerAddressSame" class="ml-2">Owner's Address is as same as property address</label>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddress">Address</label>
+                        <input pInputText id="ownerAddress" placeholder="Enter Address" type="text"
+                            formControlName="ownerAddress" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressDistrict">District</label>
+                        <input pInputText id="ownerAddressDistrict" placeholder="Enter District" type="text"
+                            formControlName="ownerAddressDistrict" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressCity">City</label>
+                        <input pInputText id="ownerAddressCity" placeholder="Enter City" type="text"
+                            formControlName="ownerAddressCity" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressPin">PIN </label>
+                        <input pInputText id="ownerAddressPin" placeholder="Enter PIN" type="text"
+                            formControlName="ownerAddressPin" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 8 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">In case of vacant land</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="plotArea">Enter Plot Area (in Decimil)</label>
+                        <input pInputText id="plotArea" placeholder="Enter Plot Area" type="text"
+                            formControlName="plotArea" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="useAsPerMasterPlan">Use As Per Master Plan</label>
+                        <input pInputText id="useAsPerMasterPlan" placeholder="Use As Per Master Plan" type="text"
+                            formControlName="useAsPerMasterPlan" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="dateOfAcquisition">Date of Acquisition</label>
+                        <p-datepicker placeholder="Date of Acquisition" id="dateOfAcquisition" class="w-full"
+                            formControlName="dateOfAcquisition" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 9 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Mobile Tower</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="mobileTowerArea">Total Area Covered by Mobile Tower & Its Supporting Equipments
+                        </label>
+                        <input pInputText id="mobileTowerArea" placeholder="Enter Area" type="text"
+                            formControlName="mobileTowerArea" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="mobileTowerDateOfInstallation">Date of Installation of Mobile Tower</label>
+                        <p-datepicker placeholder="Date of Installation of Mobile Tower"
+                            id="mobileTowerDateOfInstallation" class="w-full"
+                            formControlName="mobileTowerDateOfInstallation" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row  -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Hoarding (on the Wall/ Roof/ Land)</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="hoardingArea">Total Area of Wall/Roof/Land (in sqft):</label>
+                        <input pInputText id="hoardingArea" placeholder="Enter Area" type="text"
+                            formControlName="hoardingArea" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="hoardingDateOfInstallation">Date of Installation of Hoarding</label>
+                        <p-datepicker placeholder="Date of Installation of Hoarding" id="hoardingDateOfInstallation"
+                            class="w-full" formControlName="hoardingDateOfInstallation" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 10 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Petrol Pump</h2>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="petrolpumpUndergroundArea">Underground Area (in sqft):</label>
+                        <input pInputText id="petrolpumpUndergroundArea" placeholder="Enter Area" type="text"
+                            formControlName="petrolpumpUndergroundArea" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="petrolpumpDateOfCompletion">Date of Completion of Petrol Pump</label>
+                        <p-datepicker placeholder="Date of Completion" id="petrolpumpDateOfCompletion" class="w-full"
+                            formControlName="petrolpumpDateOfCompletion" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 11 -->
+            <div class="gesil-card">
+                <h2 class="text-lg font-semibold">Water Harvesting Provision</h2>
+                <div class="flex items-center gap-2 w-full md:w-1/2 my-4">
+                    <p-checkbox formControlName="hasWaterHarvestingProvision" value="false"
+                        inputId="hasWaterHarvestingProvision" />
+                    <label for="hasWaterHarvestingProvision" class="ml-2">Water Harvesting Provision</label>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</p-fluid>

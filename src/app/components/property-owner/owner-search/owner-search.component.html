@@ -1,0 +1,43 @@
+<div class="flex">
+    <app-page-header title="Property Owner Search" />
+</div>
+
+<div class="grid grid-cols-12 gap-8 mt-4">
+    <div class="gesil-card col-span-12 col-start-1 lg:col-start-3 xl:col-start-3 lg:col-span-8 xl:col-span-8">
+        <div class="flex gap-2 w-full">
+            <p-autocomplete class="w-full" 
+                placeholder="Search property owner here"    
+                [(ngModel)]="searchValue" fluid="true" 
+                [pAutoFocus]="true"
+                [suggestions]="items"
+                (completeMethod)="search($event)"
+                (onSelect)="onOwnerSelect($event)" />
+        </div>
+        <p class="text-center my-4 font-semibold">Search By</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <div class="flex items-center">
+                <p-radiobutton name="name" value="name" [(ngModel)]="searchBy" inputId="searchBy1" />
+                <label for="searchBy1" class="ml-2">Name</label>
+            </div>
+
+            <div class="flex items-center">
+                <p-radiobutton name="mobile" value="mobile" [(ngModel)]="searchBy" inputId="searchBy2" />
+                <label for="searchBy2" class="ml-2">Mobile</label>
+            </div>
+
+            <div class="flex items-center">
+                <p-radiobutton name="aadhar" value="aadhar" [(ngModel)]="searchBy" inputId="searchBy3" />
+                <label for="searchBy3" class="ml-2">Aadhar</label>
+            </div>
+
+            <div class="flex items-center">
+                <p-radiobutton name="pan" value="pan" [(ngModel)]="searchBy" inputId="searchBy4" />
+                <label for="searchBy4" class="ml-2">PAN</label>
+            </div>
+            <div class="flex items-center">
+                <p-radiobutton name="email" value="email" [(ngModel)]="searchBy" inputId="searchBy5" />
+                <label for="searchBy5" class="ml-2">Email ID</label>
+            </div>
+        </div>
+    </div>
+</div>

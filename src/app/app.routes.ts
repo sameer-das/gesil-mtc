@@ -13,7 +13,7 @@ export const routes: Routes = [
             { path: '', component: DashboardComponent },
             { path: 'user', loadChildren: () => import('./components/users/user.routes') },
             { path: 'master', loadChildren: () => import('./components/master-menu/master-menu.routes') },
-            { path: 'citizen', loadChildren: () => import('./components/citizen/citizen.routes') },
+            { path: 'owner', loadChildren: () => import('./components/property-owner/property-owner.routes') },
         ]
     },
     {path: 'login', component: LoginComponent}

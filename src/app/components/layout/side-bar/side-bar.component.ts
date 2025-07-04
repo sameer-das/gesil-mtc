@@ -137,19 +137,30 @@ export class SideBarComponent {
       ],
 
     }, {
-      label: 'Citizens',
+      label: 'Property Owner',
       icon: 'pi pi-users',
       items: [
         {
-          label: 'Citizen Entry',
-          icon: 'pi pi-list',
-          routerLink: '/citizen',
+          label: 'Search Property Owner',
+          icon: 'pi pi-search',
+          routerLink: '/owner/owner-search',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
             // this.router.navigate([''])
           }
         },
+        {
+          label: 'New Property Owner',
+          icon: 'pi pi-list',
+          routerLink: '/owner',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e)
+            // this.router.navigate([''])
+          }
+        },
+        
       ]
     }
   ];
