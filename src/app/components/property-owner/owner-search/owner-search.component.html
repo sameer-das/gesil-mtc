@@ -6,17 +6,31 @@
     <div class="gesil-card col-span-12 col-start-1 lg:col-start-3 xl:col-start-3 lg:col-span-8 xl:col-span-8">
         <div class="flex gap-2 w-full">
             <p-autocomplete class="w-full" 
-                placeholder="Search property owner here"    
+                [placeholder]="`Search by owner ${searchBy === 'ownerName' ? 'name' : searchBy}`"
                 [(ngModel)]="searchValue" fluid="true" 
                 [pAutoFocus]="true"
                 [suggestions]="items"
                 (completeMethod)="search($event)"
-                (onSelect)="onOwnerSelect($event)" />
+                (onSelect)="onOwnerSelect($event)">
+                    <ng-template let-item #item>
+                        <div class="flex w-full justify-between items-center gap-2">
+                            <!-- @if(item.photo) {
+                                <img [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${item?.photo}`" style="width: 18px" />
+                            } @else {
+                                <img src="assets/avatar.png" alt="User Avatar" style="width: 18px" />
+                            } -->
+                            <strong>{{item.salutation}} {{ item.ownerName }}</strong>
+                            <div>
+                                <p class="text-sm">Mobile: {{item.mobile}}</p>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-autocomplete>
         </div>
         <p class="text-center my-4 font-semibold">Search By</p>
         <div class="flex flex-wrap justify-center gap-4">
             <div class="flex items-center">
-                <p-radiobutton name="name" value="name" [(ngModel)]="searchBy" inputId="searchBy1" />
+                <p-radiobutton name="name" value="ownerName" [(ngModel)]="searchBy" inputId="searchBy1" />
                 <label for="searchBy1" class="ml-2">Name</label>
             </div>
 
@@ -25,10 +39,10 @@
                 <label for="searchBy2" class="ml-2">Mobile</label>
             </div>
 
-            <div class="flex items-center">
+            <!-- <div class="flex items-center">
                 <p-radiobutton name="aadhar" value="aadhar" [(ngModel)]="searchBy" inputId="searchBy3" />
                 <label for="searchBy3" class="ml-2">Aadhar</label>
-            </div>
+            </div> -->
 
             <div class="flex items-center">
                 <p-radiobutton name="pan" value="pan" [(ngModel)]="searchBy" inputId="searchBy4" />

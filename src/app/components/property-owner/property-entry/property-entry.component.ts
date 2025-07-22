@@ -1,5 +1,5 @@
 import { District } from './../../../models/user.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { FluidModule } from 'primeng/fluid';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +15,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Ward, Zone } from '../../../models/master-data.model';
 import { Subject, takeUntil, tap } from 'rxjs';
 import { FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
+import { MessageService } from 'primeng/api';
+import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 
 @Component({
   selector: 'app-property-entry',
@@ -31,7 +33,7 @@ import { FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fi
     DatePickerModule,
     CheckboxModule,
     FileUploadModule,
-    
+
   ],
   templateUrl: './property-entry.component.html',
   styleUrl: './property-entry.component.scss'
@@ -87,6 +89,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     propertyAddressDistrict: new FormControl(),
     propertyAddressCity: new FormControl(),
     propertyAddressPin: new FormControl(),
+    latitude: new FormControl(),
+    longitude: new FormControl(),
 
     // Owner Address
     isOwnerAddressSame: new FormControl(null),
@@ -99,7 +103,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     plotArea: new FormControl(),
     dateOfAcquisition: new FormControl(),
     useAsPerMasterPlan: new FormControl(),
-    
+
 
     // Mobile Tower
     mobileTowerArea: new FormControl(),
@@ -161,6 +165,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   enableIndividualBuildingType = false;
   enableFlatType = false;
   minFloorValue = 0;
+
+
+  messageService = inject(MessageService);
+
+
 
 
   ngOnDestroy(): void {
@@ -225,7 +234,52 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
   }
 
-  onUpload(e: FileUploadHandlerEvent, type: string, element?: FileUpload) {
-  
+
+
+  getThisLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          // Success callback
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          console.log('Got Latitude:', latitude);
+          console.log('Got Longitude:', longitude);
+          this.propertyForm.patchValue({
+            latitude: latitude,
+            longitude: longitude
+          })
+        },
+        (error: GeolocationPositionError) => {
+          // Error callback
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'User denied the request for Geolocation.', life: MessageDuaraion.STANDARD })
+              console.error('User denied the request for Geolocation.');
+              break;
+            case error.POSITION_UNAVAILABLE:
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'Location information is unavailable.', life: MessageDuaraion.STANDARD })
+              console.error('Location information is unavailable.');
+              break;
+            case error.TIMEOUT:
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'The request to get user location timed out.', life: MessageDuaraion.STANDARD })
+              console.error('The request to get user location timed out.');
+              break;
+            default:
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'An unknown error occurred.', life: MessageDuaraion.STANDARD })
+              console.error('An unknown error occurred.');
+              break;
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Optional options
+      );
+    } else {
+      this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'Geolocation is not supported by this browser.', life: MessageDuaraion.STANDARD })
     }
+  }
+
+  onUpload(e: FileUploadHandlerEvent, type: string, element?: FileUpload) {
+
+  }
+
 }

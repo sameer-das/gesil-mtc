@@ -1,11 +1,11 @@
 <app-page-header title="Owner Details" />
 
 <div class="gesil-card mb-2 mt-4">
-    <app-owner-card />
+    <app-owner-card [ownerDetail]="ownerDetail" />
     <p-divider />
     <div class="flex flex-col sm:flex-row mt-2 gap-1 sm:gap-4">
-        <a pButton [routerLink]="['/owner', 'owner-edit',  ownerDetail.ownerId]" severity="help" icon="pi pi-pencil">Edit Owner</a>
-        <a pButton [routerLink]="['/owner', 'property-entry', ownerDetail.ownerId ]" class="sm:ml-auto" icon="pi pi-plus-circle">Add Property</a>
+        <a pButton [routerLink]="['/owner', 'owner-edit',  ownerDetail?.ownerId]" severity="help" icon="pi pi-pencil">Edit Owner</a>
+        <a pButton [routerLink]="['/owner', 'property-entry', ownerDetail?.ownerId ]" class="sm:ml-auto" icon="pi pi-plus-circle">Add Property</a>
     </div>
 </div>
 

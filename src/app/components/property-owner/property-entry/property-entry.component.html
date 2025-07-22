@@ -258,6 +258,22 @@
                             formControlName="propertyAddressPin" />
                     </div>
                 </div>
+                <div class="flex flex-col md:flex-row gap-6 my-4">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="latitude">Latitude</label>
+                        <input pInputText id="latitude" placeholder="Enter Latitude" type="text"
+                            formControlName="latitude" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="longitude">Longitude </label>
+                        <input pInputText id="longitude" placeholder="Enter Longitude" type="text"
+                            formControlName="longitude" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                         <label>Get this location </label>
+                        <button pButton (click)="getThisLocation()">Get</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Row 7 -->
@@ -377,6 +393,35 @@
                         inputId="hasWaterHarvestingProvision" />
                     <label for="hasWaterHarvestingProvision" class="ml-2">Water Harvesting Provision</label>
                 </div>
+            </div>
+
+            <!-- Row 12 -->
+            <div class="gesil-card">
+                <div class="flex gap-2 w-full my-4">
+                    <div>
+                        <label class="inline-block mb-4" for="identityProof">Upload Photo of the Property</label>
+                        <p-fileupload class="my-4" #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                            maxFileSize="000000" customUpload="true"
+                            (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+                    </div>
+                    <div class="flex items-end">
+                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
+                            [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload Electricity Bill" />
+                    </div>
+                </div>
+
+                <!-- <div class="flex gap-2 w-full my-4">
+                    <div>
+                        <label class="inline-block mb-4" for="identityProof">Upload Photo</label>
+                        <p-fileupload class="my-4" #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                            maxFileSize="000000" customUpload="true"
+                            (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+                    </div>
+                    <div class="flex items-end">
+                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
+                            [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload Electricity Bill" />
+                    </div>
+                </div> -->
             </div>
 
         </div>

@@ -2,122 +2,199 @@
 
 
 <p-fluid>
-    <form [formGroup]="addNewOwnerForm">
+    <form [formGroup]="addNewOwnerForm" class="gesil-card  mt-4">
+        <div class="flex flex-col w-full">
+            <!-- Row 1 -->
 
-        <!-- User Details Card -->
-        <div class="flex mt-4">
-            <div class="flex flex-col gap-6 w-full gesil-card">
-                <div class="font-semibold text-xl">Owner Details</div>
-
-                <!-- Row 1 -->
-
-                <div class="flex flex-col md:flex-row gap-6">
-
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="name">Name of Owner</label>
-                        <input pInputText id="name" placeholder="Enter Name of Owner" type="text"
-                            formControlName="name" />
+            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="salutation">Salutation</label>
+                    <p-select id="salutation" [options]="salutations" placeholder="Select" class="w-full"
+                        formControlName="salutation"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('salutation')">
+                        Please choose a salutation for the owner.
                     </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="guardianName">Father/Husband Name</label>
-                        <input pInputText id="guardianName" placeholder="Father/Husband Name" type="text"
-                            formControlName="guardianName" tooltipPosition="top"
-                            pTooltip="Parent or care taker's name" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="ownerName">Name of Owner</label>
+                    <input pInputText id="ownerName" placeholder="Enter Name of Owner" type="text"
+                        formControlName="ownerName" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerName')">
+                        Please enter a valid owner name.
                     </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="careOf">Select Care of</label>
+                    <p-select id="careOf" [options]="careOfs" optionLabel="name" placeholder="Select" class="w-full"
+                        formControlName="careOf"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('careOf')">
+                        Please choose a care of.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="guardianName">Father/Husband Name</label>
+                    <input pInputText id="guardianName" placeholder="Father/Husband Name" type="text"
+                        formControlName="guardianName" tooltipPosition="top" pTooltip="Parent or care taker's name" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('guardianName')">
+                        Please enter a valid guardian name.
+                    </div>
+                </div>
+            </div>
 
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="gender">Gender</label>
-                        <p-select id="gender" [options]="genders" optionLabel="name" placeholder="Select Gender"
-                            class="w-full" formControlName="gender"></p-select>
+            <!-- Row 2 -->
+            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="gender">Gender</label>
+                    <p-select id="gender" [options]="genders" optionLabel="name" placeholder="Select Gender"
+                        class="w-full" formControlName="gender"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('gender')">
+                        Please choose gender of the owner.
                     </div>
                 </div>
 
-                <!-- Row 2 -->
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="dob">Date of Birth</label>
-                        <p-datepicker placeholder="Choose Date of Birth (MM/DD/YYYY)" id="dob" class="w-full"
-                            formControlName="dob" />
-                    </div>
-
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="mobile">Mobile No</label>
-                        <input pInputText id="mobile" placeholder="Enter Mobile No." type="text"
-                            formControlName="mobile" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="email">Email ID</label>
-                        <input pInputText id="email" placeholder="Enter Email ID" type="text" formControlName="email" />
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="dob">Date of Birth</label>
+                    <p-datepicker placeholder="Choose Date of Birth (MM/DD/YYYY)" id="dob" class="w-full"
+                        formControlName="dob" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('dob')">
+                        Please choose date of birth of the owner.
                     </div>
                 </div>
 
-                <!-- Row 3 -->
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex flex-wrap gap-2 w-full md:w-1/4">
-                        <label for="aadhar">Aadhar No</label>
-                        <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text"
-                            formControlName="aadhar" />
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="mobile">Mobile No</label>
+                    <input pInputText id="mobile" placeholder="Enter Mobile No." type="text" formControlName="mobile" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mobile')">
+                        Please enter a valid mobile number.
                     </div>
-                    <div class="flex flex-wrap gap-2 w-full md:w-1/4">
-                        <label for="pan">PAN</label>
-                        <input pInputText id="pan" placeholder="Enter PAN" type="text" formControlName="pan" />
-                    </div>
-                    <div class="flex items-center gap-2 w-full md:w-1/2">
-                        <p-checkbox formControlName="isSpecialOwner" value="false" inputId="isSpecialOwner" />
-                        <label for="isSpecialOwner" class="ml-2">Is woman/Senior citizens/physically
-                            challenged/Transgender/Officers of the Indian Armed Forces/Air/Navy</label>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-6">
-                    <div class="flex gap-2 w-full">
-                        <div>
-                            <label for="identityProof">Upload Identity Proof</label>
-                            <p-fileupload #up mode="basic" id="identityProof" chooseLabel="Choose"
-                                chooseIcon="pi pi-upload" maxFileSize="000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'identityProof', up)" />
-                        </div>
-
-
-                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                            [disabled]="up.files.length === 0" tooltipPosition="left"
-                            pTooltip="Upload Identity Proof" />
-                    </div>
-                    <div class="flex gap-2 w-full">
-                        <div>
-                            <label for="identityProof">Upload Owner Photo</label>
-                            <p-fileupload #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'userPhoto', up)" />
-                        </div>
-                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                            [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload User Photo" />
-                    </div>
-                    @if(addNewOwnerForm.value.isSpecialOwner?.length > 0){
-                    <div class="flex gap-2 w-full">
-                        <div>
-                            <label for="identityProof">Upload Certificate</label>
-                            <p-fileupload #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'userPhoto', up)" />
-                        </div>
-
-                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                            [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload User Photo" />
-                    </div>
-                    }
-
-
-                </div>
-
-                <!-- Row 4 -->
-                <div class="flex gap-2 justify-end">
-                    <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>
-                    <p-button raised="true" type="button" [disabled]="addNewOwnerForm.invalid" (click)="show()">{{ editMode() ? 'Update Details' : 'Save Details' }}</p-button>
                 </div>
 
             </div>
+
+            <!-- Row 3 -->
+            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="email">Email ID</label>
+                    <input pInputText id="email" placeholder="Enter Email ID" type="text" formControlName="email" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('email')">
+                        Please enter a valid email address.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="aadhar">Aadhar No</label>
+                    <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text" formControlName="aadhar" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('aadhar')">
+                        Please enter a valid 12 digit Aadhar number.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="pan">PAN</label>
+                    <input pInputText id="pan" placeholder="Enter PAN" type="text" formControlName="pan" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('pan')">
+                        Please enter a valid PAN.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Row 6 -->
+            <div class="flex gap-2 flex-col md:flex-row">
+                <div class="flex flex-1 items-center gap-2">
+                    <p-checkbox formControlName="isSpecialOwner" value="false" inputId="isSpecialOwner" />
+                    <label for="isSpecialOwner" class="ml-2">Is the owner a woman/Senior citizen/physically
+                        challenged/Transgender/Officers of the Indian Armed Forces/Air/Navy</label>
+                </div>
+
+                <div class="flex gap-2 justify-center md:justify-end">
+                    <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>
+                    <p-button raised="true" severity="secondary" (click)="show()">show</p-button>
+                    <p-button raised="true" type="button" [disabled]="addNewOwnerForm.invalid"
+                        (click)="onSaveOwnerDetail()">{{
+                        editMode() ? 'Update Details' : 'Save Details' }}</p-button>
+                </div>
+            </div>
+            @if(addNewOwnerForm.get('isSpecialOwner')?.value?.length > 0) {
+            <div class="mt-4">
+                <p-message severity="warn">{{certificateUploadMessage}}</p-message>
+            </div>
+            }
+
         </div>
     </form>
+
+    @if(editMode()) {
+    @if (ownerDetail?.isSpecialOwner){
+    <div class="w-full gesil-card">
+        @if(ownerDetail?.specialCertificate) {
+
+        }
+        <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+            <div class="flex justify-start">
+                <p-fileupload #userCertificateUploader mode="basic" chooseLabel="Choose Certificate"
+                    maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'specialCertificate')"
+                    (onClear)="onClear('specialCertificate')"
+                    (uploadHandler)="onUpload($event, 'specialCertificate')" />
+
+            </div>
+            @if(userCertificateFile){
+            <div class="flex justify-center md:justify-start gap-2">
+                <p-button label="Upload" icon="pi pi-upload" (onClick)="userCertificateUploader.upload()"
+                    severity="info" />
+                <p-button label="Remove" icon="pi pi-times" severity="danger"
+                    (onClick)="clearFile('specialCertificate')" />
+            </div>
+            }
+        </div>
+        <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
+    </div>
+    }
+
+
+    <div class="w-full gesil-card">
+
+        <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+            <div class="flex justify-start">
+                <p-fileupload #userIdentityUploader mode="basic" chooseLabel="Choose Identity Proof"
+                    maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'identityProof')"
+                    (onClear)="onClear('identityProof')" (uploadHandler)="onUpload($event,'identityProof')" />
+
+            </div>
+            <!-- @if(ownerDetail?.identityProof) {
+            
+            } -->
+            @if(userIdentityFile){
+            <div class="flex justify-center md:justify-start gap-2">
+                <p-button label="Upload" icon="pi pi-upload" (onClick)="userIdentityUploader.upload()"
+                    severity="info" />
+                <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('identityProof')" />
+            </div>
+            }
+        </div>
+        <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
+    </div>
+
+
+    <div class="w-full gesil-card">
+        @if(ownerDetail?.photo) {
+
+        }
+        <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+            <div class="flex justify-start">
+                <p-fileupload #userPhotoUploader mode="basic" chooseLabel="Choose Owner Photo" maxFileSize="20000000"
+                    customUpload="true" (onSelect)="onFileSelect($event, 'photo')" (onClear)="onClear('photo')"
+                    (uploadHandler)="onUpload($event,'photo')" />
+
+            </div>
+            @if(userPhotoFile){
+            <div class="flex justify-center md:justify-start gap-2">
+                <p-button label="Upload" icon="pi pi-upload" (onClick)="userPhotoUploader.upload()" severity="info" />
+                <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('photo')" />
+            </div>
+            }
+        </div>
+        <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
+    </div>
+    }
+
 
 </p-fluid>

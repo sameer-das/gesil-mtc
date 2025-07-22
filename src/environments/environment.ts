@@ -1,4 +1,9 @@
 export const environment = {
+    // ***************** URL for which dont show loader *****************
+    NO_LOADER_URLS: ['Master/searchOwner'],
+
+
+    
     // ***************** API BASE URL *****************
     API_URL: "http://181.214.10.5/api",
 
@@ -54,5 +59,15 @@ export const environment = {
     fyList: '/Master/fyList',
     fyDetail: '/Master/fyDetail',
     updateFyMaster: '/Master/updateFyMaster',
-    
+
+
+
+    // ********************** OWNER DETAILS Related API URLs *****************
+
+    createOwner: '/Master/createOwner',
+    ownerDetails: '/Master/ownerDetails',
+    updateOwner: '/Master/updateOwner',
+    searchOwner: '/Master/searchOwner',
+    ownerDocumentUpload: '/Master/ownerDocumentUpload',
+    ownerDocumentDownload: '/Master/ownerDocumentDownload',
 };

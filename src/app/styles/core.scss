@@ -28,3 +28,15 @@ a {
 .p-panelmenu-item-link.p-panelmenu-item-link-active {
     color: var(--primary-color);
 }
+
+.p-inputtext.ng-invalid.ng-touched {
+    border-color: var(--p-inputtext-invalid-border-color);
+}
+
+.p-select.ng-invalid.ng-touched {
+    border-color: var(--p-inputtext-invalid-border-color);
+}
+
+p-datepicker.ng-invalid.ng-touched {
+     border-color: var(--p-inputtext-invalid-border-color);
+}
