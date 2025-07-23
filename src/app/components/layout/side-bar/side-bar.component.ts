@@ -64,7 +64,7 @@ export class SideBarComponent {
       icon: 'fa fa-city',
       items: [
         {
-          label: 'Zone List',
+          label: 'Zone',
           icon: 'pi pi-list',
           routerLink: '/master/zones-list',
           routerLinkActiveOptions: { exact: true },
@@ -74,7 +74,7 @@ export class SideBarComponent {
           }
         },
         {
-          label: 'Ward List',
+          label: 'Ward',
           icon: 'pi pi-list',
           routerLink: '/master/ward-list',
           routerLinkActiveOptions: { exact: true },
@@ -84,27 +84,57 @@ export class SideBarComponent {
           }
         },
         {
-          label: 'Category List',
+          label: 'Property Type',
           icon: 'pi pi-list',
-          routerLink: '/master/category-list',
+          routerLink: '/master/ward-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
-            // console.log(e)
-            // this.router.navigate([''])
+            // console.log(e);
+            // this.router.navigate(['/user/create'])
           }
         },
         {
-          label: 'Sub-category List',
+          label: 'Ownership Type',
           icon: 'pi pi-list',
-          routerLink: '/master/sub-category-list',
+          routerLink: '/master/ward-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
-            // console.log(e)
-            // this.router.navigate([''])
+            // console.log(e);
+            // this.router.navigate(['/user/create'])
           }
         },
         {
-          label: 'Financial Year List',
+          label: 'Electricity Connection',
+          icon: 'pi pi-list',
+          routerLink: '/master/ward-list',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e);
+            // this.router.navigate(['/user/create'])
+          }
+        },
+        // {
+        //   label: 'Category List',
+        //   icon: 'pi pi-list',
+        //   routerLink: '/master/category-list',
+        //   routerLinkActiveOptions: { exact: true },
+        //   command: (e: MenuItemCommandEvent) => {
+        //     // console.log(e)
+        //     // this.router.navigate([''])
+        //   }
+        // },
+        // {
+        //   label: 'Sub-category List',
+        //   icon: 'pi pi-list',
+        //   routerLink: '/master/sub-category-list',
+        //   routerLinkActiveOptions: { exact: true },
+        //   command: (e: MenuItemCommandEvent) => {
+        //     // console.log(e)
+        //     // this.router.navigate([''])
+        //   }
+        // },
+        {
+          label: 'Financial Years',
           icon: 'pi pi-list',
           routerLink: '/master/fy-list',
           routerLinkActiveOptions: { exact: true },

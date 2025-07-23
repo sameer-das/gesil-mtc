@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APIResponse } from '../models/user.model';
 import { CreateOwnerDetail, OwnerDetail, OwnerDocumentUpload, UpdateOwnerDetail } from '../models/property-owner.model';
+import { NO_LOADER } from './httpContexts';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class OwnerServiceService {
 
   private http = inject(HttpClient);
   private API_URL = environment.API_URL;
+  
 
 
   createOwner(createOwnerDetailPayload: CreateOwnerDetail): Observable<APIResponse<string>> {
@@ -28,8 +30,9 @@ export class OwnerServiceService {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.ownerDocumentUpload}`, ownerDocumentUpload);
   }
 
-  searchOwner(key: string, value: string): Observable<APIResponse<OwnerDetail[]>> {
-    return this.http.get<APIResponse<OwnerDetail[]>>(`${this.API_URL}${environment.searchOwner}?searchKey=${key}&searchValue=${value}`)
+  searchOwner(key: string, value: string): Observable<APIResponse<OwnerDetail[]>> {     
+    return this.http.get<APIResponse<OwnerDetail[]>>(`${this.API_URL}${environment.searchOwner}?searchKey=${key}&searchValue=${value}`, 
+      {context: new HttpContext().set(NO_LOADER, true)})
   }
 
   updateOwner(updateOwnerPayload: UpdateOwnerDetail): Observable<APIResponse<string>> {

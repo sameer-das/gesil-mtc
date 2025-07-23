@@ -1,9 +1,5 @@
 export const environment = {
-    // ***************** URL for which dont show loader *****************
-    NO_LOADER_URLS: ['Master/searchOwner'],
 
-
-    
     // ***************** API BASE URL *****************
     API_URL: "http://181.214.10.5/api",
 

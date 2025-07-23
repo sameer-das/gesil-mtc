@@ -14,14 +14,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
-import { debounceTime, distinctUntilChanged, filter, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { MasterDataService } from '../../../services/master-data.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MessageModule } from 'primeng/message';
 import { CreateOwnerDetail, OwnerDetail, OwnerDocumentUpload, UpdateOwnerDetail } from '../../../models/property-owner.model';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { uniqueAadharValidator } from './uniqueAadharValidator';
 @Component({
   selector: 'app-owner-entry',
   imports: [PageHeaderComponent,
@@ -37,6 +38,7 @@ import { environment } from '../../../../environments/environment';
     DatePickerModule,
     CheckboxModule,
     FileUploadModule,
+    RouterModule,
     MessageModule],
   templateUrl: './owner-entry.component.html',
   styleUrl: './owner-entry.component.scss'
@@ -76,7 +78,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
     mobile: new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
     email: new FormControl('', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')]),
     pan: new FormControl('', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]$/)]),
-    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')]),
+    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')], [uniqueAadharValidator(this.ownerService, this.$destroy)]),
     dob: new FormControl('', [Validators.required]),
     isSpecialOwner: new FormControl(null),
   });
@@ -109,29 +111,6 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(this.editMode())
-    // this.addNewOwnerForm.get('isSpecialOwner')?.valueChanges
-    //   .pipe(takeUntil(this.$destroy), tap(val => {
-    //     console.log(val)
-    //     if (val.length > 0) {
-    //       // this.messageService.add({ severity: MessageSeverity.WARN, summary: 'Certificate Upload', detail: this.certificateUploadMessage, life: MessageDuaraion.STANDARD })
-    //     }
-    //   }))
-    //   .subscribe();
-
-    this.addNewOwnerForm.get('aadhar')?.valueChanges
-      .pipe(takeUntil(this.$destroy),
-        filter(val => !!val.trim()),
-        debounceTime(500),
-        distinctUntilChanged(),
-        tap(val => {
-          console.log(val)
-          if (this.addNewOwnerForm.get('aadhar')?.valid && val.length === 12) {
-            console.log('check backend for Aadhar')
-          }
-        }))
-      .subscribe();
-
-
     if (this.editMode()) {
       this.getOwnerDetails();
     }

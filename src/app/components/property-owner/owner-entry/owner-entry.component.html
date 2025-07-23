@@ -84,7 +84,10 @@
                     <label for="aadhar">Aadhar No</label>
                     <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text" formControlName="aadhar" />
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('aadhar')">
-                        Please enter a valid 12 digit Aadhar number.
+                        
+                         {{addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed') ? 
+                            'This aadhar number is already taken.' : 
+                            'Please enter a valid 12 digit Aadhar number.'}}
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
@@ -106,11 +109,14 @@
                 </div>
 
                 <div class="flex gap-2 justify-center md:justify-end">
-                    <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>
-                    <p-button raised="true" severity="secondary" (click)="show()">show</p-button>
-                    <p-button raised="true" type="button" [disabled]="addNewOwnerForm.invalid"
-                        (click)="onSaveOwnerDetail()">{{
-                        editMode() ? 'Update Details' : 'Save Details' }}</p-button>
+                    @if(addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
+                        <a pButton [routerLink]="['/owner', 'detail',  addNewOwnerForm.get('aadhar')?.getError('ownerId')]" severity="help" icon="pi pi-eye">View Owner Details</a>
+                    } @else {
+                        <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>
+                        <p-button raised="true" type="button" [disabled]="addNewOwnerForm.invalid"
+                            (click)="onSaveOwnerDetail()">{{
+                            editMode() ? 'Update Details' : 'Save Details' }}</p-button>
+                    } 
                 </div>
             </div>
             @if(addNewOwnerForm.get('isSpecialOwner')?.value?.length > 0) {
