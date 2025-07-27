@@ -1,5 +1,5 @@
-import { District } from './../../../models/user.model';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { District, APIResponse } from './../../../models/user.model';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { FluidModule } from 'primeng/fluid';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -12,11 +12,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
-import { Ward, Zone } from '../../../models/master-data.model';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { ElectricityConnectionType, OwnershipType, PropertyType, Ward, Zone } from '../../../models/master-data.model';
+import { forkJoin, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
+import { MasterDataService } from '../../../services/master-data.service';
 
 @Component({
   selector: 'app-property-entry',
@@ -127,38 +128,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   zones: Zone[] = [];
   wards: Ward[] = [];
+  propertyTypes: PropertyType[] = [];
+  typeOfOwnerships: OwnershipType[] = [];
+  electricityCagtegory: ElectricityConnectionType[] = [];
 
-  propertyTypes: { propertyTypeId: number; propertyTypeName: string; }[] = [
-    { propertyTypeId: 1, propertyTypeName: 'Vacant Land' },
-    { propertyTypeId: 2, propertyTypeName: 'Independent Building' },
-    { propertyTypeId: 3, propertyTypeName: 'Flats/Units in Multistoried Building' },
-    { propertyTypeId: 4, propertyTypeName: 'Super Structure' },
-  ]
-
-  typeOfOwnerships: { typeOfOwnershipId: number; typeOfOwnershipName: string }[] = [
-    { typeOfOwnershipId: 1, typeOfOwnershipName: 'Individual' },
-    { typeOfOwnershipId: 2, typeOfOwnershipName: 'Institute' },
-    { typeOfOwnershipId: 3, typeOfOwnershipName: 'Co-operative Society' },
-    { typeOfOwnershipId: 4, typeOfOwnershipName: 'Religious Trust' },
-    { typeOfOwnershipId: 5, typeOfOwnershipName: 'Trust' },
-    { typeOfOwnershipId: 6, typeOfOwnershipName: 'State Govt' },
-    { typeOfOwnershipId: 7, typeOfOwnershipName: 'Central Govt' },
-    { typeOfOwnershipId: 8, typeOfOwnershipName: 'State PSU' },
-    { typeOfOwnershipId: 9, typeOfOwnershipName: 'Central PSU' },
-    { typeOfOwnershipId: 10, typeOfOwnershipName: 'BOARD' },
-    { typeOfOwnershipId: 11, typeOfOwnershipName: 'Company Public Ltd' },
-    { typeOfOwnershipId: 12, typeOfOwnershipName: 'Company Pvt Ltd' },
-    { typeOfOwnershipId: 13, typeOfOwnershipName: 'Other' },
-  ]
-
-  electricityCagtegory: { electricityCagtegoryId: number; electricityCagtegoryName: string }[] = [
-    { electricityCagtegoryId: 1, electricityCagtegoryName: 'DSI/II/III' },
-    { electricityCagtegoryId: 2, electricityCagtegoryName: 'NDS/II/III' },
-    { electricityCagtegoryId: 3, electricityCagtegoryName: 'ISI/II' },
-    { electricityCagtegoryId: 4, electricityCagtegoryName: 'LTS' },
-    { electricityCagtegoryId: 5, electricityCagtegoryName: 'HTS' },
-  ]
-
+  masterDataFetched = signal<boolean>(false);
+  propertyTypeFetched = signal<boolean>(false);
 
 
   $destroy: Subject<null> = new Subject();
@@ -167,7 +142,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   minFloorValue = 0;
 
 
-  messageService = inject(MessageService);
+  messageService: MessageService = inject(MessageService);
+  masterDataService: MasterDataService = inject(MasterDataService);
 
 
 
@@ -182,6 +158,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.propertyForm.get('propertyType')?.valueChanges.pipe(
       takeUntil(this.$destroy),
       tap((propertyType: { propertyTypeId: number; propertyTypeName: string; }) => {
+        console.log(propertyType);
         if (propertyType.propertyTypeId === 2) {
           this.enableIndividualBuildingType = true;
           this.propertyForm.patchValue({ 'noOfFloors': 1 }, { emitEvent: true });
@@ -213,13 +190,46 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         }
       })).subscribe();
 
+    this.propertyForm.get('zone')?.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      switchMap((zone) => this.masterDataService.wardList(zone.zoneId,0,0)),
+      tap((wardResp) => {
+        if(wardResp.code === 200) {
+          this.wards = wardResp.data.wards;
+        }
+      })).subscribe();
 
+      this.fetchAllMasterData()
   }
+
+
+
+  fetchAllMasterData() {
+    forkJoin([this.masterDataService.zoneList(), 
+      this.masterDataService.propertyTypeList(), 
+      this.masterDataService.ownershipTypeList(),
+      this.masterDataService.electricityConnectionTypeList()])
+      .pipe(takeUntil(this.$destroy),
+      map(([zoneResp, propertyResp, ownershipResp, electricityResp]) => {
+          if(zoneResp.code === 200 && propertyResp.code === 200 && 
+            ownershipResp.code === 200 && electricityResp.code === 200) {
+              this.masterDataFetched.set(true);
+              this.zones = zoneResp.data.zones;
+              this.propertyTypes = propertyResp.data.propertyTypes;
+              this.typeOfOwnerships = ownershipResp.data.oTypes;
+              this.electricityCagtegory = electricityResp.data.econnections;
+            }
+      }))
+      .subscribe();
+  }
+
 
 
   get floorWiseDataFormArray(): FormArray {
     return this.propertyForm.get('floorWiseData') as FormArray;
   }
+
+
 
   private createFloorWiseDataGroup(): FormGroup {
     return new FormGroup({
@@ -229,6 +239,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       circleRate: new FormControl(),
     })
   }
+
+
 
   addFlooWiseDataRow() {
     this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
@@ -278,8 +290,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     }
   }
 
+
+
   onUpload(e: FileUploadHandlerEvent, type: string, element?: FileUpload) {
 
   }
+
+
 
 }

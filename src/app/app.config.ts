@@ -9,7 +9,7 @@ import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
 import { loaderInterceptor } from './services/interceptors/loader.interceptor';
 import { authInterceptor } from './services/interceptors/auth.interceptor';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
 import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -29,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     MessageService,
     Location,
+    ConfirmationService,
     importProvidersFrom([TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

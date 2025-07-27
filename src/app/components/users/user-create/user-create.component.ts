@@ -26,7 +26,6 @@ import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
     FormsModule,
     PageHeaderComponent,
     ReactiveFormsModule,
-    MessageModule,
     NgClass],
   templateUrl: './user-create.component.html',
   styleUrl: './user-create.component.scss',

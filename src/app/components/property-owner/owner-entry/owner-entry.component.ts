@@ -1,8 +1,8 @@
 import { APIResponse } from './../../../models/user.model';
 import { OwnerServiceService } from './../../../services/owner-service.service';
-import { Component, computed, inject, input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -18,7 +18,7 @@ import { debounceTime, distinctUntilChanged, filter, Subject, switchMap, takeUnt
 import { MasterDataService } from '../../../services/master-data.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
-import { MessageModule } from 'primeng/message';
+import { MessageModule, Message } from 'primeng/message';
 import { CreateOwnerDetail, OwnerDetail, OwnerDocumentUpload, UpdateOwnerDetail } from '../../../models/property-owner.model';
 import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
@@ -38,8 +38,7 @@ import { uniqueAadharValidator } from './uniqueAadharValidator';
     DatePickerModule,
     CheckboxModule,
     FileUploadModule,
-    RouterModule,
-    MessageModule],
+    RouterModule, Message],
   templateUrl: './owner-entry.component.html',
   styleUrl: './owner-entry.component.scss'
 })
@@ -60,6 +59,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
   userIdentityFile: File | null = null;
 
   ownerDetail!: OwnerDetail | undefined;
+  ownerAadhar = signal<string | undefined>(undefined);
 
 
 
@@ -67,6 +67,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
   masterDataService: MasterDataService = inject(MasterDataService);
   router: Router = inject(Router);
   ownerService: OwnerServiceService = inject(OwnerServiceService);
+  confirmationService: ConfirmationService = inject(ConfirmationService);
 
 
   addNewOwnerForm: FormGroup = new FormGroup({
@@ -78,7 +79,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
     mobile: new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
     email: new FormControl('', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')]),
     pan: new FormControl('', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]$/)]),
-    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')], [uniqueAadharValidator(this.ownerService, this.$destroy, this.editMode)]),
+    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')], [uniqueAadharValidator(this.ownerService, this.$destroy, this.editMode, this.ownerAadhar)]),
     dob: new FormControl('', [Validators.required]),
     isSpecialOwner: new FormControl(null),
   });
@@ -122,9 +123,33 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
     return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 
+  askConfirmationOnSave(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure that you want to proceed with these details of the owner?',
+      header: 'Confirmation',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Proceed',
+      },
+      accept: () => {
+        this.saveOwnerDetail();
+      },
+      reject: () => { },
+    });
+
+  }
 
 
-  onSaveOwnerDetail() {
+
+  saveOwnerDetail() {
     if (!this.editMode()) {
       // Create mode
       console.log(this.addNewOwnerForm.value);
@@ -153,7 +178,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
             }
           })
         ).subscribe()
-    } else if(this.editMode()){
+    } else if (this.editMode()) {
       const updateOwnerPayload: UpdateOwnerDetail = {
         ownerId: this.ownerId() || 0,
         salutaion: this.addNewOwnerForm.value.salutation,
@@ -169,13 +194,13 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
         isSpecialOwner: this.addNewOwnerForm.value.isSpecialOwner.length > 0
       }
 
-       this.ownerService.updateOwner(updateOwnerPayload)
+      this.ownerService.updateOwner(updateOwnerPayload)
         .pipe(
           takeUntil(this.$destroy),
           tap((resp: APIResponse<string>) => {
             if (resp.code === 200 && resp.status === 'Success') {
               this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Owner details updated successfully.', life: MessageDuaraion.STANDARD })
-              this.getOwnerDetails()
+              this.getOwnerDetails();
             } else {
               this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'Error while updating owner details.', life: MessageDuaraion.STANDARD })
             }
@@ -198,6 +223,9 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
         console.log(resp);
         if (resp.code === 200) {
           this.ownerDetail = resp.data;
+          // Used for Edit Purpose
+          this.ownerAadhar.set(resp.data?.aadhar);
+
           this.addNewOwnerForm.patchValue({
             salutation: resp.data.salutaion,
             ownerName: resp.data.ownerName,
@@ -240,8 +268,8 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
   onFileSelect(event: FileSelectEvent, type: string) {
     console.log(event)
     const isValid = this.validateFile(event.currentFiles[0], type);
-    if(!isValid)
-        return;
+    if (!isValid)
+      return;
     if (event.files && event.files.length > 0) {
       if (type === 'specialCertificate') {
         this.userCertificateFile = event.files[0];
@@ -267,7 +295,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
 
   }
 
-  
+
 
   clearFile(type: string) {
     if (type === 'specialCertificate') {

@@ -82,7 +82,7 @@
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="aadhar">Aadhar No</label>
-                    <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text" formControlName="aadhar" [readonly]="editMode()" />
+                    <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text" formControlName="aadhar" />
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('aadhar')">
                         
                          {{addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed') ? 
@@ -109,12 +109,12 @@
                 </div>
 
                 <div class="flex gap-2 justify-center md:justify-end">
-                    @if(!editMode() && addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
+                    @if(addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
                         <a pButton [routerLink]="['/owner', 'detail',  addNewOwnerForm.get('aadhar')?.getError('ownerId')]" severity="help" icon="pi pi-eye">View Owner Details</a>
                     } @else {
                         <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>
                         <p-button raised="true" type="button" [disabled]="addNewOwnerForm.invalid"
-                            (click)="onSaveOwnerDetail()">{{
+                            (click)="askConfirmationOnSave($event)">{{
                             editMode() ? 'Update Details' : 'Save Details' }}</p-button>
                     } 
                 </div>
@@ -129,77 +129,70 @@
     </form>
 
     @if(editMode()) {
-    @if (ownerDetail?.isSpecialOwner){
-    <div class="w-full gesil-card">
-        @if(ownerDetail?.specialCertificate) {
+        @if (ownerDetail?.isSpecialOwner){
+            <div class="w-full gesil-card">
+                <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+                    <div class="flex justify-start">
+                        <p-fileupload #userCertificateUploader mode="basic" chooseLabel="Choose Certificate"
+                            maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'specialCertificate')"
+                            (onClear)="onClear('specialCertificate')"
+                            (uploadHandler)="onUpload($event, 'specialCertificate')" />
 
+                    </div>
+                    @if(userCertificateFile){
+                    <div class="flex justify-center md:justify-start gap-2">
+                        <p-button label="Upload" icon="pi pi-upload" (onClick)="userCertificateUploader.upload()"
+                            severity="info" />
+                        <p-button label="Remove" icon="pi pi-times" severity="danger"
+                            (onClick)="clearFile('specialCertificate')" />
+                    </div>
+                    }
+                </div>
+                <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
+            </div>
         }
-        <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
-            <div class="flex justify-start">
-                <p-fileupload #userCertificateUploader mode="basic" chooseLabel="Choose Certificate"
-                    maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'specialCertificate')"
-                    (onClear)="onClear('specialCertificate')"
-                    (uploadHandler)="onUpload($event, 'specialCertificate')" />
 
+
+        <div class="w-full gesil-card">
+            <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+                <div class="flex justify-start">
+                    <p-fileupload #userIdentityUploader mode="basic" chooseLabel="Choose Identity Proof"
+                        maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'identityProof')"
+                        (onClear)="onClear('identityProof')" (uploadHandler)="onUpload($event,'identityProof')" />
+
+                </div>
+                <!-- @if(ownerDetail?.identityProof) {
+                
+                } -->
+                @if(userIdentityFile){
+                <div class="flex justify-center md:justify-start gap-2">
+                    <p-button label="Upload" icon="pi pi-upload" (onClick)="userIdentityUploader.upload()"
+                        severity="info" />
+                    <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('identityProof')" />
+                </div>
+                }
             </div>
-            @if(userCertificateFile){
-            <div class="flex justify-center md:justify-start gap-2">
-                <p-button label="Upload" icon="pi pi-upload" (onClick)="userCertificateUploader.upload()"
-                    severity="info" />
-                <p-button label="Remove" icon="pi pi-times" severity="danger"
-                    (onClick)="clearFile('specialCertificate')" />
-            </div>
-            }
+            <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
         </div>
-        <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
-    </div>
-    }
 
 
-    <div class="w-full gesil-card">
+        <div class="w-full gesil-card">
+            <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+                <div class="flex justify-start">
+                    <p-fileupload #userPhotoUploader mode="basic" chooseLabel="Choose Owner Photo" maxFileSize="20000000"
+                        customUpload="true" (onSelect)="onFileSelect($event, 'photo')" (onClear)="onClear('photo')"
+                        (uploadHandler)="onUpload($event,'photo')" />
 
-        <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
-            <div class="flex justify-start">
-                <p-fileupload #userIdentityUploader mode="basic" chooseLabel="Choose Identity Proof"
-                    maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'identityProof')"
-                    (onClear)="onClear('identityProof')" (uploadHandler)="onUpload($event,'identityProof')" />
-
+                </div>
+                @if(userPhotoFile){
+                <div class="flex justify-center md:justify-start gap-2">
+                    <p-button label="Upload" icon="pi pi-upload" (onClick)="userPhotoUploader.upload()" severity="info" />
+                    <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('photo')" />
+                </div>
+                }
             </div>
-            <!-- @if(ownerDetail?.identityProof) {
-            
-            } -->
-            @if(userIdentityFile){
-            <div class="flex justify-center md:justify-start gap-2">
-                <p-button label="Upload" icon="pi pi-upload" (onClick)="userIdentityUploader.upload()"
-                    severity="info" />
-                <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('identityProof')" />
-            </div>
-            }
+            <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
         </div>
-        <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
-    </div>
-
-
-    <div class="w-full gesil-card">
-        @if(ownerDetail?.photo) {
-
-        }
-        <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
-            <div class="flex justify-start">
-                <p-fileupload #userPhotoUploader mode="basic" chooseLabel="Choose Owner Photo" maxFileSize="20000000"
-                    customUpload="true" (onSelect)="onFileSelect($event, 'photo')" (onClear)="onClear('photo')"
-                    (uploadHandler)="onUpload($event,'photo')" />
-
-            </div>
-            @if(userPhotoFile){
-            <div class="flex justify-center md:justify-start gap-2">
-                <p-button label="Upload" icon="pi pi-upload" (onClick)="userPhotoUploader.upload()" severity="info" />
-                <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('photo')" />
-            </div>
-            }
-        </div>
-        <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
-    </div>
     }
 
 

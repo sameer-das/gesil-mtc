@@ -14,20 +14,20 @@
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="zone">Zone</label>
-                        <p-select id="zone" [options]="zones" optionLabel="name" placeholder="Select Zone"
+                        <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone"
                             class="w-full" formControlName="zone"></p-select>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ward">Ward</label>
-                        <p-select id="ward" [options]="wards" optionLabel="name" placeholder="Select Ward"
+                        <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Ward"
                             class="w-full" formControlName="ward"></p-select>
                     </div>
 
-                    <div class="flex flex-wrap gap-2 w-full">
+                    <!-- <div class="flex flex-wrap gap-2 w-full">
                         <label for="wardName">Ward Name</label>
                         <input pInputText id="wardName" placeholder="Name of Selected Ward" readonly type="text"
                             formControlName="wardName" />
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Row 2 -->
@@ -53,7 +53,7 @@
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="typeOfOwnership">Type of Ownership</label>
-                        <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="typeOfOwnershipName"
+                        <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="ownershipTypeName"
                             placeholder="Select Type of Ownership" class="w-full"
                             formControlName="typeOfOwnership"></p-select>
                     </div>
@@ -158,7 +158,7 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="electricityCategory">Electricity Category</label>
                         <p-select id="electricityCategory" [options]="electricityCagtegory"
-                            optionLabel="electricityCagtegoryName" placeholder="Choose Electricity Category"
+                            optionLabel="electricityConnectionName" placeholder="Choose Electricity Category"
                             class="w-full" formControlName="electricityCategory"></p-select>
                     </div>
                 </div>
