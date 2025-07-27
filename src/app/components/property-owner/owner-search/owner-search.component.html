@@ -13,15 +13,16 @@
                 (completeMethod)="search($event)"
                 (onSelect)="onOwnerSelect($event)">
                     <ng-template let-item #item>
-                        <div class="flex w-full justify-between items-center gap-2">
-                            <!-- @if(item.photo) {
-                                <img [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${item?.photo}`" style="width: 18px" />
+                        <div class="flex w-full items-center gap-2">
+                            @if(item.photo) {
+                                <img [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${item?.photo}`" style="width: 40px" />
                             } @else {
-                                <img src="assets/avatar.png" alt="User Avatar" style="width: 18px" />
-                            } -->
-                            <strong>{{item.salutation}} {{ item.ownerName }}</strong>
-                            <div>
+                                <img src="assets/avatar.png" alt="User Avatar" style="width: 40px" />
+                            }
+                            <div class="ml-3">
+                                <strong>{{item.salutation}} {{ item.ownerName }}</strong>
                                 <p class="text-sm">Mobile: {{item.mobile}}</p>
+                                <p class="text-sm">Aadhar: {{item.aadhar | aadharMask}}</p>
                             </div>
                         </div>
                     </ng-template>

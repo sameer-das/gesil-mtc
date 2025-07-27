@@ -1,1 +1,21 @@
-<app-page-header title="Create Ownership Type"></app-page-header>
+<app-page-header [title]="editMode() ? 'Edit Ownership Type' : 'Create Ownership Type' " [backButton]="true" />
+<form class="gesil-card mt-8 flex flex-col gap-6" [formGroup]="ownershipTypeForm">
+    <div class="font-semibold text-xl">Ownership Type</div>
+
+    <div class="flex flex-col gap-6">
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="ownershipTypeName">Ownership Type Name</label>
+                <input pInputText id="ownershipTypeName" class="w-full" type="text" placeholder="Ownership Type Name"
+                    formControlName="ownershipTypeName" />
+            </div>           
+        </div>
+    </div>
+
+
+    <div class="flex gap-2 justify-end ">
+        <p-button raised="true" severity="secondary" (click)="ownershipTypeForm.reset()">Reset</p-button>
+        <p-button raised="true" type="button" [disabled]="ownershipTypeForm.invalid" (click)="onSaveOwnershipType()">{{ editMode() ?
+            'Update' : 'Save'}} Ownership Type</p-button>
+    </div>
+</form>

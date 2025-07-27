@@ -1,4 +1,4 @@
-import { Fy, SubCategory } from './../models/master-data.model';
+import { ElectricityConnectionType, Fy, OwnershipType, PropertyType, SubCategory } from './../models/master-data.model';
 import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -95,7 +95,7 @@ export class MasterDataService {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.createFy}`, { fyName });
   }
   fyList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ fys: Fy[], totalCount: number }>> {
-    return this.http.get<APIResponse<{ fys: Fy[], totalCount: number }>>(`${this.API_URL}${environment.fyList}?&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    return this.http.get<APIResponse<{ fys: Fy[], totalCount: number }>>(`${this.API_URL}${environment.fyList}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
   fyDetail(fyId: number): Observable<APIResponse<Fy>> {
     return this.http.get<APIResponse<Fy>>(`${this.API_URL}${environment.fyDetail}?fyId=${fyId}`);
@@ -103,4 +103,48 @@ export class MasterDataService {
   updateFy(fyUpdatePayLoad: Fy): Observable<APIResponse<string>> {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateFyMaster}`, fyUpdatePayLoad);
   }
+
+
+  createPropertyType(payload: { propertyTypeName: string }): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.createPropertyType}`, payload);
+  }
+  propertyTypeList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ propertyTypes: PropertyType[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ propertyTypes: PropertyType[], totalCount: number }>>(`${this.API_URL}${environment.propertyTypeList}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+  getPropertyTypeDetail(propertyTypeId: number):Observable<APIResponse<PropertyType>> {
+    return this.http.get<APIResponse<PropertyType>>(`${this.API_URL}${environment.propertyTypeDetail}?propertytypeId=${propertyTypeId}`);
+  }
+  updatePropertyType(payload: PropertyType): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updatePropertyType}`, payload);
+  }
+
+
+  createOwnershipType(payload: { ownershipTypeName: string }): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.createOwnershipType}`, payload);
+  }
+  ownershipTypeList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ oTypes: OwnershipType[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ oTypes: OwnershipType[], totalCount: number }>>(`${this.API_URL}${environment.getOwnershipType}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+  getOwnershipTypeDetail(ownershipTypeId: number):Observable<APIResponse<OwnershipType>> {
+    return this.http.get<APIResponse<OwnershipType>>(`${this.API_URL}${environment.ownershipTypeDetail}?ownershipTypeId=${ownershipTypeId}`);
+  }
+  updateOwnershipType(payload: OwnershipType): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateOwnershipType}`, payload);
+  }
+
+
+  createElectricityConnectionType(payload: { electricityConnectionName: string }): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.createElectricityConnection}`, payload);
+  }
+  electricityConnectionTypeList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ econnections: ElectricityConnectionType[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ econnections: ElectricityConnectionType[], totalCount: number }>>(`${this.API_URL}${environment.getElectricConnections}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+  getElectricityConnectionTypeDetail(electricConnectionId: number):Observable<APIResponse<ElectricityConnectionType>> {
+    return this.http.get<APIResponse<ElectricityConnectionType>>(`${this.API_URL}${environment.electricityConnectionDetail}?electricConnectionId=${electricConnectionId}`);
+  }
+  updateElectricityConnectionType(payload: ElectricityConnectionType): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateElectricityConnection}`, payload);
+  }
+
+
 }

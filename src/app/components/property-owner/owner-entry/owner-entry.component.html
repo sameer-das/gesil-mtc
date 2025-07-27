@@ -82,7 +82,7 @@
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="aadhar">Aadhar No</label>
-                    <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text" formControlName="aadhar" />
+                    <input pInputText id="aadhar" placeholder="Enter Aadhar No" type="text" formControlName="aadhar" [readonly]="editMode()" />
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('aadhar')">
                         
                          {{addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed') ? 
@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="flex gap-2 justify-center md:justify-end">
-                    @if(addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
+                    @if(!editMode() && addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
                         <a pButton [routerLink]="['/owner', 'detail',  addNewOwnerForm.get('aadhar')?.getError('ownerId')]" severity="help" icon="pi pi-eye">View Owner Details</a>
                     } @else {
                         <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>

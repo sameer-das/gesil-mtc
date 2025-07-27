@@ -11,10 +11,12 @@ import { OwnerServiceService } from '../../../services/owner-service.service';
 import { APIResponse } from '../../../models/user.model';
 import { OwnerDetail } from '../../../models/property-owner.model';
 import { environment } from '../../../../environments/environment';
+import { AadharMaskPipe } from '../../../pipes/aadhar-mask.pipe';
 
 @Component({
   selector: 'app-owner-search',
-  imports: [PageHeaderComponent, AutoCompleteModule, FormsModule, FluidModule, RadioButtonModule, AutoFocusModule],
+  imports: [PageHeaderComponent, AutoCompleteModule, 
+    FormsModule, FluidModule, RadioButtonModule, AutoFocusModule, AadharMaskPipe],
   templateUrl: './owner-search.component.html',
   styleUrl: './owner-search.component.scss'
 })

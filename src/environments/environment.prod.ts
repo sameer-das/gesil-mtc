@@ -58,6 +58,20 @@ export const environment = {
     fyDetail: '/Master/fyDetail',
     updateFyMaster: '/Master/updateFyMaster',
 
+    createPropertyType: '/Master/createPropertyType',
+    propertyTypeList: '/Master/propertyTypes',
+    propertyTypeDetail: '/Master/propertyTypeDetail',
+    updatePropertyType: '/Master/updatePropertyType',
+
+    createOwnershipType: '/Master/createOwnershipType',
+    getOwnershipType: '/Master/ownershipTypes',
+    ownershipTypeDetail: '/Master/ownershipTypeDetail',
+    updateOwnershipType: '/Master/updateOwnershipType',
+
+    createElectricityConnection: '/Master/createElectricityConnection',
+    getElectricConnections: '/Master/getElectricConnections',
+    electricityConnectionDetail: '/Master/electricityConnectionDetail',
+    updateElectricityConnection: '/Master/updateElectricityConnection',
 
     // ********************** OWNER DETAILS Related API URLs *****************
 

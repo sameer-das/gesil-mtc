@@ -86,7 +86,7 @@ export class SideBarComponent {
         {
           label: 'Property Type',
           icon: 'pi pi-list',
-          routerLink: '/master/ward-list',
+          routerLink: '/master/property-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e);
@@ -96,7 +96,7 @@ export class SideBarComponent {
         {
           label: 'Ownership Type',
           icon: 'pi pi-list',
-          routerLink: '/master/ward-list',
+          routerLink: '/master/ownership-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e);
@@ -106,7 +106,7 @@ export class SideBarComponent {
         {
           label: 'Electricity Connection',
           icon: 'pi pi-list',
-          routerLink: '/master/ward-list',
+          routerLink: '/master/electricity-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e);

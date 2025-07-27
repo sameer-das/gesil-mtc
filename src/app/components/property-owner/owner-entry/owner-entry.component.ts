@@ -78,7 +78,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
     mobile: new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
     email: new FormControl('', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')]),
     pan: new FormControl('', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]$/)]),
-    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')], [uniqueAadharValidator(this.ownerService, this.$destroy)]),
+    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')], [uniqueAadharValidator(this.ownerService, this.$destroy, this.editMode)]),
     dob: new FormControl('', [Validators.required]),
     isSpecialOwner: new FormControl(null),
   });
@@ -298,13 +298,17 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
+
+      const fileNameParts = e.files[0].name.split('.');
+      const newFileNameWithoutExtention = fileNameParts.slice(0, fileNameParts.length - 1).join('_');
+
       const payload: OwnerDocumentUpload = {
         "ownerId": Number(this.ownerId() || 0),
         "documentType": type,
-        "documentName": e.files[0].name,
+        "documentName": newFileNameWithoutExtention,
         "documentBase64data": reader.result
       }
-      console.log(payload)
+
       this.ownerService.uploadDocument(payload).pipe(takeUntil(this.$destroy))
         .subscribe({
           next: (resp: APIResponse<string>) => {

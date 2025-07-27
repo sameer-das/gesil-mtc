@@ -77,3 +77,21 @@ export interface CreateUpdateSubCategory {
     subCategoryName: string;
     taxAmountPerMonth: number;
 }
+
+
+export interface PropertyType {
+    propertyTypeId: number;
+    propertyTypeName: string;
+}
+
+
+export interface OwnershipType {
+    ownershipTypeId: number;
+    ownershipTypeName: string;
+}
+
+
+export interface ElectricityConnectionType {
+    electricityConnectionId: number;
+    electricityConnectionName: string;
+}

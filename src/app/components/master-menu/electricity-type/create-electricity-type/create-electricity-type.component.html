@@ -1,0 +1,21 @@
+<app-page-header [title]="editMode() ? 'Edit Electricity Type' : 'Create Electricity Type' " [backButton]="true" />
+<form class="gesil-card mt-8 flex flex-col gap-6" [formGroup]="electricityConnectionForm">
+    <div class="font-semibold text-xl">Electricity Type</div>
+
+    <div class="flex flex-col gap-6">
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="electricityConnectionName">Electricity Type Name</label>
+                <input pInputText id="electricityConnectionName" class="w-full" type="text" placeholder="Electricity Type Name"
+                    formControlName="electricityConnectionName" />
+            </div>           
+        </div>
+    </div>
+
+
+    <div class="flex gap-2 justify-end ">
+        <p-button raised="true" severity="secondary" (click)="electricityConnectionForm.reset()">Reset</p-button>
+        <p-button raised="true" type="button" [disabled]="electricityConnectionForm.invalid" (click)="onSaveElectricityType()">{{ editMode() ?
+            'Update' : 'Save'}} Electricity Type</p-button>
+    </div>
+</form>

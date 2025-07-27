@@ -15,7 +15,7 @@
                 <tr><th class="table-head">{{ownerDetail()?.careOf}}</th> <td>{{ownerDetail()?.guardianName}}</td></tr>
                 <tr><th class="table-head">Mobile</th> <td>{{ownerDetail()?.mobile}}</td></tr>
                 <tr><th class="table-head">Email ID</th> <td>{{ownerDetail()?.email}}</td></tr>
-                <tr><th class="table-head">Aadhar</th> <td>{{ownerDetail()?.aadhar}}</td></tr>
+                <tr><th class="table-head">Aadhar</th> <td>{{ownerDetail()?.aadhar | aadharMask}}</td></tr>
                 <tr><th class="table-head">PAN</th> <td>{{ownerDetail()?.pan}}</td></tr>
                 <tr><th class="table-head">Gender</th> <td>{{ownerDetail()?.gender}}</td></tr>
                 <tr><th class="table-head">Date of Birth</th> <td>{{ownerDetail()?.dob | date:'dd-MMM-yyy'}}</td></tr>
@@ -29,11 +29,11 @@
         </div>
         <div> 
             @if(ownerDetail()?.identityProof) {
-                <a class="w-full" pButton [text]="true" severity="success"
+                <a class="w-full" pButton [outlined]="true" severity="success"
                     [href]="`${env.API_URL}${env.ownerDocumentDownload}?fileName=${ownerDetail()?.identityProof}`"
                     target="_blank" pTooltip="View">Identity Proof <i class="pi pi-eye"></i></a>
             } @else {
-                <a class="w-full" pButton icon="pi pi-exclamation-circle" [text]="true" severity="warn" [routerLink]="['/owner','owner-edit', ownerDetail()?.ownerId]">Please upload owner's identity proof.</a>
+                <a class="w-full" pButton icon="pi pi-exclamation-circle" [outlined]="true" severity="warn" [routerLink]="['/owner','owner-edit', ownerDetail()?.ownerId]">Please upload owner's identity proof.</a>
             }
 
         </div>
@@ -41,12 +41,12 @@
         @if(ownerDetail()?.isSpecialOwner) {
             @if(ownerDetail()?.specialCertificate) {
                 
-                    <a class="w-full" pButton [text]="true" severity="success"
+                    <a class="w-full" pButton [outlined]="true" severity="success"
                         [href]="`${env.API_URL}${env.ownerDocumentDownload}?fileName=${ownerDetail()?.identityProof}`"
                         target="_blank" pTooltip="View">Certificate <i class="pi pi-eye"></i></a>
                 
             } @else{
-                <a class="w-full" pButton icon="pi pi-exclamation-circle" [text]="true" severity="warn" [routerLink]="['/owner','owner-edit', ownerDetail()?.ownerId]">Please upload certificate.</a>
+                <a class="w-full" pButton icon="pi pi-exclamation-circle" [outlined]="true" severity="warn" [routerLink]="['/owner','owner-edit', ownerDetail()?.ownerId]">Please upload certificate.</a>
             }
         }
         </div>

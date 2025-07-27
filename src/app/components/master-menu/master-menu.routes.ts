@@ -1,3 +1,5 @@
+import { ElectricityTypeListComponent } from './electricity-type/electricity-type-list/electricity-type-list.component';
+import { CreatePropertyTypeComponent } from './property-type/create-property-type/create-property-type.component';
 import { Routes } from '@angular/router';
 import { ZoneListComponent } from './zones/zone-list/zone-list.component';
 import { ZoneCreateComponent } from './zones/zone-create/zone-create.component';
@@ -14,6 +16,8 @@ import { OwnershipTypeListComponent } from './ownership-type/ownership-type-list
 import { OwnershipTypeCreateComponent } from './ownership-type/ownership-type-create/ownership-type-create.component';
 import { RoadTypeListComponent } from './road-type/road-type-list/road-type-list.component';
 import { RoadTypeCreateComponent } from './road-type/road-type-create/road-type-create.component';
+import { PropertyTypeListComponent } from './property-type/property-type-list/property-type-list.component';
+import { CreateElectricityTypeComponent } from './electricity-type/create-electricity-type/create-electricity-type.component';
 
 
 
@@ -38,10 +42,19 @@ export default [
 
     { path: 'ownership-list', component: OwnershipTypeListComponent },
     { path: 'ownership-create', component: OwnershipTypeCreateComponent },
-    { path: 'ownership-edit/ownershipId', component: OwnershipTypeCreateComponent },
+    { path: 'ownership-edit/:ownershipTypeId', component: OwnershipTypeCreateComponent },
+
     { path: 'roadtype-list', component: RoadTypeListComponent },
     { path: 'roadtype-create', component: RoadTypeCreateComponent },
-    { path: 'roadtype-edit/roadtypeId', component: RoadTypeCreateComponent },
+    { path: 'roadtype-edit/:roadtypeId', component: RoadTypeCreateComponent },
+
+    { path: 'property-list', component: PropertyTypeListComponent },
+    { path: 'property-create', component: CreatePropertyTypeComponent },
+    { path: 'property-edit/:propertyTypeId', component: CreatePropertyTypeComponent },
+
+    { path: 'electricity-list', component: ElectricityTypeListComponent },
+    { path: 'electricity-create', component: CreateElectricityTypeComponent },
+    { path: 'electricity-edit/:electricityConnectionId', component: CreateElectricityTypeComponent },
 
 
 ] as Routes;
