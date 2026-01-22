@@ -95,6 +95,13 @@ export interface ParentOptions extends ParentUserTypeForMapping {
   optionLabel: string;
 }
 
+export interface UserListWithUserType {
+  userId: number;
+  userTypeName: string;
+  userName: string;
+  userType: number;
+}
+
 
 
 export interface UserList {
@@ -160,4 +167,31 @@ export interface UpdateUserAadharPan {
   aadharNo: string;
   pan: string;
   type: string;
+}
+
+
+export interface Permissions {
+  active: boolean;
+  feature: string;
+  featureId: number;
+}
+
+
+export interface UserPermissions {
+  featureId: 1;
+  feature: string;
+  featureActive: boolean;
+  mappingId: number;
+  mappingFeatureId: number;
+  userId: number;
+  groupId: number;
+  mappingActive: boolean
+}
+
+export interface UpdatePermission {
+    mappingId: number;
+    userId: number;
+    groupId: number;
+    featureId: number;
+    featureActive: boolean;
 }

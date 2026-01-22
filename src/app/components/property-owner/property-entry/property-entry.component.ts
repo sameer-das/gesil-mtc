@@ -1,8 +1,8 @@
 import { District, APIResponse } from './../../../models/user.model';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { FluidModule } from 'primeng/fluid';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -14,10 +14,11 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { ElectricityConnectionType, OwnershipType, PropertyType, Ward, Zone } from '../../../models/master-data.model';
 import { forkJoin, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
+import { FileSelectEvent, FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MasterDataService } from '../../../services/master-data.service';
+import { OwnerDocumentUpload } from '../../../models/property-owner.model';
 
 @Component({
   selector: 'app-property-entry',
@@ -40,13 +41,21 @@ import { MasterDataService } from '../../../services/master-data.service';
   styleUrl: './property-entry.component.scss'
 })
 export class PropertyEntryComponent implements OnInit, OnDestroy {
+  ebFile: File | null = null;
+  ppFile: File | null = null;
+  @ViewChild('ebUploader') ebUploader!: FileUpload;
+  @ViewChild('propertyPhotoUploader') propertyPhotoUploader!: FileUpload;
+  ownerId = input<number>();
+
+  isCorrespondenceSame: boolean = false;
+
   propertyForm: FormGroup = new FormGroup({
     householdNo: new FormControl(''),
-    zone: new FormControl(''),
-    ward: new FormControl(''),
+    zone: new FormControl('', [Validators.required]),
+    ward: new FormControl('', [Validators.required]),
     wardName: new FormControl(),
-    propertyType: new FormControl(),
-    typeOfOwnership: new FormControl(),
+    propertyType: new FormControl('', [Validators.required] ),
+    typeOfOwnership: new FormControl('', [Validators.required]),
     otherTypeOfOwnerShip: new FormControl(),
 
     widthOfRoad: new FormControl(),
@@ -184,6 +193,9 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
       takeUntil(this.$destroy),
       tap((val: number) => {
+        if(this.propertyForm.value.propertyType.propertyTypeId === 2 && !val) {
+          console.log('mark the form invalid')
+        }
         this.floorWiseDataFormArray.clear();
         for (let i = 1; i <= val; i++) {
           this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
@@ -192,34 +204,65 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
     this.propertyForm.get('zone')?.valueChanges.pipe(
       takeUntil(this.$destroy),
-      switchMap((zone) => this.masterDataService.wardList(zone.zoneId,0,0)),
+      switchMap((zone) => this.masterDataService.wardList(zone.zoneId, 0, 0)),
       tap((wardResp) => {
-        if(wardResp.code === 200) {
+        if (wardResp.code === 200) {
           this.wards = wardResp.data.wards;
         }
       })).subscribe();
 
-      this.fetchAllMasterData()
+    this.propertyForm.get('isOwnerAddressSame')?.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      tap((val:string[]) => {
+        if(val.length > 0) {
+          // Make the forms readonly
+          this.propertyForm.patchValue({
+            ownerAddress: this.propertyForm.value.propertyAddress,
+            ownerAddressDistrict: this.propertyForm.value.propertyAddressDistrict,
+            ownerAddressCity: this.propertyForm.value.propertyAddressCity,
+            ownerAddressPin: this.propertyForm.value.propertyAddressPin            
+          });
+          this.isCorrespondenceSame = true
+        } else {
+          this.propertyForm.patchValue({
+            ownerAddress:'',
+            ownerAddressDistrict:'',
+            ownerAddressCity:'',
+            ownerAddressPin:''
+          })
+          this.isCorrespondenceSame = false
+        }
+      })).subscribe();
+
+    this.fetchAllMasterData()
   }
 
 
 
+  isInvalid(controlName: string): boolean {
+    const control = this.propertyForm.get(controlName);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
+  }
+
+
+
+
   fetchAllMasterData() {
-    forkJoin([this.masterDataService.zoneList(), 
-      this.masterDataService.propertyTypeList(), 
-      this.masterDataService.ownershipTypeList(),
-      this.masterDataService.electricityConnectionTypeList()])
+    forkJoin([this.masterDataService.zoneList(),
+    this.masterDataService.propertyTypeList(),
+    this.masterDataService.ownershipTypeList(),
+    this.masterDataService.electricityConnectionTypeList()])
       .pipe(takeUntil(this.$destroy),
-      map(([zoneResp, propertyResp, ownershipResp, electricityResp]) => {
-          if(zoneResp.code === 200 && propertyResp.code === 200 && 
+        map(([zoneResp, propertyResp, ownershipResp, electricityResp]) => {
+          if (zoneResp.code === 200 && propertyResp.code === 200 &&
             ownershipResp.code === 200 && electricityResp.code === 200) {
-              this.masterDataFetched.set(true);
-              this.zones = zoneResp.data.zones;
-              this.propertyTypes = propertyResp.data.propertyTypes;
-              this.typeOfOwnerships = ownershipResp.data.oTypes;
-              this.electricityCagtegory = electricityResp.data.econnections;
-            }
-      }))
+            this.masterDataFetched.set(true);
+            this.zones = zoneResp.data.zones;
+            this.propertyTypes = propertyResp.data.propertyTypes;
+            this.typeOfOwnerships = ownershipResp.data.oTypes;
+            this.electricityCagtegory = electricityResp.data.econnections;
+          }
+        }))
       .subscribe();
   }
 
@@ -293,8 +336,110 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
   onUpload(e: FileUploadHandlerEvent, type: string, element?: FileUpload) {
+    console.log(e)
+    console.log('on upload ' + type)
+    const file = e.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+
+      const fileNameParts = e.files[0].name.split('.');
+      const newFileNameWithoutExtention = fileNameParts.slice(0, fileNameParts.length - 1).join('_');
+
+      const payload: OwnerDocumentUpload = {
+        "ownerId": Number(this.ownerId() || 0),
+        "documentType": type,
+        "documentName": newFileNameWithoutExtention,
+        "documentBase64data": reader.result
+      }
+
+      console.log(payload)
+      //   this.ownerService.uploadDocument(payload).pipe(takeUntil(this.$destroy))
+      //     .subscribe({
+      //       next: (resp: APIResponse<string>) => {
+      //         if (resp.code === 200) {
+      //           this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `Uploaded successfully.`, life: MessageDuaraion.STANDARD });
+      //           this.clearFile(type);
+      //         }
+      //       }
+      //     })
+      // };
+    }
+  }
+
+
+
+  onFileSelect(event: FileSelectEvent, type: string) {
+    console.log(event)
+    const isValid = this.validateFile(event.currentFiles[0], type);
+    if (!isValid)
+      return;
+
+    if (event.files && event.files.length > 0) {
+      if (type === 'EB') {
+        this.ebFile = event.files[0];
+      }
+      if (type === 'PP') {
+        this.ppFile = event.files[0];
+      }
+    }
+  }
+
+
+
+  validateFile(file: File, type: string) {
+    const validFormats = ['image/png', 'application/pdf', 'image/jpeg'];
+    if (validFormats.indexOf(file.type) >= 0) {
+      if (file.size < (2 * 1024 * 1024)) {
+        return true
+      } else {
+        this.clearFile(type);
+        this.messageService.add({ severity: MessageSeverity.WARN, summary: 'Large File Size', detail: `Only files up to 2 MB are allowed. Please choose a smaller file.`, life: MessageDuaraion.STANDARD });
+        return false;
+      }
+    } else {
+      this.clearFile(type);
+      this.messageService.add({ severity: MessageSeverity.WARN, summary: 'Invalid File Format', detail: `Please upload files with png/jpeg/pdf format only.`, life: MessageDuaraion.STANDARD });
+      return false;
+    }
+  }
+
+
+
+  onClear(type: string) {
+    console.log('Files cleared! ', type);
+    if (type === 'EB') {
+      this.ebFile = null; // Clear our stored file
+    }
+    if (type === 'PP') {
+      this.ppFile = null; // Clear our stored file
+    }
+  }
+
+
+
+  clearFile(type: string) {
+    console.log(type)
+    if (type === 'EB') {
+      this.ebFile = null;
+      if (this.ebUploader) {
+        this.ebUploader.clear(); // This clears the internal file list of the component
+      }
+    }
+    if (type === 'PP') {
+      this.ppFile = null;
+      if (this.propertyPhotoUploader) {
+        this.propertyPhotoUploader.clear(); // This clears the internal file list of the component
+      }
+    }
 
   }
+
+
+  onSubmit() {
+    console.log(this.propertyForm.value)
+  }
+
 
 
 

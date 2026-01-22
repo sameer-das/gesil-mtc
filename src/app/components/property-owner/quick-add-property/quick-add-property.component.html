@@ -1,0 +1,50 @@
+<div class="flex">
+    <app-page-header title="Quick Add Property" />
+</div>
+
+<p-fluid>
+    <form [formGroup]="quickAddPropertyForm" class="gesil-card  mt-4">
+        <div class="flex flex-col w-full">
+            <!-- Row 1 -->
+
+            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="salutation">Salutation</label>
+                    <p-select id="salutation" [options]="salutations" placeholder="Select" class="w-full"
+                        formControlName="salutation"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('salutation')">
+                        Please choose a salutation for the owner.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="ownerName">Name of Owner</label>
+                    <input pInputText id="ownerName" placeholder="Enter Name of Owner" type="text"
+                        formControlName="ownerName" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerName')">
+                        Please enter a valid owner name.
+                    </div>
+                </div>
+                 <div class="flex flex-wrap gap-2 w-full">
+                    <label for="mobile">Mobile No</label>
+                    <input pInputText id="mobile" placeholder="Enter Mobile No." type="text" formControlName="mobile" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mobile')">
+                        Please enter a valid mobile number.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Row 2 -->
+  
+
+            <!-- Row 3 -->
+            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                
+
+            </div>
+
+            
+
+        </div>
+    </form>
+</p-fluid>

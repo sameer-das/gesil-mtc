@@ -4,9 +4,11 @@
 <div class="gesil-card mt-4">
     <p-tabs [value]="selectedTab">
         <p-tablist>
-            <p-tab [routerLink]="[]" [queryParams]="{tab: 'basic-details'}" value="basic-details">User Basic Details</p-tab>
+            <p-tab [routerLink]="[]" [queryParams]="{tab: 'basic-details'}" value="basic-details">User Basic
+                Details</p-tab>
             <p-tab [routerLink]="[]" [queryParams]="{tab: 'documents'}" value="documents">User Documents</p-tab>
             <p-tab [routerLink]="[]" [queryParams]="{tab: 'reporting'}" value="reporting">User Reporting</p-tab>
+            <p-tab [routerLink]="[]" [queryParams]="{tab: 'permission'}" value="permission">User Permission</p-tab>
             <!-- <p-tab [routerLink]="[]" [queryParams]="{tab: 'doc'}" value="3">Wards Assignment</p-tab> -->
         </p-tablist>
         <p-tabpanels>
@@ -15,26 +17,27 @@
             </p-tabpanel>
             <p-tabpanel value="documents">
                 <div class="mt-4">
-    
+
                     <div class="font-semibold text-xl">Aadhar and PAN Details</div>
-    
+
                     <div class="flex flex-col md:flex-row gap-6 mt-4">
                         <div class="flex flex-wrap gap-2 w-full">
                             <label for="aadhar">Aadhar No</label>
-                            <input pInputText id="aadhar" type="text" placeholder="0000 0000 0000" [formControl]="aadharNo"
-                                fluid="true" />
+                            <input pInputText id="aadhar" type="text" placeholder="0000 0000 0000"
+                                [formControl]="aadharNo" fluid="true" />
                             <div class="flex justify-end w-full">
                                 <p-button [disabled]="aadharNo.invalid" (click)="updateAadharPan('aadhar')">Update
                                     Aadhar</p-button>
                             </div>
-    
+
                         </div>
                         <div class="flex flex-wrap gap-2 w-full">
                             <label for="pan">PAN</label>
                             <input pInputText id="pan" type="text" placeholder="ABCDE1234Z" [formControl]="pan"
                                 fluid="true" />
                             <div class="flex justify-end w-full">
-                                <p-button [disabled]="pan.invalid" (click)="updateAadharPan('pan')">Update PAN</p-button>
+                                <p-button [disabled]="pan.invalid" (click)="updateAadharPan('pan')">Update
+                                    PAN</p-button>
                             </div>
                         </div>
                     </div>
@@ -42,58 +45,72 @@
                     <div class="font-semibold text-xl">Documents</div>
                     <div class="mt-4">
                         <p class="document-name text-md">User Photo</p>
-    
+
                         <div class="flex justify-between mt-4">
                             <p-fileupload #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="000000" customUpload="true" (uploadHandler)="onUpload($event, 'userPhoto', up)" />
-    
-                            <p-button label="Upload" (onClick)="up.upload()" severity="secondary" [disabled]="up.files.length === 0"  tooltipPosition="left" pTooltip="Upload User Photo"/>
+                                maxFileSize="000000" customUpload="true"
+                                (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+
+                            <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
+                                [disabled]="up.files.length === 0" tooltipPosition="left"
+                                pTooltip="Upload User Photo" />
                         </div>
                     </div>
                     <div class="mt-4">
                         <p class="document-name text-md">Aadhar Front</p>
-    
+
                         <div class="flex justify-between mt-4">
                             <p-fileupload #af mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true" (uploadHandler)="onUpload($event, 'aadharFront', af)" />
-    
-                            <p-button label="Upload" (onClick)="af.upload()" severity="secondary" [disabled]="af.files.length === 0" tooltipPosition="left" pTooltip="Upload Aadhar Front-side" />
+                                maxFileSize="3000000" customUpload="true"
+                                (uploadHandler)="onUpload($event, 'aadharFront', af)" />
+
+                            <p-button label="Upload" (onClick)="af.upload()" severity="secondary"
+                                [disabled]="af.files.length === 0" tooltipPosition="left"
+                                pTooltip="Upload Aadhar Front-side" />
                         </div>
                     </div>
                     <div class="mt-4">
                         <p class="document-name text-md">Aadhar Back</p>
-    
+
                         <div class="flex justify-between mt-4">
                             <p-fileupload #ab mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true" (uploadHandler)="onUpload($event, 'aadharBack', ab)" />
-     
-                            <p-button label="Upload" (onClick)="ab.upload()" severity="secondary" [disabled]="ab.files.length === 0"  tooltipPosition="left" pTooltip="Upload Aadhar Back-side" />
+                                maxFileSize="3000000" customUpload="true"
+                                (uploadHandler)="onUpload($event, 'aadharBack', ab)" />
+
+                            <p-button label="Upload" (onClick)="ab.upload()" severity="secondary"
+                                [disabled]="ab.files.length === 0" tooltipPosition="left"
+                                pTooltip="Upload Aadhar Back-side" />
                         </div>
                     </div>
                     <div class="mt-4">
                         <p class="document-name text-md">PAN</p>
-    
+
                         <div class="flex justify-between mt-4">
                             <p-fileupload #pn mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true" (uploadHandler)="onUpload($event, 'pan', pn)" />
-    
-                            <p-button label="Upload" (onClick)="pn.upload()" severity="secondary" [disabled]="pn.files.length === 0"  tooltipPosition="left" pTooltip="Upload PAN"/>
+                                maxFileSize="3000000" customUpload="true"
+                                (uploadHandler)="onUpload($event, 'pan', pn)" />
+
+                            <p-button label="Upload" (onClick)="pn.upload()" severity="secondary"
+                                [disabled]="pn.files.length === 0" tooltipPosition="left" pTooltip="Upload PAN" />
                         </div>
                     </div>
                     <div class="mt-4">
                         <p class="document-name text-md">Highest Education Certificate</p>
-    
+
                         <div class="flex justify-between mt-4">
                             <p-fileupload #edu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true" (uploadHandler)="onUpload($event, 'highestQualificationDoc',edu)" />
-    
-                            <p-button label="Upload" (onClick)="edu.upload()" severity="secondary"  [disabled]="edu.files.length === 0"  tooltipPosition="left" pTooltip="Upload Education Certificate"/>
+                                maxFileSize="3000000" customUpload="true"
+                                (uploadHandler)="onUpload($event, 'highestQualificationDoc',edu)" />
+
+                            <p-button label="Upload" (onClick)="edu.upload()" severity="secondary"
+                                [disabled]="edu.files.length === 0" tooltipPosition="left"
+                                pTooltip="Upload Education Certificate" />
                         </div>
                     </div>
                 </div>
-    
-    
-    
+
+
+
             </p-tabpanel>
             <p-tabpanel value="reporting">
                 <div class="flex flex-col mt-4 gap-6">
@@ -105,18 +122,57 @@
                                 optionLabel="optionLabel" placeholder="Select Whom to Report" class="w-full"></p-select>
                         </div>
                     </div>
-    
+
                     <div class="flex gap-2 justify-end">
                         <p-button raised="true" type="button" [disabled]="!selectedParent"
                             (click)="updateUserParentMapping()">Update User Reporting</p-button>
                     </div>
                 </div>
             </p-tabpanel>
-            <!-- <p-tabpanel value="3">
+            <p-tabpanel value="permission">
                 <div class="mt-4">
-                    <div class="font-semibold text-xl">Wards</div>
+                    <!-- <div class="font-semibold text-xl">Persmission</div> -->
+                    <div class="permission-table">
+                        <p-table [value]="userPermission" dataKey="featureId">
+                            <ng-template #header>
+                                <tr>
+                                    <th style="max-width: 2rem">
+                                        <div class="flex justify-between items-center">
+                                            Sl No
+                                        </div>
+                                    </th>
+                                    <th style="min-width: 12rem">
+                                        <div class="flex justify-between items-center">
+                                            Permission Name
+                                        </div>
+                                    </th>
+                                    <th style="min-width: 12rem">
+                                        <div class="flex justify-between items-center">
+                                            Status
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template #body let-permission let-rowIndex="rowIndex">
+                                <tr>
+                                    <td>
+                                        {{rowIndex + 1}}
+                                    </td>
+
+                                    <td>
+                                        {{ permission.featureName }}
+                                    </td>
+                                    <td>
+                                        <p-togglebutton [(ngModel)]="permission.isAllowed" (onChange)="onPermissionChange($event, permission)" onLabel="On" offLabel="Off" styleClass="w-24" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+
                 </div>
-            </p-tabpanel> -->
+            </p-tabpanel>
         </p-tabpanels>
     </p-tabs>
 </div>

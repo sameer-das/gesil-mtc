@@ -6,56 +6,71 @@
             <div class="gesil-card">
 
                 <!-- Row 1 -->
-                <div class="flex flex-col md:flex-row gap-6 my-4">
+                <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="householdNo">Household No</label>
                         <input pInputText id="householdNo" placeholder="Enter Household No" type="text"
                             formControlName="householdNo" />
+                        <div class="invisible">error placeholder</div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="zone">Zone</label>
                         <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone"
                             class="w-full" formControlName="zone"></p-select>
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('zone')">
+                                Please choose zone.
+                            </div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ward">Ward</label>
                         <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Ward"
                             class="w-full" formControlName="ward"></p-select>
+                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ward')">
+                                Please choose ward.
+                         </div>
                     </div>
 
-                    <!-- <div class="flex flex-wrap gap-2 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
                         <label for="wardName">Ward Name</label>
                         <input pInputText id="wardName" placeholder="Name of Selected Ward" readonly type="text"
                             formControlName="wardName" />
-                    </div> -->
+                    </div>
                 </div>
 
                 <!-- Row 2 -->
-                <div class="flex flex-col md:flex-row gap-6 my-4">
+                <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="propertyType">Property Type</label>
                         <p-select id="propertyType" [options]="propertyTypes" optionLabel="propertyTypeName"
                             placeholder="Select Property Type" class="w-full" formControlName="propertyType"></p-select>
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyType')">
+                                Please choose property type.
+                            </div>
                     </div>
 
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="widthOfRoad">Width of Road sorrunding the plot</label>
                         <input pInputText id="widthOfRoad" placeholder="Enter Width of Road" type="text"
                             formControlName="widthOfRoad" />
+                        <div class="invisible">error placeholder</div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="areaOfPlot">Area of Plot (Decimil)</label>
                         <input pInputText id="areaOfPlot" placeholder="Enter Area of Plot" type="text"
                             formControlName="areaOfPlot" />
+                        <div class="invisible">error placeholder</div>
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row gap-6 my-4">
+                <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="typeOfOwnership">Type of Ownership</label>
                         <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="ownershipTypeName"
                             placeholder="Select Type of Ownership" class="w-full"
                             formControlName="typeOfOwnership"></p-select>
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('typeOfOwnership')">
+                                Please choose type of ownership.
+                            </div>
                     </div>
                     @if(propertyForm.get('typeOfOwnership')?.value?.typeOfOwnershipId === 13) {
 
@@ -100,7 +115,7 @@
                     <div class="flex flex-wrap gap-2 w-full sm:w-1/4">
                         <label for="noOfFloors">No of Floors</label>
                         <p-inputnumber [readonly]="!enableIndividualBuildingType" id="noOfFloors" [min]="minFloorValue"
-                            [max]="10" placeholder="Enter no of floors that building has" type="text"
+                            [max]="10" placeholder="Enter no of floors" type="text"
                             formControlName="noOfFloors" />
                     </div>
                 </div>
@@ -162,15 +177,24 @@
                             class="w-full" formControlName="electricityCategory"></p-select>
                     </div>
                 </div>
-                <div class="flex gap-2 w-full my-4">
-                    <div>
-                        <label for="identityProof">Upload Electricity Bill</label>
-                        <p-fileupload class="my-4" #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                            maxFileSize="000000" customUpload="true"
-                            (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+                <div class="w-full my-4">
+                    <div class="flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+                        <div class="flex justify-start">
+                            <p-fileupload #ebUploader mode="basic" chooseLabel="Choose Electricty Bill"
+                                maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'EB')"
+                                (onClear)="onClear('EB')" (uploadHandler)="onUpload($event,'EB')" />
+
+                        </div>
+                        @if(ebFile){
+                        <div class="flex justify-center md:justify-start gap-2">
+                            <p-button label="Upload" icon="pi pi-upload" (onClick)="ebUploader.upload()"
+                                severity="info" />
+                            <p-button label="Remove" icon="pi pi-times" severity="danger"
+                                (onClick)="clearFile('EB')" />
+                        </div>
+                        }
                     </div>
-                    <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                        [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload Electricity Bill" />
+                    <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
                 </div>
             </div>
 
@@ -270,7 +294,7 @@
                             formControlName="longitude" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                         <label>Get this location </label>
+                        <label>Get this location </label>
                         <button pButton (click)="getThisLocation()">Get</button>
                     </div>
                 </div>
@@ -287,22 +311,22 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddress">Address</label>
                         <input pInputText id="ownerAddress" placeholder="Enter Address" type="text"
-                            formControlName="ownerAddress" />
+                            formControlName="ownerAddress" [readonly]="isCorrespondenceSame" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressDistrict">District</label>
                         <input pInputText id="ownerAddressDistrict" placeholder="Enter District" type="text"
-                            formControlName="ownerAddressDistrict" />
+                            formControlName="ownerAddressDistrict" [readonly]="isCorrespondenceSame" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressCity">City</label>
                         <input pInputText id="ownerAddressCity" placeholder="Enter City" type="text"
-                            formControlName="ownerAddressCity" />
+                            formControlName="ownerAddressCity" [readonly]="isCorrespondenceSame" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressPin">PIN </label>
                         <input pInputText id="ownerAddressPin" placeholder="Enter PIN" type="text"
-                            formControlName="ownerAddressPin" />
+                            formControlName="ownerAddressPin" [readonly]="isCorrespondenceSame" />
                     </div>
                 </div>
             </div>
@@ -397,31 +421,31 @@
 
             <!-- Row 12 -->
             <div class="gesil-card">
-                <div class="flex gap-2 w-full my-4">
-                    <div>
-                        <label class="inline-block mb-4" for="identityProof">Upload Photo of the Property</label>
-                        <p-fileupload class="my-4" #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                            maxFileSize="000000" customUpload="true"
-                            (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+                <h2 class="text-lg font-semibold">Upload Photo of the Property</h2>
+            
+                <div class="my-4 flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
+                    <div class="flex justify-start">
+                        <p-fileupload #propertyPhotoUploader mode="basic" chooseLabel="Choose Property Photo" maxFileSize="20000000"
+                            customUpload="true" (onSelect)="onFileSelect($event, 'PP')" (onClear)="onClear('PP')"
+                            (uploadHandler)="onUpload($event,'PP')" />
+            
                     </div>
-                    <div class="flex items-end">
-                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                            [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload Electricity Bill" />
+                    @if(ppFile){
+                    <div class="flex justify-center md:justify-start gap-2">
+                        <p-button label="Upload" icon="pi pi-upload" (onClick)="propertyPhotoUploader.upload()" severity="info" />
+                        <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('PP')" />
                     </div>
+                    }
                 </div>
+                <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
+            
+            </div>
 
-                <!-- <div class="flex gap-2 w-full my-4">
-                    <div>
-                        <label class="inline-block mb-4" for="identityProof">Upload Photo</label>
-                        <p-fileupload class="my-4" #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                            maxFileSize="000000" customUpload="true"
-                            (uploadHandler)="onUpload($event, 'userPhoto', up)" />
-                    </div>
-                    <div class="flex items-end">
-                        <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                            [disabled]="up.files.length === 0" tooltipPosition="left" pTooltip="Upload Electricity Bill" />
-                    </div>
-                </div> -->
+            <div class="gesil-card">
+                <div class="flex">
+                    <button pButton [disabled]="propertyForm.invalid" (click)="onSubmit()">Submit</button>
+
+                </div>
             </div>
 
         </div>

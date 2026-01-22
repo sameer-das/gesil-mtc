@@ -9,16 +9,26 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { TooltipModule } from 'primeng/tooltip';
-import { Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { Subject, switchMap, takeUntil, tap, filter } from 'rxjs';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
-import { APIResponse, ParentOptions, ParentUserTypeForMapping, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserDetail } from '../../../models/user.model';
+import { APIResponse, ParentOptions, ParentUserTypeForMapping, Permissions, UpdatePermission, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserDetail, UserListWithUserType, UserPermissions } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { UserCreateComponent } from "../user-create/user-create.component";
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { ToggleButtonChangeEvent, ToggleButtonModule } from 'primeng/togglebutton';
+
 export enum TABTYPE {
   BASIC_DETAIL = 'basic-details',
   DOCUMENTS = 'documents',
   REPORTING = 'reporting'
+}
+
+interface UserPermissionTable {
+  featureId: number;
+  featureName: string;
+  isAllowed: boolean;
+  mappingId: number;
 }
 
 @Component({
@@ -29,7 +39,12 @@ export enum TABTYPE {
     ButtonModule,
     SelectModule,
     FormsModule,
-    FileUploadModule, DividerModule, ReactiveFormsModule, TooltipModule, RouterModule],
+    FileUploadModule,
+    DividerModule,
+    ReactiveFormsModule,
+    TooltipModule,
+    RouterModule,
+    TableModule, ToggleButtonModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.scss'
 })
@@ -46,18 +61,20 @@ export class UserEditComponent implements OnInit {
   userDetail!: UserDetail;
   userBasicDetail!: UpdateUserBasicDetails;
 
-  parentOptions: ParentOptions[] = [];
-  selectedParent!: ParentOptions | undefined;
+  parentOptions: UserListWithUserType[] = [];
+  selectedParent!: UserListWithUserType | undefined;
 
   aadharNo: FormControl = new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')]);
   pan: FormControl = new FormControl('', [Validators.required, Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]$/)]);
 
+  selectedTab: string = 'basic-details';
 
-  selectedTab: string = 'basic-details'
+  userPermission: UserPermissionTable[] = [];
+  permissions: Permissions[] = [];
 
   ngOnInit(): void {
     this.fetchUserDetails();
-    this.setActiveTab()
+    this.setActiveTab();
   }
 
 
@@ -72,13 +89,63 @@ export class UserEditComponent implements OnInit {
 
 
 
+  fetchUserPermissions() {
+    this.usersService.getAllPermission()
+      .pipe(
+        takeUntil(this.$destroy),
+        tap((resp: APIResponse<Permissions[]>) => { this.permissions = resp.data }),
+        switchMap(_ => this.usersService.getFeatureMapping(this.userDetail.userId, 0)),
+        tap((userPersmissionResp: APIResponse<UserPermissions[]>) => {
+          this.userPermission = this.permissions.map((permission: Permissions) => {
+            const existingPermission = userPersmissionResp.data.find((userPermission: UserPermissions) => userPermission.featureId === permission.featureId);
+
+            return {
+              featureId: permission.featureId,
+              featureName: permission.feature,
+              isAllowed: existingPermission?.mappingActive ?? false,
+              mappingId: existingPermission?.mappingId ?? 0
+            }
+          })
+          console.log(this.userPermission)
+        })
+      ).subscribe()
+  }
+
+
+  onPermissionChange(e: ToggleButtonChangeEvent, permission: UserPermissionTable) {
+    const payload: UpdatePermission = {
+      mappingId: permission.mappingId,
+      userId: this.userDetail.userId,
+      groupId: -1,
+      featureId: permission.featureId,
+      featureActive: permission.isAllowed
+    }
+    console.log(payload)
+
+    this.usersService.updateFeatureMapping(payload)
+      .pipe(takeUntil(this.$destroy),
+        tap((resp: APIResponse<string>) => {
+          if (resp.code === 200 && resp.data === 'S') {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `Permission updated successfully.`, life: MessageDuaraion.STANDARD })
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: `Permissioin Update Failed!`, life: MessageDuaraion.STANDARD })
+          }
+          this.fetchUserPermissions();
+        }))
+      .subscribe();
+  }
+
+
+
+
+
   updateUserParentMapping() {
     console.log(this.selectedParent);
     if (this.selectedParent) {
       const updateUserMappingPayload: UpdateUserParentTypePayload = {
         userId: this.currentUserId,
-        parentUserType: this.selectedParent.parentUserType,
-        parentUser: this.selectedParent.parentUserId
+        parentUserType: this.selectedParent.userType, // change this
+        parentUser: this.selectedParent.userId
       }
 
       this.usersService.updateUserParentDetails(updateUserMappingPayload).pipe(takeUntil(this.$destroy))
@@ -130,7 +197,8 @@ export class UserEditComponent implements OnInit {
             this.aadharNo.setValue(this.userDetail.aadharNo);
             this.pan.setValue(this.userDetail.pan)
 
-            this.fetchParentTypesForCurrentUserType(this.userDetail.userType);
+            this.fetchWholeUserList();
+            this.fetchUserPermissions();
 
           }
         }))
@@ -139,20 +207,45 @@ export class UserEditComponent implements OnInit {
 
 
 
-  fetchParentTypesForCurrentUserType(userType: number) {
-    this.usersService.getParentUserType(userType).pipe(takeUntil(this.$destroy))
+  // fetchParentTypesForCurrentUserType(userType: number) {
+  //   this.usersService.getParentUserType(userType).pipe(takeUntil(this.$destroy))
+  //     .subscribe({
+  //       next: (resp: APIResponse<UserListWithUserType[]>) => {
+  //         console.log(resp)
+  //         if (resp.code === 200) {
+  //           this.parentOptions = (resp.data)
+  //             .map((curr: UserListWithUserType) => ({ ...curr, optionLabel: `${curr.parentFirstName} ${curr.parentMiddleName} ${curr.parentLastName} (${curr.parentUserTypeName})` }))
+
+  //           if (this.userDetail.parentUserId > 0) {
+  //             // set selectedParent as the user is already mapped to parent
+
+  //             this.selectedParent = this.parentOptions.find((curr: ParentOptions) => {
+  //               return curr.parentUserId === this.userDetail.parentUserId
+  //             })
+  //           }
+  //         }
+  //       }
+  //     })
+  // }
+
+
+
+  fetchWholeUserList() {
+    this.usersService.getUserWholeList(0, 0).pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse<ParentUserTypeForMapping[]>) => {
+        next: (resp: APIResponse<UserListWithUserType[]>) => {
           console.log(resp)
           if (resp.code === 200) {
-            this.parentOptions = (resp.data)
-              .map((curr: ParentUserTypeForMapping) => ({ ...curr, optionLabel: `${curr.parentFirstName} ${curr.parentMiddleName} ${curr.parentLastName} (${curr.parentUserTypeName})` }))
+            this.parentOptions = resp.data
+              .filter(curr => curr.userId !== this.userDetail.userId)
+              .map((curr) => ({ ...curr, optionLabel: `${curr.userName} (${curr.userTypeName})` }))
+
 
             if (this.userDetail.parentUserId > 0) {
               // set selectedParent as the user is already mapped to parent
 
-              this.selectedParent = this.parentOptions.find((curr: ParentOptions) => {
-                return curr.parentUserId === this.userDetail.parentUserId
+              this.selectedParent = this.parentOptions.find((curr: UserListWithUserType) => {
+                return curr.userId === this.userDetail.parentUserId
               })
             }
           }
@@ -210,7 +303,7 @@ export class UserEditComponent implements OnInit {
       .subscribe({
         next: (resp: APIResponse<string>) => {
           if (resp.code === 200 && resp.data === 'S') {
-            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `User ${type} updated successfully.`, life: MessageDuaraion.STANDARD})
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `User ${type} updated successfully.`, life: MessageDuaraion.STANDARD })
           } else {
             this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: `Update Failed!`, life: MessageDuaraion.STANDARD })
           }

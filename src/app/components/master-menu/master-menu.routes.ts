@@ -18,6 +18,8 @@ import { RoadTypeListComponent } from './road-type/road-type-list/road-type-list
 import { RoadTypeCreateComponent } from './road-type/road-type-create/road-type-create.component';
 import { PropertyTypeListComponent } from './property-type/property-type-list/property-type-list.component';
 import { CreateElectricityTypeComponent } from './electricity-type/create-electricity-type/create-electricity-type.component';
+import { MohallaListComponent } from './mohalla/mohalla-list/mohalla-list.component';
+import { MohallaCreateComponent } from './mohalla/mohalla-create/mohalla-create.component';
 
 
 
@@ -55,6 +57,10 @@ export default [
     { path: 'electricity-list', component: ElectricityTypeListComponent },
     { path: 'electricity-create', component: CreateElectricityTypeComponent },
     { path: 'electricity-edit/:electricityConnectionId', component: CreateElectricityTypeComponent },
+
+    { path: 'mohalla-list', component: MohallaListComponent },
+    { path: 'mohalla-create', component:  MohallaCreateComponent},
+    { path: 'mohalla-edit/:mohallaId', component: MohallaCreateComponent },
 
 
 ] as Routes;

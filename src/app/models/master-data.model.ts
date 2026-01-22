@@ -95,3 +95,15 @@ export interface ElectricityConnectionType {
     electricityConnectionId: number;
     electricityConnectionName: string;
 }
+
+
+export interface Mohalla {
+    mohallaId: number;
+    mohallaName: string;
+    active?: number;
+}
+
+export interface CreateUpdateMohalla {
+    mohallaId?: number;
+    mohallaName: string;
+}

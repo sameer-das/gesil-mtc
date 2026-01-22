@@ -1,4 +1,4 @@
-import { ElectricityConnectionType, Fy, OwnershipType, PropertyType, SubCategory } from './../models/master-data.model';
+import { CreateUpdateMohalla, ElectricityConnectionType, Fy, Mohalla, OwnershipType, PropertyType, SubCategory } from './../models/master-data.model';
 import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -144,6 +144,23 @@ export class MasterDataService {
   }
   updateElectricityConnectionType(payload: ElectricityConnectionType): Observable<APIResponse<string>> {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateElectricityConnection}`, payload);
+  }
+
+
+  createMohalla(createMohallaPayload: CreateUpdateMohalla): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.mohallaCreate}`, createMohallaPayload);
+  }
+
+  mohallaList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ mohallas: Mohalla[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ mohallas: Mohalla[], totalCount: number }>>(`${this.API_URL}${environment.mohallaList}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+
+  mohallaDetails(mohallaId: number): Observable<APIResponse<Mohalla>> {
+    return this.http.get<APIResponse<Mohalla>>(`${this.API_URL}${environment.mohallaDetail}?mohallaId=${mohallaId}`);
+  }
+
+  updateMohalla(createMohallaPayload: CreateUpdateMohalla): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateMohalla}`, createMohallaPayload);
   }
 
 

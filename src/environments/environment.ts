@@ -27,6 +27,11 @@ export const environment = {
     userDocumentUpload: '/Admin/userDocumentUpload',
     updateUserAadharPan: '/Admin/updateUserAadharPan',
     userDownloadDocument: '/Admin/userDocumentDownload',
+    getUserWholeList: '/Admin/getUserWholeList',
+    
+    getFeatureList: '/Admin/getFeatureList',
+    getFeatureMapping: '/Admin/getFeatureMapping',
+    updateFeatureMapping: '/Admin/updateFeatureMapping',
 
     // ***************** MASTER DATA Related API URLs *****************
 
@@ -71,6 +76,11 @@ export const environment = {
     electricityConnectionDetail: '/Master/electricityConnectionDetail',
     updateElectricityConnection: '/Master/updateElectricityConnection',
 
+    mohallaList: '/Master/mohallaList',
+    mohallaCreate: '/Master/createMohalla',
+    mohallaDetail: '/Master/mohallaDetail',
+    updateMohalla: '/Master/updateMohalla',
+
 
 
     // ********************** OWNER DETAILS Related API URLs *****************
@@ -81,4 +91,5 @@ export const environment = {
     searchOwner: '/Master/searchOwner',
     ownerDocumentUpload: '/Master/ownerDocumentUpload',
     ownerDocumentDownload: '/Master/ownerDocumentDownload',
+    getPropertyMasterDetails: '/Master/getPropertyMasterDetails'
 };

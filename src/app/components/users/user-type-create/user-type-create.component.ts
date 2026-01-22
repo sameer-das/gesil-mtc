@@ -33,16 +33,13 @@ export class UserTypeCreateComponent implements OnInit, OnDestroy {
 
   userTypeForm: FormGroup = new FormGroup({
     userType: new FormControl('', [Validators.required]),
-    parentReportingUserType: new FormControl<UserType[]>([], [Validators.required])
+    // parentReportingUserType: new FormControl<UserType[]>([], [Validators.required])
   })
 
   userTypeDetails!: UserType;
 
   allUserTypes: UserType[] = [
-    { userType: 2, userTypeName: 'Project Manager' },
-    { userType: 3, userTypeName: 'Municipalty Admin' },
-    { userType: 4, userTypeName: 'Project Lead' },
-    { userType: 5, userTypeName: 'Team Lead' },
+    { userType: 1, userTypeName: 'Admin' },
   ]
 
 

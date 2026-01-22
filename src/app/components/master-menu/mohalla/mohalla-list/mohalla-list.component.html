@@ -1,8 +1,8 @@
-<app-page-header title="Ward List" />
+<app-page-header title="Mohalla List"></app-page-header>
 
 <div class="gesil-card mt-4">
-    <p-table [value]="wards"
-        dataKey="wardId" 
+    <p-table [value]="mohallas"
+        dataKey="mohallaId" 
         [rows]="TABLE_CONFIG.rows"
         [rowHover]="TABLE_CONFIG.rowHover"
         [showGridlines]="TABLE_CONFIG.showGridlines" 
@@ -14,8 +14,8 @@
         (onPage)="onPaginate($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
-                <a [routerLink]="['../','ward-create']" class="p-button ml-auto">
-                    <i class="pi pi-plus-circle"></i>Add New Ward
+                <a [routerLink]="['../','mohalla-create']" class="p-button ml-auto">
+                    <i class="pi pi-plus-circle"></i>Add New Mohalla
                 </a>
             </div>
         </ng-template>
@@ -29,17 +29,7 @@
                 </th>
                 <th style="min-width: 12rem">
                     <div class="flex justify-between items-center">
-                        Ward Name
-                    </div>
-                </th>
-                <th style="min-width: 12rem">
-                    <div class="flex justify-between items-center">
-                        Ward Number
-                    </div>
-                </th>
-                <th style="min-width: 12rem">
-                    <div class="flex justify-between items-center">
-                        Zone Name
+                        Mohalla Name
                     </div>
                 </th>
                 <th style="min-width: 12rem">
@@ -57,19 +47,13 @@
                     {{ index + 1 }}
                 </td>
                 <td>
-                    {{ item.wardName }}
+                    {{ item.mohallaName }}
                 </td>
                 <td>
-                    {{ item.wardNumber }}
-                </td>
-                <td>
-                    {{ item.zoneName }}
-                </td>
-                <td>
-                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'ward-edit', item.wardId]" [rounded]="true" class="mr-2" severity="help"
+                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'mohalla-edit', item.mohallaId]" [rounded]="true" class="mr-2" severity="help"
                      pTooltip="Edit"></a>
-                    <!-- <p-button icon="pi pi-trash" [rounded]="true" class="" severity="danger"
-                        (click)="deleteUserType(item)" pTooltip="Delete"></p-button> -->
+                     <!-- <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
+                        [routerLink]="['../','mohalla-details', item.mohallaId]" pTooltip="View"></a> -->
                 </td>
 
             </tr>

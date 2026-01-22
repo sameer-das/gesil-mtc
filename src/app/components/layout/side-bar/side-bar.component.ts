@@ -84,6 +84,16 @@ export class SideBarComponent {
           }
         },
         {
+          label: 'Mohalla',
+          icon: 'pi pi-list',
+          routerLink: '/master/mohalla-list',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e);
+            // this.router.navigate(['/user/create'])
+          }
+        },
+        {
           label: 'Property Type',
           icon: 'pi pi-list',
           routerLink: '/master/property-list',
@@ -103,36 +113,36 @@ export class SideBarComponent {
             // this.router.navigate(['/user/create'])
           }
         },
+        // {
+        //   label: 'Electricity Connection',
+        //   icon: 'pi pi-list',
+        //   routerLink: '/master/electricity-list',
+        //   routerLinkActiveOptions: { exact: true },
+        //   command: (e: MenuItemCommandEvent) => {
+        //     // console.log(e);
+        //     // this.router.navigate(['/user/create'])
+        //   }
+        // },
         {
-          label: 'Electricity Connection',
+          label: 'Category List',
           icon: 'pi pi-list',
-          routerLink: '/master/electricity-list',
+          routerLink: '/master/category-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
-            // console.log(e);
-            // this.router.navigate(['/user/create'])
+            // console.log(e)
+            // this.router.navigate([''])
           }
         },
-        // {
-        //   label: 'Category List',
-        //   icon: 'pi pi-list',
-        //   routerLink: '/master/category-list',
-        //   routerLinkActiveOptions: { exact: true },
-        //   command: (e: MenuItemCommandEvent) => {
-        //     // console.log(e)
-        //     // this.router.navigate([''])
-        //   }
-        // },
-        // {
-        //   label: 'Sub-category List',
-        //   icon: 'pi pi-list',
-        //   routerLink: '/master/sub-category-list',
-        //   routerLinkActiveOptions: { exact: true },
-        //   command: (e: MenuItemCommandEvent) => {
-        //     // console.log(e)
-        //     // this.router.navigate([''])
-        //   }
-        // },
+        {
+          label: 'Sub-category List',
+          icon: 'pi pi-list',
+          routerLink: '/master/sub-category-list',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e)
+            // this.router.navigate([''])
+          }
+        },
         {
           label: 'Financial Years',
           icon: 'pi pi-list',
@@ -167,7 +177,7 @@ export class SideBarComponent {
       ],
 
     }, {
-      label: 'Property Owner',
+      label: 'Property and Owner',
       icon: 'pi pi-users',
       items: [
         {
@@ -181,15 +191,25 @@ export class SideBarComponent {
           }
         },
         {
-          label: 'New Property Owner',
-          icon: 'pi pi-list',
-          routerLink: '/owner',
+          label: 'Quick Add Property',
+          icon: 'pi pi-building-columns',
+          routerLink: '/owner/quick-add-property',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
             // this.router.navigate([''])
           }
         },
+        // {
+        //   label: 'New Property Owner',
+        //   icon: 'pi pi-list',
+        //   routerLink: '/owner',
+        //   routerLinkActiveOptions: { exact: true },
+        //   command: (e: MenuItemCommandEvent) => {
+        //     // console.log(e)
+        //     // this.router.navigate([''])
+        //   }
+        // },
         
       ]
     }

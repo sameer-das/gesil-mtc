@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { APIResponse, ChildUserType, CreateUserTypePayload, District, ParentUserTypeForMapping, State, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UpdateUserTypePayload, UserBasicDetails, UserDetail, UserList, UserType } from '../models/user.model';
+import { APIResponse, ChildUserType, CreateUserTypePayload, District, ParentUserTypeForMapping, Permissions, State, UpdatePermission, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UpdateUserTypePayload, UserBasicDetails, UserDetail, UserList, UserListWithUserType, UserPermissions, UserType } from '../models/user.model';
+import { SHOW_LOADER } from './httpContexts';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,8 @@ export class UsersService {
     return this.http.get<APIResponse<District[]>>(`${this.API_URL}${environment.districtMaster}${stateId}`);
   }
 
-  getUserList(userType: number, pageNumber: number, pageSize: number): Observable<APIResponse<{ userLists: UserList[], totalCount: number}>> {
-    return this.http.get<APIResponse<{userLists: UserList[], totalCount: number}>>(`${this.API_URL}${environment.getUserList}?userType=${userType}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  getUserList(userType: number, pageNumber: number, pageSize: number): Observable<APIResponse<{ userLists: UserList[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ userLists: UserList[], totalCount: number }>>(`${this.API_URL}${environment.getUserList}?userType=${userType}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
   getUserDetails(userId: number): Observable<APIResponse<UserDetail>> {
@@ -49,6 +50,10 @@ export class UsersService {
 
   getParentUserType(currentUserType: number): Observable<APIResponse<ParentUserTypeForMapping[]>> {
     return this.http.get<APIResponse<ParentUserTypeForMapping[]>>(`${this.API_URL}${environment.userParentMapping}${currentUserType}`)
+  }
+
+  getUserWholeList(pageSize: number, pageNumber: number): Observable<APIResponse<UserListWithUserType[]>> {
+    return this.http.get<APIResponse<UserListWithUserType[]>>(`${this.API_URL}${environment.getUserWholeList}`, { params: { pageSize, pageNumber } });
   }
 
   createUserType(payload: CreateUserTypePayload): Observable<APIResponse<string>> {
@@ -69,6 +74,21 @@ export class UsersService {
   }
 
   updateUserAadharPan(payload: UpdateUserAadharPan): Observable<APIResponse<string>> {
-        return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateUserAadharPan}`, payload);
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateUserAadharPan}`, payload);
   }
+
+  // ==========================================================================================
+
+  getAllPermission(): Observable<APIResponse<Permissions[]>> {
+    return this.http.get<APIResponse<Permissions[]>>(`${this.API_URL}${environment.getFeatureList}`);
+  }
+
+  getFeatureMapping(userId: number, groupId: number): Observable<APIResponse<UserPermissions[]>> {
+    return this.http.get<APIResponse<UserPermissions[]>>(`${this.API_URL}${environment.getFeatureMapping}?userId=${userId}&groupId=${groupId}`, {context: new HttpContext().set(SHOW_LOADER, false)});
+  }
+
+  updateFeatureMapping(payload: UpdatePermission):  Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateFeatureMapping}`, payload, {context: new HttpContext().set(SHOW_LOADER, false)})
+  }
+
 }

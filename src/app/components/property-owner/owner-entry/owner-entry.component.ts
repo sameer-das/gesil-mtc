@@ -181,7 +181,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
     } else if (this.editMode()) {
       const updateOwnerPayload: UpdateOwnerDetail = {
         ownerId: this.ownerId() || 0,
-        salutaion: this.addNewOwnerForm.value.salutation,
+        salutation: this.addNewOwnerForm.value.salutation,
         ownerName: this.addNewOwnerForm.value.ownerName,
         careOf: this.addNewOwnerForm.value.careOf.code,
         guardianName: this.addNewOwnerForm.value.guardianName,
@@ -227,7 +227,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
           this.ownerAadhar.set(resp.data?.aadhar);
 
           this.addNewOwnerForm.patchValue({
-            salutation: resp.data.salutaion,
+            salutation: resp.data.salutation,
             ownerName: resp.data.ownerName,
             careOf: this.careOfs.find(c => c.code.toLowerCase() === resp.data.careOf.toLowerCase()),
             guardianName: resp.data.guardianName,
