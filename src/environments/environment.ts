@@ -91,5 +91,9 @@ export const environment = {
     searchOwner: '/Master/searchOwner',
     ownerDocumentUpload: '/Master/ownerDocumentUpload',
     ownerDocumentDownload: '/Master/ownerDocumentDownload',
-    getPropertyMasterDetails: '/Master/getPropertyMasterDetails'
+    getPropertyMasterDetails: '/Master/getPropertyMasterDetails',
+
+    updateProperty:'/Master/AddOrUpdatePropertyMaster',
+    approveRejectProperty:'/Master/approveRejectProperty',
+    getApprovalLog:'/Master/getApprovalLog',
 };

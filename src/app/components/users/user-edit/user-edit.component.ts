@@ -1,3 +1,4 @@
+import { PERMISSIONS } from './../../../models/constants';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, RouterModule } from '@angular/router';
@@ -17,6 +18,7 @@ import { PageHeaderComponent } from "../../utils/page-header/page-header.compone
 import { UserCreateComponent } from "../user-create/user-create.component";
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ToggleButtonChangeEvent, ToggleButtonModule } from 'primeng/togglebutton';
+import { PermissionService } from '../../../services/permission.service';
 
 export enum TABTYPE {
   BASIC_DETAIL = 'basic-details',
@@ -54,6 +56,8 @@ export class UserEditComponent implements OnInit {
   private usersService: UsersService = inject(UsersService)
   private route: ActivatedRoute = inject(ActivatedRoute);
   private messageService: MessageService = inject(MessageService);
+  permissionService: PermissionService = inject(PermissionService);
+  PERMISSIONS = PERMISSIONS;
 
   private currentUserId!: number;
   private currentUserType!: number;

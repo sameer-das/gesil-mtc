@@ -9,7 +9,7 @@
             <div class="flex flex-col md:flex-row gap-2 md:gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="salutation">Salutation</label>
-                    <p-select id="salutation" [options]="salutations" placeholder="Select" class="w-full"
+                    <p-select id="salutation" [options]="salutations" optionLabel="label" placeholder="Select" class="w-full"
                         formControlName="salutation"></p-select>
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('salutation')">
                         Please choose a salutation for the owner.
@@ -25,7 +25,7 @@
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="careOf">Select Care of</label>
-                    <p-select id="careOf" [options]="careOfs" optionLabel="name" placeholder="Select" class="w-full"
+                    <p-select id="careOf" [options]="careOfs" optionLabel="label" placeholder="Select" class="w-full"
                         formControlName="careOf"></p-select>
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('careOf')">
                         Please choose a care of.
@@ -45,7 +45,7 @@
             <div class="flex flex-col md:flex-row gap-2 md:gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="gender">Gender</label>
-                    <p-select id="gender" [options]="genders" optionLabel="name" placeholder="Select Gender"
+                    <p-select id="gender" [options]="genders" optionLabel="label" placeholder="Select Gender"
                         class="w-full" formControlName="gender"></p-select>
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('gender')">
                         Please choose gender of the owner.
@@ -72,7 +72,7 @@
             </div>
 
             <!-- Row 3 -->
-            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+            <!-- <div class="flex flex-col md:flex-row gap-2 md:gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="email">Email ID</label>
                     <input pInputText id="email" placeholder="Enter Email ID" type="text" formControlName="email" />
@@ -97,33 +97,32 @@
                         Please enter a valid PAN.
                     </div>
                 </div>
-
-            </div>
+            </div> -->
 
             <!-- Row 6 -->
             <div class="flex gap-2 flex-col md:flex-row">
                 <div class="flex flex-1 items-center gap-2">
-                    <p-checkbox formControlName="isSpecialOwner" value="false" inputId="isSpecialOwner" />
+                    <!-- <p-checkbox formControlName="isSpecialOwner" value="false" inputId="isSpecialOwner" />
                     <label for="isSpecialOwner" class="ml-2">Is the owner a woman/Senior citizen/physically
-                        challenged/Transgender/Officers of the Indian Armed Forces/Air/Navy</label>
+                        challenged/Transgender/Officers of the Indian Armed Forces/Air/Navy</label> -->
                 </div>
 
                 <div class="flex gap-2 justify-center md:justify-end">
-                    @if(addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
+                    <!-- @if(addNewOwnerForm.get('aadhar')?.hasError('aadharAlreadyUsed')) {
                         <a pButton [routerLink]="['/owner', 'detail',  addNewOwnerForm.get('aadhar')?.getError('ownerId')]" severity="help" icon="pi pi-eye">View Owner Details</a>
-                    } @else {
+                    } @else { -->
                         <p-button raised="true" severity="secondary" (click)="addNewOwnerForm.reset()">Reset</p-button>
                         <p-button raised="true" type="button" [disabled]="addNewOwnerForm.invalid"
                             (click)="askConfirmationOnSave($event)">{{
                             editMode() ? 'Update Details' : 'Save Details' }}</p-button>
-                    } 
+                    <!-- }  -->
                 </div>
             </div>
-            @if(addNewOwnerForm.get('isSpecialOwner')?.value?.length > 0) {
+            <!-- @if(addNewOwnerForm.get('isSpecialOwner')?.value?.length > 0) {
             <div class="mt-4">
                 <p-message severity="warn">{{certificateUploadMessage}}</p-message>
             </div>
-            }
+            } -->
 
         </div>
     </form>

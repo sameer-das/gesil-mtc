@@ -59,12 +59,77 @@
         </div>
     </div> -->
 
-    <div class="gesil-card col-span-12 col-start-1 lg:col-start-4 xl:col-start-3 lg:col-span-6 xl:col-span-8">
-        <div class="flex flex-col gap-4">
-            <input type="text" fluid pInputText [pAutoFocus]="true" placeholder="Search by PIN/Survey No." 
-            [ngModel]="searchPin" (ngModelChange)="searchPin = $event.toUpperCase()" 
-             />
-            <button pButton fluid [disabled]="!searchPin.trim()" (click)="searchProperty()">Search</button>
-        </div>
+    <div class="gesil-card col-span-12 col-start-1 lg:col-start-4 xl:col-start-4 lg:col-span-6 xl:col-span-6">
+        <form class="flex flex-col gap-4" #f="ngForm" (ngSubmit)="searchProperty(f.value)">
+
+            <p-inputgroup>
+                <input type="text" pInputText [pAutoFocus]="true" name="searchValue"
+                    [placeholder]="`Search by ${searchForm.searchBy === 'ownerName' ? 'Owner Name' : (searchForm.searchBy === 'householdNo' ? 'PIN/Survey No': searchForm.searchBy)}`"
+                    [ngModel]="searchForm.searchValue"
+                    (ngModelChange)="searchForm.searchValue = $event.toUpperCase()" />
+                <p-inputgroup-addon>
+                    <p-button type="submit" [disabled]="!searchForm.searchValue.trim()" icon="pi pi-search"
+                        severity="primary" variant="text" (click)="searchProperty(f.value)" />
+                </p-inputgroup-addon>
+            </p-inputgroup>
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="flex items-center">
+                    <p-radiobutton name="searchBy" value="householdNo" [(ngModel)]="searchForm.searchBy"
+                        inputId="searchBy0" />
+                    <label for="searchBy0" class="ml-2">PIN/Survey No.</label>
+                </div>
+                <!-- <div class="flex items-center">
+                    <p-radiobutton name="searchBy" value="ownerName" [(ngModel)]="searchForm.searchBy" inputId="searchBy1" />
+                    <label for="searchBy1" class="ml-2">Name</label>
+                </div> -->
+
+                <div class="flex items-center">
+                    <p-radiobutton name="searchBy" value="mobile" [(ngModel)]="searchForm.searchBy"
+                        inputId="searchBy2" />
+                    <label for="searchBy2" class="ml-2">Mobile</label>
+                </div>
+
+                <!-- <div class="flex items-center">
+                        <p-radiobutton name="aadhar" value="aadhar" [(ngModel)]="searchBy" inputId="searchBy3" />
+                        <label for="searchBy3" class="ml-2">Aadhar</label>
+                    </div>
+                    <div class="flex items-center">
+                        <p-radiobutton name="email" value="email" [(ngModel)]="searchBy" inputId="searchBy5" />
+                        <label for="searchBy5" class="ml-2">Email ID</label>
+                    </div> -->
+            </div>
+
+
+        </form>
     </div>
 </div>
+@if(properties.length > 0) {
+    <div class="flex justify-between items-center mt-4">
+        <p>Result ({{properties.length}})</p>
+        <button pButton (click)="clearResults()">
+            <i class="pi pi-times" pButtonIcon></i>
+            <span pButtonLabel>Clear</span></button>
+    </div>
+}
+
+@for (property of properties; track property.propertyId) {
+<div class="gesil-card card-hover col-span-12 mt-4" (click)="onOwnerSelect(property.propertyId || 0)">
+    <div class="flex flex-col">
+        <strong [style]="{color: 'var(--primary-color)', fontSize: '1.1rem'}" class="mb-2">Owner Name: {{property.ownerName}}</strong>
+        @if(property.householdNo) {
+        <p><strong class="mr-2">Household No. /PIN: </strong>{{property.householdNo}}</p>
+        }
+        @if(property.surveyNo) {
+        <p><strong class="mr-2">Survey No: </strong>{{property.surveyNo}}</p>
+        }
+        @if(property.careOf && property.guardianName) {
+            <p><strong class="mr-2">{{property.careOf}}: </strong>{{property.guardianName}} </p>
+        }
+        <p><strong class="mr-2">Mobile: </strong>{{property.mobile}}</p>
+    </div>
+</div>
+} @empty {
+<!-- <div class="flex justify-center">
+    <h4> No property found for the provided details</h4>
+</div> -->
+}

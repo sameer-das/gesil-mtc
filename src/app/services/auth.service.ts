@@ -31,6 +31,10 @@ export class AuthService {
   logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('loginUserType');
+    localStorage.removeItem('loginUserId');
+    localStorage.removeItem('loginUserFirstName');
+    localStorage.removeItem('username');
     // Navigate to login or handle logout
     this.router.navigate(['/login'])
 

@@ -1,0 +1,31 @@
+<app-page-header title="Awaiting Approval"  [backButton]="true" />
+
+@for(property of properties; track property.propertyId ) {
+    <div class="gesil-card mt-4 flex gap-4 card-hover" (click)="propertyClick(property?.propertyId || 0)">
+        <div class="flex-1">
+            <strong class="underline">Owner Details</strong>
+            <p [style]="{color:'var(--primary-color)'}">{{property.salutation}} {{property.ownerName}} ({{property.gender}})</p>
+            <p>{{property.careOf}} {{property.guardianName}}</p>
+            <p>Mobile: {{property.guardianName}}</p>
+        </div>
+        <div class="flex-1">
+            <strong class="underline">Property Details</strong>
+            <p><strong>Property Type: </strong>({{property.propertyType}})</p>
+            <p><strong>Zone: </strong>{{property.zoneName}}</p>
+            <p><strong>Ward: </strong>{{property.wardName}}</p>
+            <p><strong>Mohalla: </strong>{{property.mohallaNameDetail}}</p>            
+            <p><strong>Area (Sq. Ft.): </strong>{{property.areaOfPlot}}</p>            
+            <p><strong>Sorrounding Road (Ft.): </strong>{{property.widthOfRoad}}</p>            
+
+        </div>
+        <div class="flex-1">
+            <strong class="underline">Property Address</strong>
+            <p>{{property.propertyAddress}}</p>
+            <p>{{property.propertyAddressHouseNo}}</p>
+            <p>{{property.propertyAddressCity}}, {{property.propertyAddressDistrict}}, PIN - {{property.propertyAddressPin}}</p>
+            <p>Land Mark: {{property.propertyAddressLandmark}}</p>            
+        </div>
+
+        <!-- <p>{{property.careOf}} {{property.guardianName}}</p> -->
+    </div>
+}

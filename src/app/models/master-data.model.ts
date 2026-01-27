@@ -107,3 +107,5 @@ export interface CreateUpdateMohalla {
     mohallaId?: number;
     mohallaName: string;
 }
+
+export type SelectType = { label: string; value: string | number };

@@ -12,13 +12,18 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
-import { ElectricityConnectionType, OwnershipType, PropertyType, Ward, Zone } from '../../../models/master-data.model';
+import { Category, ElectricityConnectionType, Mohalla, OwnershipType, PropertyType, SubCategory, Ward, Zone } from '../../../models/master-data.model';
 import { forkJoin, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FileSelectEvent, FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MasterDataService } from '../../../services/master-data.service';
-import { OwnerDocumentUpload } from '../../../models/property-owner.model';
+import { OwnerDocumentUpload, PropertySearchResultType } from '../../../models/property-owner.model';
+import { OwnerServiceService } from '../../../services/owner-service.service';
+import { Router } from '@angular/router';
+import { CAREOF_OPTIONS, GENDER_OPTIONS, SALUTATION_OPTIONS } from '../../../models/constants';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-property-entry',
@@ -35,7 +40,8 @@ import { OwnerDocumentUpload } from '../../../models/property-owner.model';
     DatePickerModule,
     CheckboxModule,
     FileUploadModule,
-
+    ToggleSwitchModule,
+    ToggleButtonModule 
   ],
   templateUrl: './property-entry.component.html',
   styleUrl: './property-entry.component.scss'
@@ -45,19 +51,37 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   ppFile: File | null = null;
   @ViewChild('ebUploader') ebUploader!: FileUpload;
   @ViewChild('propertyPhotoUploader') propertyPhotoUploader!: FileUpload;
-  ownerId = input<number>();
+  propertyId = input<number>();
 
   isCorrespondenceSame: boolean = false;
 
+  property: Partial<PropertySearchResultType> = {};
+
+  readMode = true;
+
+  genders = GENDER_OPTIONS;
+  salutations = SALUTATION_OPTIONS;
+  careOfs = CAREOF_OPTIONS;
+
   propertyForm: FormGroup = new FormGroup({
-    householdNo: new FormControl(''),
+    salutation: new FormControl(''),
+    ownerName: new FormControl(''),
+    careOf: new FormControl(''),
+    guardianName: new FormControl(''),
+
+    gender: new FormControl(''),
+    dob: new FormControl(''),
+    mobile: new FormControl(''),
+
     zone: new FormControl('', [Validators.required]),
     ward: new FormControl('', [Validators.required]),
-    wardName: new FormControl(),
-    propertyType: new FormControl('', [Validators.required] ),
-    typeOfOwnership: new FormControl('', [Validators.required]),
-    otherTypeOfOwnerShip: new FormControl(),
+    mohallaName: new FormControl('', [Validators.required]),
 
+    propertyType: new FormControl('', [Validators.required]),
+    category: new FormControl(),
+    subCategory: new FormControl(),
+
+    typeOfOwnership: new FormControl('', [Validators.required]),
     widthOfRoad: new FormControl(),
     areaOfPlot: new FormControl(),
 
@@ -68,78 +92,90 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     // For Flats/Units in multi storied builing
     buildingNo: new FormControl(),
     flatNo: new FormControl(),
-    flatSize: new FormControl(),
 
-    // Electricity 
+    // flatSize: new FormControl(),
 
-    elctricityCustomerId: new FormControl(),
-    electricityAccountNo: new FormControl(),
-    electricityBookNo: new FormControl(),
-    electricityCategory: new FormControl(),
+    // // Electricity 
 
-    // Building Plan and Water Bill Details
+    // elctricityCustomerId: new FormControl(),
+    // electricityAccountNo: new FormControl(),
+    // electricityBookNo: new FormControl(),
+    // electricityCategory: new FormControl(),
 
-    buildingPlanApprovalNo: new FormControl(),
-    buildingPlanApprovalDate: new FormControl(),
-    waterConsumerNo: new FormControl(),
-    waterConnectionDate: new FormControl(),
+    // // Building Plan and Water Bill Details
 
-    // As per Patta
+    // buildingPlanApprovalNo: new FormControl(),
+    // buildingPlanApprovalDate: new FormControl(),
+    // waterConsumerNo: new FormControl(),
+    // waterConnectionDate: new FormControl(),
 
-    district: new FormControl(),
-    tahasil: new FormControl(),
-    villageName: new FormControl(),
-    khataNo: new FormControl(),
-    plotNo: new FormControl(),
+    // // As per Patta
+
+    // district: new FormControl(),
+    // tahasil: new FormControl(),
+    // villageName: new FormControl(),
+    // khataNo: new FormControl(),
+    // plotNo: new FormControl(),
 
 
     // Property Address
-
     propertyAddress: new FormControl(),
     propertyAddressDistrict: new FormControl(),
     propertyAddressCity: new FormControl(),
     propertyAddressPin: new FormControl(),
-    latitude: new FormControl(),
-    longitude: new FormControl(),
+    propertyAddressHouseNo: new FormControl(),
+    propertyAddressLandmark: new FormControl(),
+
+    // latitude: new FormControl(),
+    // longitude: new FormControl(),
 
     // Owner Address
     isOwnerAddressSame: new FormControl(null),
+
     ownerAddress: new FormControl(),
     ownerAddressDistrict: new FormControl(),
     ownerAddressCity: new FormControl(),
     ownerAddressPin: new FormControl(),
+    ownerAddressHouseNo: new FormControl(),
+    ownerAddressLandmark: new FormControl(),
 
-    // Valcant Land
-    plotArea: new FormControl(),
-    dateOfAcquisition: new FormControl(),
-    useAsPerMasterPlan: new FormControl(),
-
-
-    // Mobile Tower
-    mobileTowerArea: new FormControl(),
-    mobileTowerDateOfInstallation: new FormControl(),
+    // // Valcant Land
+    // plotArea: new FormControl(),
+    // dateOfAcquisition: new FormControl(),
+    // useAsPerMasterPlan: new FormControl(),
 
 
-    // Hoarding
-    hoardingArea: new FormControl(),
-    hoardingDateOfInstallation: new FormControl(),
+    // // Mobile Tower
+    // mobileTowerArea: new FormControl(),
+    // mobileTowerDateOfInstallation: new FormControl(),
 
 
-    // Petrol Pump
-    petrolpumpUndergroundArea: new FormControl(),
-    petrolpumpDateOfCompletion: new FormControl(),
+    // // Hoarding
+    // hoardingArea: new FormControl(),
+    // hoardingDateOfInstallation: new FormControl(),
 
-    // Water Harvesting provision
-    hasWaterHarvestingProvision: new FormControl()
+
+    // // Petrol Pump
+    // petrolpumpUndergroundArea: new FormControl(),
+    // petrolpumpDateOfCompletion: new FormControl(),
+
+    // // Water Harvesting provision
+    // hasWaterHarvestingProvision: new FormControl()
 
   })
 
 
   zones: Zone[] = [];
   wards: Ward[] = [];
+  mohallas: Mohalla[] = [];
+
   propertyTypes: PropertyType[] = [];
+  categories: Category[] = [];
+  subCategory: SubCategory[] = [];
+
   typeOfOwnerships: OwnershipType[] = [];
-  electricityCagtegory: ElectricityConnectionType[] = [];
+
+  // electricityCagtegory: ElectricityConnectionType[] = [];
 
   masterDataFetched = signal<boolean>(false);
   propertyTypeFetched = signal<boolean>(false);
@@ -153,7 +189,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   messageService: MessageService = inject(MessageService);
   masterDataService: MasterDataService = inject(MasterDataService);
-
+  ownerService: OwnerServiceService = inject(OwnerServiceService);
+  private router = inject(Router);
 
 
 
@@ -164,6 +201,34 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    console.log(this.propertyId());
+    if (this.propertyId()) {
+      this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId()))
+        .pipe(takeUntil(this.$destroy),
+          tap((resp: APIResponse<PropertySearchResultType[]>) => {
+            console.log(resp)
+            if (resp.code === 200 && resp.status === 'Success') {
+              if (resp.data.length > 0) {
+                this.property = resp.data[0];
+                // initialize the form
+                this.propertyForm.patchValue({
+
+                })
+              }
+              else {
+                this.property = {};
+                this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
+              }
+            } else {
+              this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found with provided details.`, life: MessageDuaraion.STANDARD })
+            }
+          }))
+        .subscribe()
+    } else {
+      this.router.navigate(['/owner', 'owner-search']);
+    }
+
+
     this.propertyForm.get('propertyType')?.valueChanges.pipe(
       takeUntil(this.$destroy),
       tap((propertyType: { propertyTypeId: number; propertyTypeName: string; }) => {
@@ -193,7 +258,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
       takeUntil(this.$destroy),
       tap((val: number) => {
-        if(this.propertyForm.value.propertyType.propertyTypeId === 2 && !val) {
+        if (this.propertyForm.value.propertyType.propertyTypeId === 2 && !val) {
           console.log('mark the form invalid')
         }
         this.floorWiseDataFormArray.clear();
@@ -213,22 +278,22 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
     this.propertyForm.get('isOwnerAddressSame')?.valueChanges.pipe(
       takeUntil(this.$destroy),
-      tap((val:string[]) => {
-        if(val.length > 0) {
+      tap((val: string[]) => {
+        if (val.length > 0) {
           // Make the forms readonly
           this.propertyForm.patchValue({
             ownerAddress: this.propertyForm.value.propertyAddress,
             ownerAddressDistrict: this.propertyForm.value.propertyAddressDistrict,
             ownerAddressCity: this.propertyForm.value.propertyAddressCity,
-            ownerAddressPin: this.propertyForm.value.propertyAddressPin            
+            ownerAddressPin: this.propertyForm.value.propertyAddressPin
           });
           this.isCorrespondenceSame = true
         } else {
           this.propertyForm.patchValue({
-            ownerAddress:'',
-            ownerAddressDistrict:'',
-            ownerAddressCity:'',
-            ownerAddressPin:''
+            ownerAddress: '',
+            ownerAddressDistrict: '',
+            ownerAddressCity: '',
+            ownerAddressPin: ''
           })
           this.isCorrespondenceSame = false
         }
@@ -260,7 +325,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             this.zones = zoneResp.data.zones;
             this.propertyTypes = propertyResp.data.propertyTypes;
             this.typeOfOwnerships = ownershipResp.data.oTypes;
-            this.electricityCagtegory = electricityResp.data.econnections;
+            // this.electricityCagtegory = electricityResp.data.econnections;
           }
         }))
       .subscribe();
@@ -347,7 +412,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       const newFileNameWithoutExtention = fileNameParts.slice(0, fileNameParts.length - 1).join('_');
 
       const payload: OwnerDocumentUpload = {
-        "ownerId": Number(this.ownerId() || 0),
+        "ownerId": Number(0),
         "documentType": type,
         "documentName": newFileNameWithoutExtention,
         "documentBase64data": reader.result

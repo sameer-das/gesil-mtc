@@ -4,11 +4,11 @@
 <div class="gesil-card mt-4">
     <p-tabs [value]="selectedTab">
         <p-tablist>
-            <p-tab [routerLink]="[]" [queryParams]="{tab: 'basic-details'}" value="basic-details">User Basic
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DETAILS)" [routerLink]="[]" [queryParams]="{tab: 'basic-details'}" value="basic-details">User Basic
                 Details</p-tab>
-            <p-tab [routerLink]="[]" [queryParams]="{tab: 'documents'}" value="documents">User Documents</p-tab>
-            <p-tab [routerLink]="[]" [queryParams]="{tab: 'reporting'}" value="reporting">User Reporting</p-tab>
-            <p-tab [routerLink]="[]" [queryParams]="{tab: 'permission'}" value="permission">User Permission</p-tab>
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DOCUMENT)" [routerLink]="[]" [queryParams]="{tab: 'documents'}" value="documents">User Documents</p-tab>
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_REPORTING_STRUCTURE)" [routerLink]="[]" [queryParams]="{tab: 'reporting'}" value="reporting">User Reporting</p-tab>
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_PERMISSION)" [routerLink]="[]" [queryParams]="{tab: 'permission'}" value="permission">User Permission</p-tab>
             <!-- <p-tab [routerLink]="[]" [queryParams]="{tab: 'doc'}" value="3">Wards Assignment</p-tab> -->
         </p-tablist>
         <p-tabpanels>

@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
@@ -13,6 +13,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
 import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { PermissionService } from './services/permission.service';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) =>
     new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -22,7 +23,8 @@ export const appConfig: ApplicationConfig = {
 
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAppInitializer(() => {
-      console.log('App initializer ran')
+      console.log('App initializer ran');
+      inject(PermissionService).refreshPermissions();
     }),
     provideHttpClient(withInterceptors([loaderInterceptor, authInterceptor])),
     provideRouter(routes, withComponentInputBinding()),

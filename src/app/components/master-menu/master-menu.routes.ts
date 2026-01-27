@@ -20,47 +20,176 @@ import { PropertyTypeListComponent } from './property-type/property-type-list/pr
 import { CreateElectricityTypeComponent } from './electricity-type/create-electricity-type/create-electricity-type.component';
 import { MohallaListComponent } from './mohalla/mohalla-list/mohalla-list.component';
 import { MohallaCreateComponent } from './mohalla/mohalla-create/mohalla-create.component';
+import { inject } from '@angular/core';
+import { PermissionService } from '../../services/permission.service';
+import { PERMISSIONS } from '../../models/constants';
 
 
 
 export default [
-    { path: '', component: ZoneListComponent },
-    { path: 'zones-list', component: ZoneListComponent },
-    { path: 'zone-create', component: ZoneCreateComponent },
-    { path: 'zone-edit/:zoneId', component: ZoneCreateComponent },
-    { path: 'zone-details/:zoneId', component: ZoneDetailsComponent },
-    { path: 'ward-list', component: WardListComponent },
-    { path: 'ward-create', component: WardCreateComponent },
-    { path: 'ward-edit/:wardId', component: WardCreateComponent },
-    { path: 'category-list', component: CategoryListComponent },
-    { path: 'category-create', component: CategoryCreateComponent },
-    { path: 'category-edit/:categoryId', component: CategoryCreateComponent },
-    { path: 'sub-category-list', component: SubCategoryListComponent },
-    { path: 'sub-category-create', component: SubCategoryCreateComponent },
-    { path: 'sub-category-edit/:subCategoryId', component: SubCategoryCreateComponent },
-    { path: 'fy-list', component: FyListComponent },
-    { path: 'fy-create', component: FyCreateComponent },
-    { path: 'fy-edit/:fyId', component: FyCreateComponent },
+    // { path: '', component: ZoneListComponent },
+    // ==================== ZONE ======================
+    {
+        path: 'zones-list', component: ZoneListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'zone-create', component: ZoneCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'zone-edit/:zoneId', component: ZoneCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'zone-details/:zoneId', component: ZoneDetailsComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    // ==================== WARD ======================
+    {
+        path: 'ward-list', component: WardListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'ward-create', component: WardCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'ward-edit/:wardId', component: WardCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    // ==================== CATEGORY ======================
+    {
+        path: 'category-list', component: CategoryListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'category-create', component: CategoryCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'category-edit/:categoryId', component: CategoryCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    // ==================== SUB CATEGORY ======================
+    {
+        path: 'sub-category-list', component: SubCategoryListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'sub-category-create', component: SubCategoryCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'sub-category-edit/:subCategoryId', component: SubCategoryCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    // ==================== FY ======================
+    {
+        path: 'fy-list', component: FyListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'fy-create', component: FyCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'fy-edit/:fyId', component: FyCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    // ==================== OWNERSHIP TYPE ======================
+    {
+        path: 'ownership-list', component: OwnershipTypeListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'ownership-create', component: OwnershipTypeCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'ownership-edit/:ownershipTypeId', component: OwnershipTypeCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    // ==================== ROAD TYPE ======================
+    {
+        path: 'roadtype-list', component: RoadTypeListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'roadtype-create', component: RoadTypeCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'roadtype-edit/:roadtypeId', component: RoadTypeCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
 
-    { path: 'ownership-list', component: OwnershipTypeListComponent },
-    { path: 'ownership-create', component: OwnershipTypeCreateComponent },
-    { path: 'ownership-edit/:ownershipTypeId', component: OwnershipTypeCreateComponent },
-
-    { path: 'roadtype-list', component: RoadTypeListComponent },
-    { path: 'roadtype-create', component: RoadTypeCreateComponent },
-    { path: 'roadtype-edit/:roadtypeId', component: RoadTypeCreateComponent },
-
-    { path: 'property-list', component: PropertyTypeListComponent },
-    { path: 'property-create', component: CreatePropertyTypeComponent },
-    { path: 'property-edit/:propertyTypeId', component: CreatePropertyTypeComponent },
-
-    { path: 'electricity-list', component: ElectricityTypeListComponent },
-    { path: 'electricity-create', component: CreateElectricityTypeComponent },
+    // ==================== PROPERTY TYPE ======================
+    {
+        path: 'property-list', component: PropertyTypeListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'property-create', component: CreatePropertyTypeComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'property-edit/:propertyTypeId', component: CreatePropertyTypeComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    // ==================== ELECTIRCITY TYPE ======================
+    {
+        path: 'electricity-list', component: ElectricityTypeListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'electricity-create', component: CreateElectricityTypeComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
     { path: 'electricity-edit/:electricityConnectionId', component: CreateElectricityTypeComponent },
-
-    { path: 'mohalla-list', component: MohallaListComponent },
-    { path: 'mohalla-create', component:  MohallaCreateComponent},
-    { path: 'mohalla-edit/:mohallaId', component: MohallaCreateComponent },
+    // ==================== MOHALLA ======================
+    {
+        path: 'mohalla-list', component: MohallaListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'mohalla-create', component: MohallaCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'mohalla-edit/:mohallaId', component: MohallaCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
 
 
 ] as Routes;

@@ -9,14 +9,15 @@ import { ToggleSwitchChangeEvent, ToggleSwitchModule } from 'primeng/toggleswitc
 import { LayoutService } from '../../../services/layout.service';
 import { SelectButtonChangeEvent, SelectButtonModule } from 'primeng/selectbutton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-top-bar',
-  imports: [MenuModule, ButtonModule, 
-    StyleClassModule, 
-    ToggleSwitchModule, 
-    FormsModule, 
-    SelectButtonModule, 
+  imports: [MenuModule, ButtonModule,
+    StyleClassModule,
+    ToggleSwitchModule,
+    FormsModule,
+    SelectButtonModule,
     TranslateModule],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss'
@@ -24,6 +25,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class TopBarComponent implements OnInit {
 
   private translateService: TranslateService = inject(TranslateService);
+  private authService: AuthService = inject(AuthService);
 
 
   isDarkMode!: boolean;
@@ -57,9 +59,7 @@ export class TopBarComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   onLangChange(e: SelectButtonChangeEvent) {

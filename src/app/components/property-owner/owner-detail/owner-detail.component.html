@@ -1,13 +1,184 @@
-<app-page-header title="Owner Details" />
+<app-page-header title="Property Details" [backButton]="true" />
 
+<div class="flex justify-end gap-4">
+    <p-button label="Edit" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined" severity="info" />
+    @if(userId == +(property.attribute1 || 0)){
+        <p-button label="Approve" (click)="onApproveClick($event)" icon="pi pi-check" variant="outlined" severity="success" />
+    }
+    <p-button label="Approval History" (click)="onApprovalHistory($event)" icon="pi pi-list" variant="outlined" severity="help" />
+</div>
 <div class="gesil-card mb-2 mt-4">
-    <app-owner-card [ownerDetail]="ownerDetail" />
-    <p-divider />
-    <div class="flex flex-col sm:flex-row mt-2 gap-1 sm:gap-4">
-        <a pButton [routerLink]="['/owner', 'owner-edit',  ownerDetail?.ownerId]" severity="help" icon="pi pi-pencil">Edit Owner</a>
-        <!-- <a pButton [routerLink]="['/owner', 'property-entry', ownerDetail?.ownerId ]" class="sm:ml-auto" icon="pi pi-plus-circle">Add Property</a> -->
-        <a pButton class="" icon="pi pi-plus-circle">View Property</a>
+    <div class="flex flex-col sm:flex-row sm:items-start">
+        <!-- Image -->
+        <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0">
+            @if(property.photo) {
+            <img [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${property.photo}`" alt="User Pic"
+                lazy="true" alt="User Avatar" class="h-auto object-cover" />
+            } @else {
+            <img src="assets/avatar.png" alt="User Avatar" class="h-auto object-cover" />
+            }
+
+        </div>
+        <div class="flex-1 sm:mx-4">
+            <div class="flex items-center justify-between my-2">
+                <h3 class="font-bold underline">Owner Details</h3>
+                <!-- <p-button icon="pi pi-pencil" [routerLink]="['/owner', 'owner-edit',  property?.propertyId ]"
+                    severity="info" [link]="true" [rounded]="true" [text]="true" /> -->
+
+            </div>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="table-head">Name</th>
+                        <td> {{property.salutation}} {{property.ownerName}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">{{property.careOf}}</th>
+                        <td>{{property.guardianName}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Mobile</th>
+                        <td>{{property.mobile}}</td>
+                    </tr>
+                    <!-- <tr><th class="table-head">Email ID</th> <td>{{property.email}}</td></tr>
+                <tr><th class="table-head">Aadhar</th> <td>{{property.aadhar | aadharMask}}</td></tr>
+                <tr><th class="table-head">PAN</th> <td>{{property.pan}}</td></tr> -->
+                    <tr>
+                        <th class="table-head">Gender</th>
+                        <td>{{property.gender}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Date of Birth</th>
+                        <td>{{property.dob | date:'dd-MMM-yyy'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex-1 sm:mx-4 ">
+            <div class="flex items-center justify-between ">
+                <h3 class="font-bold underline">Address of Property</h3>
+                <!-- <p-button icon="pi pi-pencil" [routerLink]="['/owner', 'property-entry', property?.propertyId ]"
+                    severity="info" [link]="true" [rounded]="true" [text]="true" /> -->
+            </div>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="table-head">Zone :</th>
+                        <td> {{property.zoneName}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Ward :</th>
+                        <td>{{property.wardName}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Mohalla Name :</th>
+                        <td>{{property.mohallaNameDetail}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">House No :</th>
+                        <td>{{property.propertyAddressHouseNo}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Address :</th>
+                        <td>{{property.propertyAddress}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head"></th>
+                        <td>{{property.propertyAddressDistrict}}, {{property.propertyAddressCity}},
+                            {{property.propertyAddressPin}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Land Mark :</th>
+                        <td>{{property.propertyAddressLandmark}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- <div class="flex-1 mt-4 sm:mt-0 gap-2 flex flex-col">
+        <div>
+            <h3 class="font-bold text-center sm:text-left">Related Documents</h3>
+        </div>
+        <div> 
+            @if(property.identityProof) {
+                <a class="w-full" pButton [outlined]="true" severity="success"
+                    [href]="`${env.API_URL}${env.ownerDocumentDownload}?fileName=${property.identityProof}`"
+                    target="_blank" pTooltip="View">Identity Proof <i class="pi pi-eye"></i></a>
+            } @else {
+                <a class="w-full" pButton icon="pi pi-exclamation-circle" [outlined]="true" severity="warn" [routerLink]="['/owner','owner-edit', property.householdNo]">Please upload owner's identity proof.</a>
+            }
+
+        </div>
+        <div> 
+        @if(property.isSpecialOwner) {
+            @if(property.specialCertificate) {
+                
+                    <a class="w-full" pButton [outlined]="true" severity="success"
+                        [href]="`${env.API_URL}${env.ownerDocumentDownload}?fileName=${property.identityProof}`"
+                        target="_blank" pTooltip="View">Certificate <i class="pi pi-eye"></i></a>
+                
+            } @else{
+                <a class="w-full" pButton icon="pi pi-exclamation-circle" [outlined]="true" severity="warn" [routerLink]="['/owner','owner-edit', property?.householdNo]">Please upload certificate.</a>
+            }
+        }
+        </div>
+    </div>   -->
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:items-start mt-4">
+        <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0"></div> -->
+        <div class="flex-1 sm:mx-4">
+            <h3 class="font-bold underline mb-2">Property Details</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="table-head">Property Type :</th>
+                        <td>{{property.propertyType}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Catergory :</th>
+                        <td>{{property.categoryName}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Sub Category :</th>
+                        <td>{{property.subCategoryName}}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="table-head">Area of Plot (Sq. Ft.) :</th>
+                        <td>{{property.plotArea}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Width of Road Sorrunding (Ft.) :</th>
+                        <td>{{property.widthOfRoad}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex-1 sm:mx-4">
+            <h3 class="font-bold underline mb-2">Address of Owner</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="table-head">House No :</th>
+                        <td>{{property.ownerAddressHouseNo}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Address :</th>
+                        <td>{{property.ownerAddress}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head"></th>
+                        <td>{{property.ownerAddressDistrict}}, {{property.ownerAddressCity}},
+                            {{property.ownerAddressPin}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-head">Land Mark. :</th>
+                        <td>{{property.ownerAddressLandmark}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
-<!-- <app-property-list  /> -->

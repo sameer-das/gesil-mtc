@@ -181,7 +181,7 @@ export class SideBarComponent {
       icon: 'pi pi-users',
       items: [
         {
-          label: 'Search Property Owner',
+          label: 'Search Property',
           icon: 'pi pi-search',
           routerLink: '/owner/owner-search',
           routerLinkActiveOptions: { exact: true },
@@ -190,26 +190,26 @@ export class SideBarComponent {
             // this.router.navigate([''])
           }
         },
-        {
-          label: 'Quick Add Property',
-          icon: 'pi pi-building-columns',
-          routerLink: '/owner/quick-add-property',
-          routerLinkActiveOptions: { exact: true },
-          command: (e: MenuItemCommandEvent) => {
-            // console.log(e)
-            // this.router.navigate([''])
-          }
-        },
         // {
-        //   label: 'New Property Owner',
-        //   icon: 'pi pi-list',
-        //   routerLink: '/owner',
+        //   label: 'Quick Add Property',
+        //   icon: 'pi pi-building-columns',
+        //   routerLink: '/owner/quick-add-property',
         //   routerLinkActiveOptions: { exact: true },
         //   command: (e: MenuItemCommandEvent) => {
         //     // console.log(e)
         //     // this.router.navigate([''])
         //   }
         // },
+        {
+          label: 'Approve Property',
+          icon: 'pi pi-check',
+          routerLink: '/owner/approval-list',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e)
+            // this.router.navigate([''])
+          }
+        },
         
       ]
     }

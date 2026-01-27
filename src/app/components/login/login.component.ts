@@ -12,6 +12,9 @@ import { AuthUser } from '../../models/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
+import { UsersService } from '../../services/users.service';
+import { PermissionService } from '../../services/permission.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +33,8 @@ export class LoginComponent implements OnDestroy {
   private messageService = inject(MessageService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private permissionService = inject(PermissionService);
+  private authService: AuthService = inject(AuthService);
 
   private returnUrl: string = '/';
 
@@ -53,12 +58,14 @@ export class LoginComponent implements OnDestroy {
           localStorage.setItem('accessToken', resp.accessToken);
           localStorage.setItem('refreshToken', resp.refreshToken);
           localStorage.setItem('loginUserType', String(resp.userType));
+          localStorage.setItem('loginUserId', String(resp.id));
           localStorage.setItem('loginUserFirstName', String(resp.firstName));
+          localStorage.setItem('username', String(resp.username));
+          this.permissionService.refreshPermissions(resp.id);
 
           this.router.navigateByUrl(this.returnUrl);
         } else {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
+          this.authService.logout();
         }
       }, error: (err: HttpErrorResponse) => {
         console.log(err)

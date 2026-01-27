@@ -4,12 +4,12 @@ import { ActivatedRoute, Params, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { TooltipModule } from 'primeng/tooltip';
 import { Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { APIResponse, District, State, UserDetail } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
-import { TooltipModule } from 'primeng/tooltip';
-import { environment } from '../../../../environments/environment';
 
 
 @Component({

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChartModule } from 'primeng/chart';
 import { PageHeaderComponent } from "../utils/page-header/page-header.component";
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +20,9 @@ export class DashboardComponent implements OnInit {
   pieData: any;
   pieOptions: any;
 
-    ngOnInit(): void {
+  permissionService: PermissionService = inject(PermissionService);
+  
+  ngOnInit(): void {
     this.initChart()
   }
 
@@ -84,28 +87,28 @@ export class DashboardComponent implements OnInit {
     };
 
 
-    
-        this.pieData = {
-            labels: ['A', 'B', 'C'],
-            datasets: [
-                {
-                    data: [540, 325, 702],
-                    backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
-                    hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
-                }
-            ]
-        };
 
-        this.pieOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        usePointStyle: true,
-                        color: textColor
-                    }
-                }
-            }
-        };
+    this.pieData = {
+      labels: ['A', 'B', 'C'],
+      datasets: [
+        {
+          data: [540, 325, 702],
+          backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
+          hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
+        }
+      ]
+    };
+
+    this.pieOptions = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+            color: textColor
+          }
+        }
+      }
+    };
   }
 
 

@@ -19,10 +19,11 @@ import { MasterDataService } from '../../../services/master-data.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MessageModule, Message } from 'primeng/message';
-import { CreateOwnerDetail, OwnerDetail, OwnerDocumentUpload, UpdateOwnerDetail } from '../../../models/property-owner.model';
+import { CreateOwnerDetail, OwnerDetail, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType, UpdateOwnerDetail } from '../../../models/property-owner.model';
 import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { uniqueAadharValidator } from './uniqueAadharValidator';
+import { CAREOF_OPTIONS, GENDER_OPTIONS, SALUTATION_OPTIONS } from '../../../models/constants';
 @Component({
   selector: 'app-owner-entry',
   imports: [PageHeaderComponent,
@@ -47,8 +48,8 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
   env = environment;
   $destroy: Subject<null> = new Subject();
 
-  ownerId = input<number>();
-  editMode = computed(() => !!this.ownerId());
+  propertyId = input<number>();
+  editMode = computed(() => !!this.propertyId());
 
   @ViewChild('userCertificateUploader') userCertificateUploader!: FileUpload;
   @ViewChild('userIdentityUploader') userIdentityUploader!: FileUpload;
@@ -70,33 +71,27 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
   confirmationService: ConfirmationService = inject(ConfirmationService);
 
 
+  property: Partial<PropertySearchResultType> = {};
+  currentLoggedUsername: string = localStorage.getItem('username') ?? '';
+
   addNewOwnerForm: FormGroup = new FormGroup({
     salutation: new FormControl('', [Validators.required]),
     ownerName: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
-    careOf: new FormControl('', [Validators.required]),
-    guardianName: new FormControl('', [Validators.required]),
-    gender: new FormControl('', [Validators.required]),
-    mobile: new FormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
+    careOf: new FormControl('', []),
+    guardianName: new FormControl('', []),
+    gender: new FormControl('', []),
+    mobile: new FormControl('', [Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]),
     email: new FormControl('', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$')]),
     pan: new FormControl('', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]$/)]),
-    aadhar: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{12}$')], [uniqueAadharValidator(this.ownerService, this.$destroy, this.editMode, this.ownerAadhar)]),
-    dob: new FormControl('', [Validators.required]),
+    aadhar: new FormControl('', [Validators.pattern('^[0-9]{12}$')]),
+    dob: new FormControl('', []),
     isSpecialOwner: new FormControl(null),
   });
 
 
-  genders = [
-    { name: 'Male', code: 'M' },
-    { name: 'Female', code: 'F' },
-    { name: 'Others', code: 'O' },
-  ];
-
-  salutations = ['Mr.', 'Mrs.', 'Miss'];
-  careOfs = [
-    { name: 'Wife of', code: 'W/o' },
-    { name: 'Son of', code: 'S/o' },
-    { name: 'Doughter of', code: 'D/o' },
-  ];
+  genders = GENDER_OPTIONS;
+  salutations = SALUTATION_OPTIONS;
+  careOfs = CAREOF_OPTIONS;
 
   certificateUploadMessage = 'By selecting the checkbox, you confirm that you possess the relevant certificate and are prepared to upload it when required.';
 
@@ -113,7 +108,7 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log(this.editMode())
     if (this.editMode()) {
-      this.getOwnerDetails();
+      this.getPropertyDetail();
     }
   }
 
@@ -150,99 +145,76 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
 
 
   saveOwnerDetail() {
-    if (!this.editMode()) {
-      // Create mode
-      console.log(this.addNewOwnerForm.value);
-      const createOwnerPayload: CreateOwnerDetail = {
-        salutation: this.addNewOwnerForm.value.salutation,
-        ownerName: this.addNewOwnerForm.value.ownerName,
-        careOf: this.addNewOwnerForm.value.careOf.code,
-        guardianName: this.addNewOwnerForm.value.guardianName,
-        mobile: this.addNewOwnerForm.value.mobile,
-        email: this.addNewOwnerForm.value.email,
-        pan: this.addNewOwnerForm.value.pan,
-        aadhar: this.addNewOwnerForm.value.aadhar,
-        dob: this.getDate(this.addNewOwnerForm.value.dob),
-        gender: this.addNewOwnerForm.value.gender.code,
-        isSpecialOwner: this.addNewOwnerForm.value.isSpecialOwner.length > 0 ? 1 : 0
-      }
-      this.ownerService.createOwner(createOwnerPayload)
-        .pipe(
-          takeUntil(this.$destroy),
-          tap((resp: APIResponse<string>) => {
-            if (resp.code === 200 && resp.status === 'Success') {
-              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Owner details saved successfully.', life: MessageDuaraion.STANDARD })
-              this.router.navigate(['owner', 'detail', resp.data]);
-            } else {
-              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'Error while saving owner details.', life: MessageDuaraion.STANDARD })
-            }
-          })
-        ).subscribe()
-    } else if (this.editMode()) {
-      const updateOwnerPayload: UpdateOwnerDetail = {
-        ownerId: this.ownerId() || 0,
-        salutation: this.addNewOwnerForm.value.salutation,
-        ownerName: this.addNewOwnerForm.value.ownerName,
-        careOf: this.addNewOwnerForm.value.careOf.code,
-        guardianName: this.addNewOwnerForm.value.guardianName,
-        mobile: this.addNewOwnerForm.value.mobile,
-        email: this.addNewOwnerForm.value.email,
-        pan: this.addNewOwnerForm.value.pan,
-        aadhar: this.addNewOwnerForm.value.aadhar,
-        dob: this.getDate(this.addNewOwnerForm.value.dob),
-        gender: this.addNewOwnerForm.value.gender.code,
-        isSpecialOwner: this.addNewOwnerForm.value.isSpecialOwner.length > 0
-      }
 
-      this.ownerService.updateOwner(updateOwnerPayload)
-        .pipe(
-          takeUntil(this.$destroy),
-          tap((resp: APIResponse<string>) => {
-            if (resp.code === 200 && resp.status === 'Success') {
-              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Owner details updated successfully.', life: MessageDuaraion.STANDARD })
-              this.getOwnerDetails();
-            } else {
-              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'Error while updating owner details.', life: MessageDuaraion.STANDARD })
-            }
-          })
-        ).subscribe()
+    const updateOwnerPayload: PropertyMaster = {
+      propertyId: this.property.propertyId || 0,
+      salutation: this.addNewOwnerForm.value.salutation.value,
+      ownerName: this.addNewOwnerForm.value.ownerName,
+      careOf: this.addNewOwnerForm.value.careOf.value,
+      guardianName: this.addNewOwnerForm.value.guardianName,
+      mobile: this.addNewOwnerForm.value.mobile,
+      email: this.addNewOwnerForm.value.email,
+      pan: this.addNewOwnerForm.value.pan,
+      aadhar: this.addNewOwnerForm.value.aadhar,
+      dob: this.getDate(this.addNewOwnerForm.value.dob),
+      gender: this.addNewOwnerForm.value.gender.value,
+      isSpecialOwner: this.addNewOwnerForm.value.isSpecialOwner.length > 0,
+      updatedBy: this.currentLoggedUsername
     }
+
+    this.ownerService.updatePropertyMaster(updateOwnerPayload)
+      .pipe(
+        takeUntil(this.$destroy),
+        tap((resp: APIResponse<string>) => {
+          if (resp.code === 200 && resp.status === 'Success') {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Owner details updated successfully.', life: MessageDuaraion.STANDARD })
+            this.getPropertyDetail();
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error', detail: 'Error while updating owner details.', life: MessageDuaraion.STANDARD })
+          }
+        })
+      ).subscribe()
+
+  }
+
+
+  getPropertyDetail() {
+    this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0)
+      .pipe(takeUntil(this.$destroy),
+        tap((resp: APIResponse<PropertySearchResultType[]>) => {
+          console.log(resp)
+          if (resp.code === 200 && resp.status === 'Success') {
+            if (resp.data.length > 0) {
+
+              this.property = resp.data[0];
+
+              this.ownerAadhar.set(this.property?.aadhar);
+
+              this.addNewOwnerForm.patchValue({
+                salutation: this.salutations.find(curr => String(curr.value).toLowerCase() === String(this.property.salutation).toLowerCase()),
+                ownerName: this.property.ownerName,
+                careOf: this.careOfs.find(curr => String(curr.value).toLowerCase() === String(this.property.careOf).toLowerCase()),
+                guardianName: this.property.guardianName,
+                gender: this.genders.find(curr => String(curr.value).toLowerCase() === String(this.property.gender).toLowerCase()),
+                mobile: this.property.mobile,
+                email: this.property.email,
+                pan: this.property.pan,
+                aadhar: this.property.aadhar,
+                dob: this.property.dob ? new Date(this.property.dob) : new Date(),
+                isSpecialOwner: this.property.isSpecialOwner ? ['false'] : [],
+              }, { emitEvent: false })
+            }
+            else
+              this.router.navigate(['owner', 'owner-search'])
+          }
+        }))
+      .subscribe()
   }
 
 
 
   show() {
     console.log(this.addNewOwnerForm)
-  }
-
-
-  getOwnerDetails() {
-    this.ownerService.getOwnerDetails(this.ownerId() || 0).pipe(
-      takeUntil(this.$destroy),
-      tap((resp: APIResponse<OwnerDetail>) => {
-        console.log(resp);
-        if (resp.code === 200) {
-          this.ownerDetail = resp.data;
-          // Used for Edit Purpose
-          this.ownerAadhar.set(resp.data?.aadhar);
-
-          this.addNewOwnerForm.patchValue({
-            salutation: resp.data.salutation,
-            ownerName: resp.data.ownerName,
-            careOf: this.careOfs.find(c => c.code.toLowerCase() === resp.data.careOf.toLowerCase()),
-            guardianName: resp.data.guardianName,
-            gender: this.genders.find(g => g.code === resp.data.gender),
-            mobile: resp.data.mobile,
-            email: resp.data.email,
-            pan: resp.data.pan,
-            aadhar: resp.data.aadhar,
-            dob: new Date(resp.data.dob),
-            isSpecialOwner: resp.data.isSpecialOwner ? ['false'] : [],
-          }, { emitEvent: false })
-
-        }
-      })
-    ).subscribe();
   }
 
 
@@ -330,22 +302,22 @@ export class OwnerEntryComponent implements OnInit, OnDestroy {
       const fileNameParts = e.files[0].name.split('.');
       const newFileNameWithoutExtention = fileNameParts.slice(0, fileNameParts.length - 1).join('_');
 
-      const payload: OwnerDocumentUpload = {
-        "ownerId": Number(this.ownerId() || 0),
-        "documentType": type,
-        "documentName": newFileNameWithoutExtention,
-        "documentBase64data": reader.result
-      }
+      // const payload: OwnerDocumentUpload = {
+      //   "ownerId": Number(this.ownerId() || 0),
+      //   "documentType": type,
+      //   "documentName": newFileNameWithoutExtention,
+      //   "documentBase64data": reader.result
+      // }
 
-      this.ownerService.uploadDocument(payload).pipe(takeUntil(this.$destroy))
-        .subscribe({
-          next: (resp: APIResponse<string>) => {
-            if (resp.code === 200) {
-              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `Uploaded successfully.`, life: MessageDuaraion.STANDARD });
-              this.clearFile(type);
-            }
-          }
-        })
+      // this.ownerService.uploadDocument(payload).pipe(takeUntil(this.$destroy))
+      //   .subscribe({
+      //     next: (resp: APIResponse<string>) => {
+      //       if (resp.code === 200) {
+      //         this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `Uploaded successfully.`, life: MessageDuaraion.STANDARD });
+      //         this.clearFile(type);
+      //       }
+      //     }
+      //   })
     };
 
 

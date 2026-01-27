@@ -2,40 +2,128 @@
 
 <p-fluid>
     <form [formGroup]="propertyForm" class="mt-4">
-        <div class="flex flex-col w-full ">
+        <div class="flex flex-col w-full">
             <div class="gesil-card">
+                <div class="flex flex-col md:flex-row gap-6">
+                    @if(property.householdNo){
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <p><strong [style]="{color:'var(--primary-color)'}">Household No./PIN :
+                            </strong>{{property.householdNo || ''}}</p>
+                    </div>
+                    }
 
+                    @if(property.surveyNo) {
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <p><strong [style]="{color:'var(--primary-color)'}">Survey No. : </strong>{{property.surveyNo ||
+                            ''}}</p>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="gesil-card">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="salutation">Salutation</label>
+                            <p-select id="salutation" [options]="salutations" optionLabel="label" placeholder="Select"
+                                class="w-full" formControlName="salutation"></p-select>
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('salutation')">
+                                Please choose a salutation for the owner.
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="ownerName">Name of Owner</label>
+                            <input pInputText id="ownerName" placeholder="Enter Name of Owner" type="text"
+                                formControlName="ownerName" />
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerName')">
+                                Please enter a valid owner name.
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="careOf">Select Care of</label>
+                            <p-select id="careOf" [options]="careOfs" optionLabel="label" placeholder="Select"
+                                class="w-full" formControlName="careOf"></p-select>
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('careOf')">
+                                Please choose a care of.
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <label for="guardianName">Father/Husband Name</label>
+                            <input pInputText id="guardianName" placeholder="Father/Husband Name" type="text"
+                                formControlName="guardianName" tooltipPosition="top"
+                                pTooltip="Parent or care taker's name" />
+                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('guardianName')">
+                                Please enter a valid guardian name.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="gender">Gender</label>
+                        <p-select id="gender" [options]="genders" optionLabel="label" placeholder="Select Gender"
+                            class="w-full" formControlName="gender"></p-select>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('gender')">
+                            Please choose gender of the owner.
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="dob">Date of Birth</label>
+                        <p-datepicker placeholder="Choose Date of Birth (MM/DD/YYYY)" id="dob" class="w-full"
+                            formControlName="dob" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('dob')">
+                            Please choose date of birth of the owner.
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="mobile">Mobile No</label>
+                        <input pInputText id="mobile" placeholder="Enter Mobile No." type="text"
+                            formControlName="mobile" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mobile')">
+                            Please enter a valid mobile number.
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="gesil-card">
                 <!-- Row 1 -->
                 <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="householdNo">Household No</label>
-                        <input pInputText id="householdNo" placeholder="Enter Household No" type="text"
-                            formControlName="householdNo" />
-                        <div class="invisible">error placeholder</div>
-                    </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="zone">Zone</label>
                         <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone"
                             class="w-full" formControlName="zone"></p-select>
-                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('zone')">
-                                Please choose zone.
-                            </div>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('zone')">
+                            Please choose zone.
+                        </div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ward">Ward</label>
                         <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Ward"
                             class="w-full" formControlName="ward"></p-select>
-                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ward')">
-                                Please choose ward.
-                         </div>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ward')">
+                            Please choose ward.
+                        </div>
                     </div>
 
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="wardName">Ward Name</label>
-                        <input pInputText id="wardName" placeholder="Name of Selected Ward" readonly type="text"
-                            formControlName="wardName" />
+                        <label for="ward">Mohalla</label>
+                        <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Mohalla Name"
+                            class="w-full" formControlName="mohallaName"></p-select>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mohallaName')">
+                            Please choose mohalla.
+                        </div>
                     </div>
                 </div>
+
+
+
 
                 <!-- Row 2 -->
                 <div class="flex flex-col md:flex-row gap-6">
@@ -43,19 +131,37 @@
                         <label for="propertyType">Property Type</label>
                         <p-select id="propertyType" [options]="propertyTypes" optionLabel="propertyTypeName"
                             placeholder="Select Property Type" class="w-full" formControlName="propertyType"></p-select>
-                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyType')">
-                                Please choose property type.
-                            </div>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyType')">
+                            Please choose property type.
+                        </div>
                     </div>
-
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="widthOfRoad">Width of Road sorrunding the plot</label>
+                        <label for="category">Category</label>
+                        <p-select id="category" [options]="categories" optionLabel="categoryName"
+                            placeholder="Select Category" class="w-full" formControlName="category"></p-select>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('category')">
+                            Please choose category.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="subCategory">Sub-Category</label>
+                        <p-select id="subCategory" [options]="subCategory" optionLabel="subCategoryName"
+                            placeholder="Select Sub-Category" class="w-full" formControlName="subCategory"></p-select>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('subCategory')">
+                            Please Sub-Category.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="widthOfRoad">Width of Road sorrunding (Ft.)</label>
                         <input pInputText id="widthOfRoad" placeholder="Enter Width of Road" type="text"
                             formControlName="widthOfRoad" />
                         <div class="invisible">error placeholder</div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="areaOfPlot">Area of Plot (Decimil)</label>
+                        <label for="areaOfPlot">Area of Plot (Sq. Ft)</label>
                         <input pInputText id="areaOfPlot" placeholder="Enter Area of Plot" type="text"
                             formControlName="areaOfPlot" />
                         <div class="invisible">error placeholder</div>
@@ -68,9 +174,9 @@
                         <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="ownershipTypeName"
                             placeholder="Select Type of Ownership" class="w-full"
                             formControlName="typeOfOwnership"></p-select>
-                            <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('typeOfOwnership')">
-                                Please choose type of ownership.
-                            </div>
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('typeOfOwnership')">
+                            Please choose type of ownership.
+                        </div>
                     </div>
                     @if(propertyForm.get('typeOfOwnership')?.value?.typeOfOwnershipId === 13) {
 
@@ -83,7 +189,129 @@
                 </div>
             </div>
 
-            @if(enableFlatType) {
+            <!-- Property Address -->
+            <div class="gesil-card">
+                <h2 class="text-lg mb-4">Address of the Property</h2>
+                <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressDistrict">District</label>
+                        <input pInputText id="propertyAddressDistrict" placeholder="Enter District" type="text"
+                            formControlName="propertyAddressDistrict" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyAddressDistrict')">
+                            Please enter district.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressCity">City</label>
+                        <input pInputText id="propertyAddressCity" placeholder="Enter City" type="text"
+                            formControlName="propertyAddressCity" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyAddressCity')">
+                            Please enter city.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressPin">PIN</label>
+                        <input pInputText id="propertyAddressPin" placeholder="Enter PIN" type="text"
+                            formControlName="propertyAddressPin" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyAddressPin')">
+                            Please enter PIN.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressHouseNo">House No</label>
+                        <input pInputText id="propertyAddressHouseNo" placeholder="Enter House No." type="text"
+                            formControlName="propertyAddressHouseNo" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyAddressHouseNo')">
+                            Please enter a House No.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                        <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddressLandmark">Landmark</label>
+                        <input pInputText id="propertyAddressLandmark" placeholder="Enter Landmark" type="text"
+                            formControlName="propertyAddressLandmark" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyAddressLandmark')">
+                            Please enter landmark.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="propertyAddress">Address</label>
+                        <input pInputText id="propertyAddress" placeholder="Address" type="text"
+                            formControlName="propertyAddress" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyAddress')">
+                            Please enter address.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Owner Address -->
+            <div class="gesil-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg">Address of the Owner</h2>
+                    <div class="flex items-center gap-2">
+                         <p-togglebutton formControlName="isOwnerAddressSame" [onLabel]="'Owner address is same.'" [offLabel]="'Owner address is different.'" />
+                        <!-- <span>Is owner address same as property address?</span><p-toggleswitch formControlName="isOwnerAddressSame" /> -->
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressDistrict">District</label>
+                        <input pInputText id="ownerAddressDistrict" placeholder="Enter District" type="text"
+                            formControlName="ownerAddressDistrict" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressDistrict')">
+                            Please enter district.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressCity">City</label>
+                        <input pInputText id="ownerAddressCity" placeholder="Enter City" type="text"
+                            formControlName="ownerAddressCity" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressCity')">
+                            Please enter city.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressPin">PIN</label>
+                        <input pInputText id="ownerAddressPin" placeholder="Enter PIN" type="text"
+                            formControlName="ownerAddressPin" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressPin')">
+                            Please enter PIN.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressHouseNo">House No</label>
+                        <input pInputText id="ownerAddressHouseNo" placeholder="Enter House No." type="text"
+                            formControlName="ownerAddressHouseNo" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressHouseNo')">
+                            Please enter a House No.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                        <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddressLandmark">Landmark</label>
+                        <input pInputText id="ownerAddressLandmark" placeholder="Enter Landmark" type="text"
+                            formControlName="ownerAddressLandmark" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressLandmark')">
+                            Please enter landmark.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="ownerAddress">Address</label>
+                        <input pInputText id="ownerAddress" placeholder="Address" type="text"
+                            formControlName="ownerAddress" />
+                        <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddress')">
+                            Please enter address.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- @if(enableFlatType) {
             <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Provide Flat Details</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
@@ -104,10 +332,9 @@
                     </div>
                 </div>
             </div>
+            } -->
 
-            }
-
-            @if(enableIndividualBuildingType) {
+            <!-- @if(enableIndividualBuildingType) {
 
             <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Provide data for individual building</h2>
@@ -115,15 +342,14 @@
                     <div class="flex flex-wrap gap-2 w-full sm:w-1/4">
                         <label for="noOfFloors">No of Floors</label>
                         <p-inputnumber [readonly]="!enableIndividualBuildingType" id="noOfFloors" [min]="minFloorValue"
-                            [max]="10" placeholder="Enter no of floors" type="text"
-                            formControlName="noOfFloors" />
+                            [max]="10" placeholder="Enter no of floors" type="text" formControlName="noOfFloors" />
                     </div>
                 </div>
             </div>
-            }
+            } -->
 
             <!-- Floor Wise data -->
-            @if(floorWiseDataFormArray.controls.length > 0) {
+            <!-- @if(floorWiseDataFormArray.controls.length > 0) {
             <div class="gesil-card">
                 <h2 class="text-base text-center underline font-semibold">Provide floorwise data for the building</h2>
                 <div formArrayName="floorWiseData">
@@ -149,10 +375,10 @@
                     }
                 </div>
             </div>
-            }
+            } -->
 
             <!-- Row 3 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Electricity Connection Details</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -189,17 +415,16 @@
                         <div class="flex justify-center md:justify-start gap-2">
                             <p-button label="Upload" icon="pi pi-upload" (onClick)="ebUploader.upload()"
                                 severity="info" />
-                            <p-button label="Remove" icon="pi pi-times" severity="danger"
-                                (onClick)="clearFile('EB')" />
+                            <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('EB')" />
                         </div>
                         }
                     </div>
                     <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 4 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Building Plan/Water Connection Details</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -223,10 +448,10 @@
                             formControlName="waterConnectionDate" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 5 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Plot Details as per Patta/Tahasil Record</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -255,10 +480,10 @@
                             formControlName="plotNo" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 6 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Address of Property</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -298,10 +523,10 @@
                         <button pButton (click)="getThisLocation()">Get</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 7 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Correspondence address of the Owner</h2>
                 <div class="flex items-center gap-2 w-full md:w-1/2 my-4">
                     <p-checkbox formControlName="isOwnerAddressSame" value="false" inputId="isOwnerAddressSame" />
@@ -329,10 +554,10 @@
                             formControlName="ownerAddressPin" [readonly]="isCorrespondenceSame" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 8 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">In case of vacant land</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -351,10 +576,10 @@
                             formControlName="dateOfAcquisition" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 9 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Mobile Tower</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -371,10 +596,10 @@
                             formControlName="mobileTowerDateOfInstallation" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row  -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Hoarding (on the Wall/ Roof/ Land)</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -389,10 +614,10 @@
                             class="w-full" formControlName="hoardingDateOfInstallation" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 10 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Petrol Pump</h2>
                 <div class="flex flex-col md:flex-row gap-6 my-4">
                     <div class="flex flex-wrap gap-2 w-full">
@@ -407,39 +632,40 @@
                             formControlName="petrolpumpDateOfCompletion" />
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 11 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Water Harvesting Provision</h2>
                 <div class="flex items-center gap-2 w-full md:w-1/2 my-4">
                     <p-checkbox formControlName="hasWaterHarvestingProvision" value="false"
                         inputId="hasWaterHarvestingProvision" />
                     <label for="hasWaterHarvestingProvision" class="ml-2">Water Harvesting Provision</label>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Row 12 -->
-            <div class="gesil-card">
+            <!-- <div class="gesil-card">
                 <h2 class="text-lg font-semibold">Upload Photo of the Property</h2>
-            
+
                 <div class="my-4 flex flex-col md:flex-row gap-2 w-full justify-center md:justify-between">
                     <div class="flex justify-start">
-                        <p-fileupload #propertyPhotoUploader mode="basic" chooseLabel="Choose Property Photo" maxFileSize="20000000"
-                            customUpload="true" (onSelect)="onFileSelect($event, 'PP')" (onClear)="onClear('PP')"
-                            (uploadHandler)="onUpload($event,'PP')" />
-            
+                        <p-fileupload #propertyPhotoUploader mode="basic" chooseLabel="Choose Property Photo"
+                            maxFileSize="20000000" customUpload="true" (onSelect)="onFileSelect($event, 'PP')"
+                            (onClear)="onClear('PP')" (uploadHandler)="onUpload($event,'PP')" />
+
                     </div>
                     @if(ppFile){
                     <div class="flex justify-center md:justify-start gap-2">
-                        <p-button label="Upload" icon="pi pi-upload" (onClick)="propertyPhotoUploader.upload()" severity="info" />
+                        <p-button label="Upload" icon="pi pi-upload" (onClick)="propertyPhotoUploader.upload()"
+                            severity="info" />
                         <p-button label="Remove" icon="pi pi-times" severity="danger" (onClick)="clearFile('PP')" />
                     </div>
                     }
                 </div>
                 <p class="text-blue-500 italic text-sm mt-2">File must be in jpeg/pdf format and below 2MB</p>
-            
-            </div>
+
+            </div> -->
 
             <div class="gesil-card">
                 <div class="flex">
