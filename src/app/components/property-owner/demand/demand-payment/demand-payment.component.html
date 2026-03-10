@@ -1,0 +1,61 @@
+<app-page-header title="Payment Collection" [backButton]="true" />
+<div class="gesil-card mt-4">
+    <div>
+        <p><strong>Household No : </strong>{{this.property.householdNo}}</p>
+    </div>
+
+    <div class="mt-8">
+        <p [style]="{color: 'var(--primary-color)', fontSize: '1.15rem'}" class="text-center my-4"><strong>Total Amount
+                Pending : </strong>
+            {{demand.amountPending}}</p>
+        <form [formGroup]="paymentForm" class="flex justify-center">
+            <div class="flex flex-col gap-2 w-100 md:w-[50%]">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="remark">Remark</label>
+                    <p-select id="remark" [options]="remarkOptions" optionLabel="label" placeholder="Select"
+                        class="w-full" formControlName="remarks"></p-select>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label for="amount">Amount</label>
+                    <input pInputText id="amount" placeholder="Enter Amount" type="text" formControlName="amountPaid" />
+                    <!-- <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('amount')">
+                        Please enter a valid owner name.
+                    </div> -->
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label for="txnId">Transaction ID</label>
+                    <input pInputText id="txnId" placeholder="Transaction ID" type="text"
+                        formControlName="paymentTxnNumber" tooltipPosition="top" />
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label for="customReason">Custom Reason</label>
+                    <input pInputText id="customReason" placeholder="Custom Reason" type="text"
+                        formControlName="customReason" />
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <label for="nextVisitDate">Next Visit Date</label>
+                    <p-datepicker placeholder="Choose Next Visit Date (MM/DD/YYYY)" id="nextVisitDate"
+                        [minDate]="minDate" styleClass="w-full" inputStyleClass="w-full"
+                        formControlName="nextVisitDate" />
+                </div>
+
+                <!-- <div class="flex flex-wrap gap-2 w-full">
+                    <label for="careOf">Select Care of</label>
+                    <p-select id="careOf" [options]="careOfs" optionLabel="label" placeholder="Select" class="w-full"
+                        formControlName="careOf"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('careOf')">
+                        Please choose a care of.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="guardianName">Father/Husband Name</label>
+                    <input pInputText id="guardianName" placeholder="Father/Husband Name" type="text"
+                        formControlName="guardianName" tooltipPosition="top" pTooltip="Parent or care taker's name" />
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('guardianName')">
+                        Please enter a valid guardian name.
+                    </div>
+                </div> -->
+            </div>
+        </form>
+    </div>
+</div>

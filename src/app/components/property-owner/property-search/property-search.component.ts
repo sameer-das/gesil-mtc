@@ -28,15 +28,15 @@ type PropertySearchType = {
 }
 
 @Component({
-  selector: 'app-owner-search',
+  selector: 'app-property-search',
   imports: [PageHeaderComponent, AutoCompleteModule,
     FormsModule, FluidModule, RadioButtonModule, AutoFocusModule,
     InputGroupModule, InputIconModule,
     IconFieldModule, InputTextModule, ButtonModule, InputGroupAddonModule, CommonModule],
-  templateUrl: './owner-search.component.html',
-  styleUrl: './owner-search.component.scss'
+  templateUrl: './property-search.component.html',
+  styleUrl: './property-search.component.scss'
 })
-export class OwnerSearchComponent {
+export class PropertySearchComponent {
 
   env = environment;
 
@@ -96,7 +96,7 @@ export class OwnerSearchComponent {
     if (!propertyId) {
       return
     }
-    this.router.navigate(['/owner', 'detail', propertyId])
+    this.router.navigate(['/property', 'detail', propertyId])
   }
 
   searchProperty(formValue: PropertySearchType) {

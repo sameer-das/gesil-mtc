@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APIResponse } from '../models/user.model';
-import { ApproveRejectPayload, CreateOwnerDetail, OwnerDetail, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType, UpdateOwnerDetail } from '../models/property-owner.model';
+import { ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, OwnerDetail, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType, UpdateOwnerDetail } from '../models/property-owner.model';
 import { SHOW_LOADER } from './httpContexts';
 
 @Injectable({
@@ -145,7 +145,18 @@ export class OwnerServiceService {
       "surveyNo": payload.surveyNo || null,
     }
     console.log(payloadToApi)
-
-    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateProperty}`, payloadToApi);
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateProperty}`, payload);
   }
+
+
+  getDemandsOfProperty(propertyId: number, pageNumber: number, pageSize: number) {
+    return this.http.get<APIResponse<DemandListResp>>(`${this.API_URL}${environment.getDemandsOfProperty}`, { params: { propertyId, pageNumber, pageSize } })
+  }
+
+  getDemandsTxnOfProperty(propertyId: number, demandId: number) {
+    return this.http.get<APIResponse<DemandTransactionRecord[]>>(`${this.API_URL}${environment.getAllDemandTxn}`, { params: { propertyId, demandId } })
+  }
+
 }
+
+

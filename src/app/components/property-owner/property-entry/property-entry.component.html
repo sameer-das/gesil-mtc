@@ -105,7 +105,7 @@
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ward">Ward</label>
-                        <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Ward"
+                        <p-select id="ward" [options]="wards" optionLabel="wardNumber" placeholder="Select Ward"
                             class="w-full" formControlName="ward"></p-select>
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ward')">
                             Please choose ward.
@@ -114,8 +114,8 @@
 
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ward">Mohalla</label>
-                        <p-select id="ward" [options]="wards" optionLabel="wardName" placeholder="Select Mohalla Name"
-                            class="w-full" formControlName="mohallaName"></p-select>
+                        <p-select id="ward" [options]="mohallas" optionLabel="mohallaName"
+                            placeholder="Select Mohalla Name" class="w-full" formControlName="mohallaName"></p-select>
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mohallaName')">
                             Please choose mohalla.
                         </div>
@@ -145,7 +145,7 @@
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="subCategory">Sub-Category</label>
-                        <p-select id="subCategory" [options]="subCategory" optionLabel="subCategoryName"
+                        <p-select id="subCategory" [options]="subCategories" optionLabel="subCategoryName"
                             placeholder="Select Sub-Category" class="w-full" formControlName="subCategory"></p-select>
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('subCategory')">
                             Please Sub-Category.
@@ -171,21 +171,54 @@
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="typeOfOwnership">Type of Ownership</label>
-                        <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="ownershipTypeName"
+                        <p-select id="typeOfOwnership" [options]="typeOfOwnerships" optionLabel="label"
                             placeholder="Select Type of Ownership" class="w-full"
                             formControlName="typeOfOwnership"></p-select>
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('typeOfOwnership')">
                             Please choose type of ownership.
                         </div>
                     </div>
-                    @if(propertyForm.get('typeOfOwnership')?.value?.typeOfOwnershipId === 13) {
 
+                    <!-- Individual Building -->
+                    @if(propertyForm.get('typeOfOwnership')?.value.value === '1' ) {
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <label for="noOfFloors">No. Of Floors</label>
+                        <input pInputText id="noOfFloors" placeholder="No. Of Floors" type="text"
+                            formControlName="noOfFloors" />
+                        <div [class.invisible]="!isInvalid('noOfFloors')">No. Of Floors</div>
+                    </div>
+
+                    <!-- <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <button pButton >Floor wise data</button>
+                        <div>asd</div>
+                    </div> -->
+                    }
+
+                    <!-- Flat in Appartment -->
+                    @if(propertyForm.get('typeOfOwnership')?.value.value === '2' ) {
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <label for="buildingNo">Building No.</label>
+                        <input pInputText id="buildingNo" placeholder="Building No." type="text"
+                            formControlName="buildingNo" />
+                        <div [class.invisible]="!isInvalid('buildingNo')">Building No.</div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <label for="flatNo">Flat No.</label>
+                        <input pInputText id="flatNo" placeholder="Flat No." type="text" formControlName="flatNo" />
+                        <div [class.invisible]="!isInvalid('flatNo')">Flat No.</div>
+                    </div>
+                    }
+
+                    <!-- Other Types -->
+                    @if(propertyForm.get('typeOfOwnership')?.value.value > 2 ) {
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="otherTypeOfOwnerShip">Specify Ownership Type</label>
                         <input pInputText id="otherTypeOfOwnerShip" placeholder="Specify Ownership Type" type="text"
                             formControlName="otherTypeOfOwnerShip" />
+                        <div [class.invisible]="!isInvalid('otherTypeOfOwnerShip')">otherTypeOfOwnerShip</div>
                     </div>
                     }
+
                 </div>
             </div>
 
@@ -228,7 +261,7 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-2 md:gap-6">
-                        <div class="flex flex-wrap gap-2 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
                         <label for="propertyAddressLandmark">Landmark</label>
                         <input pInputText id="propertyAddressLandmark" placeholder="Enter Landmark" type="text"
                             formControlName="propertyAddressLandmark" />
@@ -247,12 +280,13 @@
                 </div>
             </div>
 
-             <!-- Owner Address -->
+            <!-- Owner Address -->
             <div class="gesil-card">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg">Address of the Owner</h2>
                     <div class="flex items-center gap-2">
-                         <p-togglebutton formControlName="isOwnerAddressSame" [onLabel]="'Owner address is same.'" [offLabel]="'Owner address is different.'" />
+                        <p-togglebutton formControlName="isOwnerAddressSame" [onLabel]="'Owner address is same.'"
+                            [offLabel]="'Owner address is different.'" />
                         <!-- <span>Is owner address same as property address?</span><p-toggleswitch formControlName="isOwnerAddressSame" /> -->
                     </div>
                 </div>
@@ -260,7 +294,7 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressDistrict">District</label>
                         <input pInputText id="ownerAddressDistrict" placeholder="Enter District" type="text"
-                            formControlName="ownerAddressDistrict" />
+                            formControlName="ownerAddressDistrict" [readOnly]="isCorrespondenceSame" />
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressDistrict')">
                             Please enter district.
                         </div>
@@ -268,7 +302,7 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressCity">City</label>
                         <input pInputText id="ownerAddressCity" placeholder="Enter City" type="text"
-                            formControlName="ownerAddressCity" />
+                            formControlName="ownerAddressCity" [readOnly]="isCorrespondenceSame" />
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressCity')">
                             Please enter city.
                         </div>
@@ -276,7 +310,7 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressPin">PIN</label>
                         <input pInputText id="ownerAddressPin" placeholder="Enter PIN" type="text"
-                            formControlName="ownerAddressPin" />
+                            formControlName="ownerAddressPin" [readOnly]="isCorrespondenceSame" />
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressPin')">
                             Please enter PIN.
                         </div>
@@ -284,7 +318,7 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressHouseNo">House No</label>
                         <input pInputText id="ownerAddressHouseNo" placeholder="Enter House No." type="text"
-                            formControlName="ownerAddressHouseNo" />
+                            formControlName="ownerAddressHouseNo" [readOnly]="isCorrespondenceSame" />
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressHouseNo')">
                             Please enter a House No.
                         </div>
@@ -292,10 +326,10 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-2 md:gap-6">
-                        <div class="flex flex-wrap gap-2 w-full">
+                    <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddressLandmark">Landmark</label>
                         <input pInputText id="ownerAddressLandmark" placeholder="Enter Landmark" type="text"
-                            formControlName="ownerAddressLandmark" />
+                            formControlName="ownerAddressLandmark" [readOnly]="isCorrespondenceSame" />
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddressLandmark')">
                             Please enter landmark.
                         </div>
@@ -303,7 +337,7 @@
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="ownerAddress">Address</label>
                         <input pInputText id="ownerAddress" placeholder="Address" type="text"
-                            formControlName="ownerAddress" />
+                            formControlName="ownerAddress" [readOnly]="isCorrespondenceSame" />
                         <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ownerAddress')">
                             Please enter address.
                         </div>
@@ -478,80 +512,6 @@
                         <label for="plotNo">Plot No</label>
                         <input pInputText id="plotNo" placeholder="Enter Plot No" type="text"
                             formControlName="plotNo" />
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- Row 6 -->
-            <!-- <div class="gesil-card">
-                <h2 class="text-lg font-semibold">Address of Property</h2>
-                <div class="flex flex-col md:flex-row gap-6 my-4">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="propertyAddress">Address</label>
-                        <input pInputText id="propertyAddress" placeholder="Enter Address" type="text"
-                            formControlName="propertyAddress" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="propertyAddressDistrict">District</label>
-                        <input pInputText id="propertyAddressDistrict" placeholder="Enter District" type="text"
-                            formControlName="propertyAddressDistrict" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="propertyAddressCity">City</label>
-                        <input pInputText id="propertyAddressCity" placeholder="Enter City" type="text"
-                            formControlName="propertyAddressCity" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="propertyAddressPin">PIN </label>
-                        <input pInputText id="propertyAddressPin" placeholder="Enter PIN" type="text"
-                            formControlName="propertyAddressPin" />
-                    </div>
-                </div>
-                <div class="flex flex-col md:flex-row gap-6 my-4">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="latitude">Latitude</label>
-                        <input pInputText id="latitude" placeholder="Enter Latitude" type="text"
-                            formControlName="latitude" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="longitude">Longitude </label>
-                        <input pInputText id="longitude" placeholder="Enter Longitude" type="text"
-                            formControlName="longitude" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label>Get this location </label>
-                        <button pButton (click)="getThisLocation()">Get</button>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- Row 7 -->
-            <!-- <div class="gesil-card">
-                <h2 class="text-lg font-semibold">Correspondence address of the Owner</h2>
-                <div class="flex items-center gap-2 w-full md:w-1/2 my-4">
-                    <p-checkbox formControlName="isOwnerAddressSame" value="false" inputId="isOwnerAddressSame" />
-                    <label for="isOwnerAddressSame" class="ml-2">Owner's Address is as same as property address</label>
-                </div>
-                <div class="flex flex-col md:flex-row gap-6 my-4">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="ownerAddress">Address</label>
-                        <input pInputText id="ownerAddress" placeholder="Enter Address" type="text"
-                            formControlName="ownerAddress" [readonly]="isCorrespondenceSame" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="ownerAddressDistrict">District</label>
-                        <input pInputText id="ownerAddressDistrict" placeholder="Enter District" type="text"
-                            formControlName="ownerAddressDistrict" [readonly]="isCorrespondenceSame" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="ownerAddressCity">City</label>
-                        <input pInputText id="ownerAddressCity" placeholder="Enter City" type="text"
-                            formControlName="ownerAddressCity" [readonly]="isCorrespondenceSame" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="ownerAddressPin">PIN </label>
-                        <input pInputText id="ownerAddressPin" placeholder="Enter PIN" type="text"
-                            formControlName="ownerAddressPin" [readonly]="isCorrespondenceSame" />
                     </div>
                 </div>
             </div> -->

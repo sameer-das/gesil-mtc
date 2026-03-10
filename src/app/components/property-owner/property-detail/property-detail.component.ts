@@ -1,29 +1,26 @@
-import { ApproveRejectPayload, OwnerDetail, PropertySearchResultType } from './../../../models/property-owner.model';
-import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
-import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
-import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DividerModule } from 'primeng/divider';
-import { AccordionModule } from 'primeng/accordion';
-import { FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
-import { TooltipModule } from 'primeng/tooltip';
-import { MenuModule } from 'primeng/menu';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { PropertyListComponent } from "../property-list/property-list.component";
-import { OwnerServiceService } from '../../../services/owner-service.service';
-import { finalize, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { APIResponse } from '../../../models/user.model';
-import { environment } from '../../../../environments/environment';
-import { AadharMaskPipe } from '../../../pipes/aadhar-mask.pipe';
 import { CommonModule, Location } from '@angular/common';
-import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AccordionModule } from 'primeng/accordion';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DividerModule } from 'primeng/divider';
+import { FileUploadModule } from 'primeng/fileupload';
+import { MenuModule } from 'primeng/menu';
+import { TooltipModule } from 'primeng/tooltip';
+import { finalize, map, Subject, takeUntil, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
+import { ApproveRejectPayload, OwnerDetail, PropertySearchResultType } from '../../../models/property-owner.model';
+import { APIResponse } from '../../../models/user.model';
 import { LoaderService } from '../../../services/loader.service';
+import { OwnerServiceService } from '../../../services/owner-service.service';
+import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 
 
 @Component({
-  selector: 'app-owner-detail',
+  selector: 'app-property-detail',
   imports: [PageHeaderComponent,
     ButtonModule,
     RouterModule,
@@ -31,14 +28,13 @@ import { LoaderService } from '../../../services/loader.service';
     AccordionModule,
     FileUploadModule,
     TooltipModule,
-    AadharMaskPipe,
     CommonModule,
     ConfirmDialogModule,
-    MenuModule, PropertyListComponent],
-  templateUrl: './owner-detail.component.html',
-  styleUrl: './owner-detail.component.scss'
+    MenuModule,],
+  templateUrl: './property-detail.component.html',
+  styleUrl: './property-detail.component.scss'
 })
-export class OwnerDetailComponent implements OnInit, OnDestroy {
+export class PropertyDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.$destroy.next(true);
@@ -66,7 +62,7 @@ export class OwnerDetailComponent implements OnInit, OnDestroy {
     if (this.propertyId()) {
       this.getPropertyDetail()
     } else {
-      this.router.navigate(['owner', 'detail'])
+      this.router.navigate(['property', 'detail'])
     }
   }
 
@@ -101,7 +97,7 @@ export class OwnerDetailComponent implements OnInit, OnDestroy {
               }
             }
             else
-              this.router.navigate(['owner', 'owner-search'])
+              this.router.navigate(['property', 'property-search'])
           }
         }))
       .subscribe()
@@ -135,12 +131,13 @@ export class OwnerDetailComponent implements OnInit, OnDestroy {
 
 
   onEditClick(e: Event) {
-    this.messageService.add({
-      severity: MessageSeverity.CONTRAST,
-      summary: 'Feature Unavailable',
-      detail: `Edit feature is only available in mobile app.`, life: MessageDuaraion.LONG, closable: true
-    })
+    // this.messageService.add({
+    //   severity: MessageSeverity.CONTRAST,
+    //   summary: 'Feature Unavailable',
+    //   detail: `Edit feature is only available in mobile app.`, life: MessageDuaraion.LONG, closable: true
+    // })
 
+    this.router.navigate(['/property', 'property-entry', this.property?.propertyId])
   }
 
   onApproveClick(e: Event) {

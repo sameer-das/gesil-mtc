@@ -89,10 +89,10 @@ export class DashboardComponent implements OnInit {
 
 
     this.pieData = {
-      labels: ['A', 'B', 'C'],
+      labels: ['Residential', 'Commercial', 'Mixed'],
       datasets: [
         {
-          data: [540, 325, 702],
+          data: [500000, 300000, 75000],
           backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
           hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
         }

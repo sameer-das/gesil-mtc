@@ -254,4 +254,58 @@ export interface PropertyMaster {
   propertyAddressHouseNo?: string | null;
   propertyAddressLandmark?: string | null;
   surveyNo?: string | null;
+  zoneName?: string | null;
+  mohallaNameDetail?: string | null;
+  categoryName?: string | null;
+  subCategoryName?: string | null;
+  approverName?: string | null;
+  approverMobile?: string | null;
+  approverEmail?: string | null;
+  approverUserTypeName?: string | null;
+}
+
+
+export interface DemandList {
+  demandId: number;
+  fyId: number;
+  dueFromPrevYear: number;
+  currentMonthlyCharge: number;
+  noOfMonths: number;
+  currentFyAmount: number;
+  totalAmount: number;
+  demandNo: string;
+  amountPaid: number;
+  amountPending: number;
+  propertyId: number;
+  demandGeneratedBy: string; // Kept as string since it's quoted in JSON
+  demandGeneratedDate: string; // ISO 8601 date string
+  demandFile: string;
+  fyName: string;
+}
+
+
+export interface DemandListResp {
+  totalCount: number;
+  demands: DemandList[];
+}
+
+
+export interface DemandTransactionRecord {
+  txnId: number;
+  billDate: string;
+  txnDate: string;
+  billNo: string;
+  propertyId: number;
+  demandId: number;
+  amountPaid: number;
+  remarks: string;
+  customReason: string | null;
+  paymentTxnNumber: string;
+  nextVisitDate: string | null;
+  attribute0: string;
+  attribute1: string;
+  attribute2: string;
+  attribute3: string;
+  attribute4: string;
+  remarkLabel?: string;
 }

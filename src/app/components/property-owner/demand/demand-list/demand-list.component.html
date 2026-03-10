@@ -1,0 +1,52 @@
+<app-page-header title="Demand List" [backButton]="true" />
+
+<div class="flex flex-col gap-4">
+    @for(demand of demands; track demand.demandId) {
+        <div class="gesil-card mt-4">
+            <div class="flex justify-between">
+                <p><strong>Demand No: </strong>{{demand.demandNo}}</p>
+                <p><strong>FY: </strong>{{demand.fyName}}</p>
+            </div>
+            <div class="mt-4 flex flex-col gap-2 items-center justify-center">
+                <table class="">
+                    <tbody>
+                        <tr>
+                            <td>Previous Due</td>
+                            <td>{{demand.dueFromPrevYear}}</td>
+                        </tr>
+                        <tr>
+                            <td>Current Due</td>
+                            <td>{{demand.currentFyAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>{{demand.totalAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td>Amount Paid by today</td>
+                            <td>{{demand.amountPaid}}</td>
+                        </tr>
+                        <tr>
+                            <td>Amount Pending</td>
+                            <td>{{demand.amountPending}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="flex flex-row sm:flex-wrap flex gap-2">
+                    @if(demand.demandNo) {
+                    <a pButton severity="primary"
+                        [routerLink]="['/property', 'property-payment', this.propertyId(), demand.demandId]"> Collect Payment</a>
+                    <a pButton severity="help" [outlined]="true" [href]="getDemandFileUrl(demand.demandFile)"
+                        target="_blank">
+                        View Demand </a>
+                    <a pButton severity="contrast" [outlined]="true"
+                        [routerLink]="['/property', 'property-transactions', this.propertyId(), demand.demandId]"> All Transactions</a>
+                    } @else {
+                    <p-button type="button" severity="info" variant="outlined" label="Generate Demand" />
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

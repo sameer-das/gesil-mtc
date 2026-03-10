@@ -3,7 +3,7 @@ export const environment = {
     // ***************** API BASE URL *****************
     API_URL: "http://181.214.10.5/api",
 
-    
+
     // ***************** Authentication URLs *****************
     login: '/Auth/login',
     refreshToken: '/Auth/refresh',
@@ -20,15 +20,15 @@ export const environment = {
     createUserType: '/Admin/createUserType',
     updateUserType: '/Admin/updateUserType',
     getUserType: '/Admin/getUserType?userType=',
-    getUserList:'/Admin/UserList',
-    getUserDetails:'/Admin/userDetails?userId=',
+    getUserList: '/Admin/UserList',
+    getUserDetails: '/Admin/userDetails?userId=',
     updateUserBasicDetails: '/Admin/updateUserBasicDetails',
     updateUserParentDetails: '/Admin/updateUserParent',
     userDocumentUpload: '/Admin/userDocumentUpload',
     updateUserAadharPan: '/Admin/updateUserAadharPan',
     userDownloadDocument: '/Admin/userDocumentDownload',
     getUserWholeList: '/Admin/getUserWholeList',
-    
+
     getFeatureList: '/Admin/getFeatureList',
     getFeatureMapping: '/Admin/getFeatureMapping',
     updateFeatureMapping: '/Admin/updateFeatureMapping',
@@ -39,7 +39,7 @@ export const environment = {
     zoneList: '/Master/zoneList',
     zoneDetails: '/Master/zoneDetails',
     updateZone: '/Master/updateZone',
-    
+
     createWard: '/Master/createWard',
     wardList: '/Master/wardList',
     wardDetails: '/Master/wardDetails',
@@ -93,7 +93,9 @@ export const environment = {
     ownerDocumentDownload: '/Master/ownerDocumentDownload',
     getPropertyMasterDetails: '/Master/getPropertyMasterDetails',
 
-    updateProperty:'/Master/AddOrUpdatePropertyMaster',
-    approveRejectProperty:'/Master/approveRejectProperty',
-    getApprovalLog:'/Master/getApprovalLog',
+    updateProperty: '/Master/AddOrUpdatePropertyMaster',
+    approveRejectProperty: '/Master/approveRejectProperty',
+    getApprovalLog: '/Master/getApprovalLog',
+    getDemandsOfProperty: '/Master/getAllDemands',
+    getAllDemandTxn: '/Master/getAllDemandTxn'
 };

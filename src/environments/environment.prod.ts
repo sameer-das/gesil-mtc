@@ -1,7 +1,7 @@
 import { DomHandler } from "primeng/dom";
 
 export const environment = {
-    
+
     // ***************** API BASE URL *****************
     API_URL: "http://181.214.10.5/api",
 
@@ -41,7 +41,7 @@ export const environment = {
     zoneList: '/Master/zoneList',
     zoneDetails: '/Master/zoneDetails',
     updateZone: '/Master/updateZone',
-    
+
     createWard: '/Master/createWard',
     wardList: '/Master/wardList',
     wardDetails: '/Master/wardDetails',
@@ -93,7 +93,9 @@ export const environment = {
     ownerDocumentDownload: '/Master/ownerDocumentDownload',
     getPropertyMasterDetails: '/Master/getPropertyMasterDetails',
 
-    updateProperty:'/Master/AddOrUpdatePropertyMaster',
-    approveRejectProperty:'/Master/approveRejectProperty',
-    getApprovalLog:'/Master/getApprovalLog',
+    updateProperty: '/Master/AddOrUpdatePropertyMaster',
+    approveRejectProperty: '/Master/approveRejectProperty',
+    getApprovalLog: '/Master/getApprovalLog',
+    getDemandsOfProperty: '/Master/getAllDemands',
+    getAllDemandTxn: '/Master/getAllDemandTxn'
 };

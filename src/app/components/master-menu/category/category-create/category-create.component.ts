@@ -70,7 +70,7 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.$destroy))
         .subscribe({
           next: (resp: APIResponse<string>) => {
-            if (resp.code === 200 && resp.data === 'S') {
+            if (resp.code === 200 && resp.status === 'Success') {
               this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Category created successfully.', life: MessageDuaraion.STANDARD });
               this.categoryForm.reset();
             } else {

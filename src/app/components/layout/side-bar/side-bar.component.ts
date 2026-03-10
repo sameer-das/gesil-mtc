@@ -183,7 +183,7 @@ export class SideBarComponent {
         {
           label: 'Search Property',
           icon: 'pi pi-search',
-          routerLink: '/owner/owner-search',
+          routerLink: '/property/property-search',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)
@@ -203,7 +203,7 @@ export class SideBarComponent {
         {
           label: 'Approve Property',
           icon: 'pi pi-check',
-          routerLink: '/owner/approval-list',
+          routerLink: '/property/approval-list',
           routerLinkActiveOptions: { exact: true },
           command: (e: MenuItemCommandEvent) => {
             // console.log(e)

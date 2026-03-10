@@ -1,0 +1,45 @@
+<app-page-header title="All Transactions" [backButton]="true" />
+<div class="gesil-card mt-4">
+    <div class="flex justify-between">
+        <p [style]="{color: 'var(--primary-color)'}"><strong>Household No. : </strong> {{property.householdNo}}</p>
+        <div class="flex items-center gap-2">
+            <span id="switch2">{{showAll ? 'Showing All' : 'Showing Payments'}}</span>
+            <p-inputSwitch ariaLabelledBy="ShowAllToggle" [(ngModel)]="showAll" (onChange)="onChangeSwitch($event)" />
+        </div>
+    </div>
+    <div class="mt-8">
+        @for(txn of filteredTransactions; track txn.txnId) {
+        <div class="mt-2 border-b">
+            <div class="flex justify-between">
+                @if(txn.billNo === '0') {
+                <p><strong>Visit Comment</strong></p>
+                } @else {
+                <p><strong>Bill No. : </strong>{{txn.billNo}}</p>
+                }
+                <p><strong>Transaction Date : </strong>{{txn.billDate | date:'dd-MM-yyyy'}}</p>
+            </div>
+            <div class="flex justify-between">
+                <p><strong>{{txn.remarkLabel}}</strong></p>
+                @if(txn.remarks === '4') {
+                <p><strong>Next Vist Date : </strong>{{txn.nextVisitDate | date: 'dd-MM-yyyy'}}</p>
+                } @else if (txn.remarks === '8') {
+                <p><strong>Reason : </strong>{{txn.customReason}}</p>
+                } @else {
+                <p>{{null}}</p>
+                }
+
+            </div>
+            <div class="flex justify-between">
+                @if(txn.amountPaid > 0) {
+                <p><strong>Amount Paid : </strong>{{txn.amountPaid}}</p>
+                } @else {
+                <p>{{null}}</p>
+                }
+
+                <p><strong>Date : </strong>{{txn.txnDate | date:'medium'}}</p>
+            </div>
+        </div>
+
+        }
+    </div>
+</div>

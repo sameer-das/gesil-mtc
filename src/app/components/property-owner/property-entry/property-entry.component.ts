@@ -1,5 +1,5 @@
 import { District, APIResponse } from './../../../models/user.model';
-import { Component, inject, input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { FluidModule } from 'primeng/fluid';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,16 +12,16 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
-import { Category, ElectricityConnectionType, Mohalla, OwnershipType, PropertyType, SubCategory, Ward, Zone } from '../../../models/master-data.model';
-import { forkJoin, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { Category, ElectricityConnectionType, Mohalla, OwnershipType, PropertyType, SelectType, SubCategory, Ward, Zone } from '../../../models/master-data.model';
+import { forkJoin, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FileSelectEvent, FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MasterDataService } from '../../../services/master-data.service';
-import { OwnerDocumentUpload, PropertySearchResultType } from '../../../models/property-owner.model';
+import { OwnerDocumentUpload, PropertyMaster, PropertySearchResultType } from '../../../models/property-owner.model';
 import { OwnerServiceService } from '../../../services/owner-service.service';
 import { Router } from '@angular/router';
-import { CAREOF_OPTIONS, GENDER_OPTIONS, SALUTATION_OPTIONS } from '../../../models/constants';
+import { CAREOF_OPTIONS, GENDER_OPTIONS, OWNERSHIP_TYPE, SALUTATION_OPTIONS } from '../../../models/constants';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 
@@ -41,12 +41,15 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     CheckboxModule,
     FileUploadModule,
     ToggleSwitchModule,
-    ToggleButtonModule 
+    ToggleButtonModule
   ],
   templateUrl: './property-entry.component.html',
   styleUrl: './property-entry.component.scss'
 })
 export class PropertyEntryComponent implements OnInit, OnDestroy {
+
+  constructor() { }
+
   ebFile: File | null = null;
   ppFile: File | null = null;
   @ViewChild('ebUploader') ebUploader!: FileUpload;
@@ -54,14 +57,16 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   propertyId = input<number>();
 
   isCorrespondenceSame: boolean = false;
+  currentLoggedUserType: string = localStorage.getItem('username') || 'GESIL';
+
 
   property: Partial<PropertySearchResultType> = {};
-
   readMode = true;
 
   genders = GENDER_OPTIONS;
   salutations = SALUTATION_OPTIONS;
   careOfs = CAREOF_OPTIONS;
+  typeOfOwnerships = OWNERSHIP_TYPE;
 
   propertyForm: FormGroup = new FormGroup({
     salutation: new FormControl(''),
@@ -171,15 +176,14 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   propertyTypes: PropertyType[] = [];
   categories: Category[] = [];
-  subCategory: SubCategory[] = [];
+  subCategories: SubCategory[] = [];
 
-  typeOfOwnerships: OwnershipType[] = [];
 
   // electricityCagtegory: ElectricityConnectionType[] = [];
 
   masterDataFetched = signal<boolean>(false);
-  propertyTypeFetched = signal<boolean>(false);
-
+  propertyDetailFetched = signal<boolean>(false);
+  populateMasterFormsForEdit = computed(() => this.masterDataFetched() && this.propertyDetailFetched());
 
   $destroy: Subject<null> = new Subject();
   enableIndividualBuildingType = false;
@@ -201,44 +205,20 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.fetchAllMasterData();
+
     console.log(this.propertyId());
-    if (this.propertyId()) {
-      this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId()))
-        .pipe(takeUntil(this.$destroy),
-          tap((resp: APIResponse<PropertySearchResultType[]>) => {
-            console.log(resp)
-            if (resp.code === 200 && resp.status === 'Success') {
-              if (resp.data.length > 0) {
-                this.property = resp.data[0];
-                // initialize the form
-                this.propertyForm.patchValue({
 
-                })
-              }
-              else {
-                this.property = {};
-                this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
-              }
-            } else {
-              this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found with provided details.`, life: MessageDuaraion.STANDARD })
-            }
-          }))
-        .subscribe()
-    } else {
-      this.router.navigate(['/owner', 'owner-search']);
-    }
-
-
-    this.propertyForm.get('propertyType')?.valueChanges.pipe(
+    this.propertyForm.get('typeOfOwnership')?.valueChanges.pipe(
       takeUntil(this.$destroy),
-      tap((propertyType: { propertyTypeId: number; propertyTypeName: string; }) => {
+      tap((propertyType: SelectType) => {
         console.log(propertyType);
-        if (propertyType.propertyTypeId === 2) {
+        if (+propertyType.value === 1) {
           this.enableIndividualBuildingType = true;
           this.propertyForm.patchValue({ 'noOfFloors': 1 }, { emitEvent: true });
           this.enableFlatType = false;
           this.minFloorValue = 1;
-        } else if (propertyType.propertyTypeId === 3) {
+        } else if (+propertyType.value === 2) {
           this.enableFlatType = true;
           this.enableIndividualBuildingType = false;
           this.minFloorValue = 0;
@@ -253,7 +233,6 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe();
-
 
     this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
       takeUntil(this.$destroy),
@@ -273,19 +252,44 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       tap((wardResp) => {
         if (wardResp.code === 200) {
           this.wards = wardResp.data.wards;
+          if (this.propertyId()) {
+            this.propertyForm.patchValue({
+              ward: this.wards.find(ward => ward.wardId === +(this.property.ward || 0))
+            })
+          }
         }
       })).subscribe();
 
+    this.propertyForm.get('category')?.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      tap(c => console.log(c)),
+      switchMap((category: Category) => this.masterDataService.subCategoriesOfCategory(category.categoryId, 0, 0)),
+      tap((subCategoryResp) => {
+        if (subCategoryResp.code === 200) {
+          this.subCategories = subCategoryResp.data.subCategories;
+          if (this.propertyId()) {
+            this.propertyForm.patchValue({
+              subCategory: this.subCategories.find(s => s.subCategoryId === +(this.property.subcategory || 0))
+            })
+          }
+        }
+      }
+      )
+    ).subscribe();
+
     this.propertyForm.get('isOwnerAddressSame')?.valueChanges.pipe(
       takeUntil(this.$destroy),
-      tap((val: string[]) => {
-        if (val.length > 0) {
+      tap((val: boolean) => {
+        console.log(val)
+        if (val) {
           // Make the forms readonly
           this.propertyForm.patchValue({
             ownerAddress: this.propertyForm.value.propertyAddress,
             ownerAddressDistrict: this.propertyForm.value.propertyAddressDistrict,
             ownerAddressCity: this.propertyForm.value.propertyAddressCity,
-            ownerAddressPin: this.propertyForm.value.propertyAddressPin
+            ownerAddressPin: this.propertyForm.value.propertyAddressPin,
+            ownerAddressHouseNo: this.propertyForm.value.propertyAddressHouseNo,
+            ownerAddressLandmark: this.propertyForm.value.propertyAddressLandmark,
           });
           this.isCorrespondenceSame = true
         } else {
@@ -293,13 +297,14 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             ownerAddress: '',
             ownerAddressDistrict: '',
             ownerAddressCity: '',
-            ownerAddressPin: ''
+            ownerAddressPin: '',
+            ownerAddressHouseNo: '',
+            ownerAddressLandmark: ''
           })
           this.isCorrespondenceSame = false
         }
       })).subscribe();
 
-    this.fetchAllMasterData()
   }
 
 
@@ -313,22 +318,92 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
   fetchAllMasterData() {
-    forkJoin([this.masterDataService.zoneList(),
-    this.masterDataService.propertyTypeList(),
-    this.masterDataService.ownershipTypeList(),
-    this.masterDataService.electricityConnectionTypeList()])
+    const fakeAPIResp: APIResponse<PropertySearchResultType[]> = {
+      code: 200,
+      status: 'Success',
+      data: []
+    }
+    const propertyDetail = this.propertyId() ?
+      this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId())) :
+      of(fakeAPIResp)
+
+    forkJoin([propertyDetail, this.masterDataService.zoneList(),
+      this.masterDataService.propertyTypeList(),
+      this.masterDataService.mohallaList(),
+      this.masterDataService.categoryList()])
       .pipe(takeUntil(this.$destroy),
-        map(([zoneResp, propertyResp, ownershipResp, electricityResp]) => {
-          if (zoneResp.code === 200 && propertyResp.code === 200 &&
-            ownershipResp.code === 200 && electricityResp.code === 200) {
+        map(([propertyDetailResp, zoneResp, propertyTypeResp, mohallaResp, categoryResp]) => {
+          if (zoneResp.code === 200 && propertyTypeResp.code === 200 &&
+            mohallaResp.code === 200 && categoryResp.code === 200) {
             this.masterDataFetched.set(true);
             this.zones = zoneResp.data.zones;
-            this.propertyTypes = propertyResp.data.propertyTypes;
-            this.typeOfOwnerships = ownershipResp.data.oTypes;
-            // this.electricityCagtegory = electricityResp.data.econnections;
+            this.propertyTypes = propertyTypeResp.data.propertyTypes;
+            this.mohallas = mohallaResp.data.mohallas;
+            this.categories = categoryResp.data.categories;
+
+
+            if (propertyDetailResp.code === 200 && propertyDetailResp.status === 'Success') {
+              if (propertyDetailResp.data.length > 0) {
+                this.property = propertyDetailResp.data[0];
+                console.log(this.property);
+                this.patchFormData();
+              }
+              else {
+                // new mode
+                this.property = {};
+                // this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
+              }
+            }
+
           }
         }))
       .subscribe();
+  }
+
+
+
+  patchFormData() {
+
+    this.propertyForm.patchValue({
+      salutation: SALUTATION_OPTIONS.find(opt => opt.value === this.property.salutation) || SALUTATION_OPTIONS[0],
+      careOf: CAREOF_OPTIONS.find(opt => opt.value === this.property.careOf) || CAREOF_OPTIONS[0],
+      gender: GENDER_OPTIONS.find(opt => opt.value === this.property.gender) || GENDER_OPTIONS[0],
+      ownerName: this.property.ownerName || '',
+      guardianName: this.property.guardianName || '',
+      mobile: this.property.mobile || '',
+      dob: this.property.dob ? new Date(this.property.dob) : new Date(),
+
+      zone: this.zones.find(zone => zone.zoneId === +(this.property.zone || 0)),
+      mohallaName: this.mohallas.find(m => m.mohallaId === +(this.property.mohallaName || 0)),
+      propertyType: this.propertyTypes.find(p => p.propertyTypeName === this.property.propertyType),
+      category: this.categories.find(c => c.categoryId === +(this.property.category || 0)),
+
+
+      widthOfRoad: this.property.widthOfRoad,
+      areaOfPlot: this.property.areaOfPlot,
+      typeOfOwnership: OWNERSHIP_TYPE.find(opt => opt.value === this.property.typeOfOwnership),
+
+      propertyAddress: this.property.propertyAddress,
+      propertyAddressDistrict: this.property.propertyAddressDistrict,
+      propertyAddressCity: this.property.propertyAddressCity,
+      propertyAddressPin: this.property.propertyAddressPin,
+      propertyAddressHouseNo: this.property.propertyAddressHouseNo,
+      propertyAddressLandmark: this.property.propertyAddressLandmark,
+
+      isOwnerAddressSame: this.property.isOwnerAddressSame,
+
+      ownerAddress: this.property.ownerAddress,
+      ownerAddressDistrict: this.property.ownerAddressDistrict,
+      ownerAddressCity: this.property.ownerAddressCity,
+      ownerAddressPin: this.property.ownerAddressPin,
+      ownerAddressHouseNo: this.property.ownerAddressHouseNo,
+      ownerAddressLandmark: this.property.ownerAddressLandmark,
+
+      noOfFloors: this.property.noOfFloors,
+      buildingNo: this.property.buildingNo,
+      flatNo: this.property.flatNo,
+    });
+
   }
 
 
@@ -503,6 +578,71 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     console.log(this.propertyForm.value)
+    const updateDetailsPayload: PropertyMaster = {
+            propertyId: this.property?.propertyId || 0,
+            householdNo: this.property?.householdNo,
+
+            salutation: this.propertyForm.value.salutation.value,
+            ownerName: this.propertyForm.value.ownerName,
+            careOf: this.propertyForm.value.careOf.value,
+            guardianName: this.propertyForm.value.guardianName,
+            gender: this.propertyForm.value.gender.value,
+            dob: this.getDate(this.propertyForm.value.dob),
+            mobile: this.propertyForm.value.mobile,
+
+            zone: this.propertyForm.value.zone?.zoneId,
+            ward: this.propertyForm.value.ward?.wardId,
+            category: String(this.propertyForm.value.category.categoryId),
+            subcategory: String(this.propertyForm.value.subCategory.subCategoryId),
+            mohallaName: String(this.propertyForm.value.mohallaName.mohallaId),
+
+            propertyType: this.propertyForm.value.propertyType.propertyTypeName,
+            widthOfRoad: String(this.propertyForm.value.widthOfRoad),
+            areaOfPlot: String(this.propertyForm.value.areaOfPlot),
+            
+            typeOfOwnership: this.propertyForm.value.typeOfOwnerShip?.value,
+            buildingNo: this.propertyForm.value.buildingNo,
+            flatNo: this.propertyForm.value.flatNo,
+            noOfFloors: this.propertyForm.value.noOfFloors,
+
+            propertyAddress: this.propertyForm.value.propertyAddress,
+            propertyAddressCity: this.propertyForm.value.propertyAddressCity,
+            propertyAddressDistrict: this.propertyForm.value.propertyAddressDistrict  ,
+            propertyAddressPin: this.propertyForm.value.propertyAddressPin,
+            propertyAddressHouseNo: this.propertyForm.value.propertyAddressHouseNo  ,
+            propertyAddressLandmark: this.propertyForm.value.propertyAddressLandmark,
+
+            isOwnerAddressSame: this.propertyForm.value.isOwnerAddressSame,
+
+            ownerAddress: this.propertyForm.value.ownerAddress,
+            ownerAddressCity: this.propertyForm.value.ownerAddressCity,
+            ownerAddressDistrict: this.propertyForm.value.ownerAddressDistrict,
+            ownerAddressPin: this.propertyForm.value.ownerAddressPin,
+            ownerAddressHouseNo: this.propertyForm.value.ownerAddressHouseNo,
+            ownerAddressLandmark: this.propertyForm.value.ownerAddressLandmark, 
+
+            updatedBy: this.currentLoggedUserType,
+        };
+
+        console.log(updateDetailsPayload);
+
+        this.ownerService.updatePropertyMaster(updateDetailsPayload)
+        .pipe(takeUntil(this.$destroy))
+        .subscribe({
+          next: (resp: APIResponse<string>) => {
+            if (resp.code === 200 && resp.status === 'Success') {
+              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data, life: MessageDuaraion.STANDARD });
+            } else {
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Property update failed.', life: MessageDuaraion.STANDARD })
+            }
+          }
+        })
+
+  }
+
+  getDate(date: Date | string) {
+    const d = new Date(date).getTime() + 19800000;
+    return new Date(d).toISOString();
   }
 
 
