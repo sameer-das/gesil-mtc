@@ -1,13 +1,16 @@
 <app-page-header title="Demand List" [backButton]="true" />
 
 <div class="flex flex-col gap-4">
+    <div class="flex mt-4 justify-end">
+        <a [routerLink]="['/property', 'add-demand', this.property.propertyId]" pButton [outlined]="true" >New Demand</a>
+    </div>
     @for(demand of demands; track demand.demandId) {
-        <div class="gesil-card mt-4">
+        <div class="gesil-card mt-2">
             <div class="flex justify-between">
                 <p><strong>Demand No: </strong>{{demand.demandNo}}</p>
                 <p><strong>FY: </strong>{{demand.fyName}}</p>
             </div>
-            <div class="mt-4 flex flex-col gap-2 items-center justify-center">
+            <div class="mt-4 flex flex-col gap-4 items-center justify-center">
                 <table class="">
                     <tbody>
                         <tr>
@@ -27,8 +30,8 @@
                             <td>{{demand.amountPaid}}</td>
                         </tr>
                         <tr>
-                            <td>Amount Pending</td>
-                            <td>{{demand.amountPending}}</td>
+                            <td ><strong [style]="{color: 'var(--primary-color)'}">Amount Pending</strong></td>
+                            <td><strong [style]="{color: 'var(--primary-color)'}">{{demand.amountPending}}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -42,11 +45,14 @@
                     <a pButton severity="contrast" [outlined]="true"
                         [routerLink]="['/property', 'property-transactions', this.propertyId(), demand.demandId]"> All Transactions</a>
                     } @else {
-                    <p-button type="button" severity="info" variant="outlined" label="Generate Demand" />
+                    <p-button type="button" severity="info" variant="outlined" (click)="onDemandGenerationClick(demand.demandId)" label="Generate Demand" />
                     }
                 </div>
             </div>
         </div>
+    }
+    @empty {
+        <p class="text-center">No demands found</p>
     }
 
 </div>

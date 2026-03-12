@@ -9,7 +9,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
   imports: [RouterOutlet, LoaderComponent, Toast, ConfirmDialog],
   template: `
   <p-toast />
-  <p-confirmdialog />
+  <p-confirmdialog key="global" />
   <loader />
   <router-outlet></router-outlet>`,
   providers: []

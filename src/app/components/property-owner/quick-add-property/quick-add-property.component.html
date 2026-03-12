@@ -10,7 +10,7 @@
             <div class="flex flex-col md:flex-row gap-2 md:gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="salutation">Salutation</label>
-                    <p-select id="salutation" [options]="salutations" placeholder="Select" class="w-full"
+                    <p-select id="salutation" [options]="salutations" optionLabel="label" placeholder="Select" class="w-full"
                         formControlName="salutation"></p-select>
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('salutation')">
                         Please choose a salutation for the owner.
@@ -24,7 +24,7 @@
                         Please enter a valid owner name.
                     </div>
                 </div>
-                 <div class="flex flex-wrap gap-2 w-full">
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="mobile">Mobile No</label>
                     <input pInputText id="mobile" placeholder="Enter Mobile No." type="text" formControlName="mobile" />
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mobile')">
@@ -35,16 +35,70 @@
             </div>
 
             <!-- Row 2 -->
-  
+
+            <div class="flex flex-col md:flex-row gap-2 md:gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="propertyType">Property Type</label>
+                    <p-select id="propertyType" [options]="propertyTypes" optionLabel="propertyTypeName"
+                        placeholder="Select Property Type" class="w-full" formControlName="propertyType"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('propertyType')">
+                        Please choose property type.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="category">Category</label>
+                    <p-select id="category" [options]="categories" optionLabel="categoryName"
+                        placeholder="Select Category" class="w-full" formControlName="category"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('category')">
+                        Please choose category.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="subCategory">Sub-Category</label>
+                    <p-select id="subCategory" [options]="subCategories" optionLabel="subCategoryName"
+                        placeholder="Select Sub-Category" class="w-full" formControlName="subCategory"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('subCategory')">
+                        Please Sub-Category.
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Row 3 -->
             <div class="flex flex-col md:flex-row gap-2 md:gap-6">
-                
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="zone">Zone</label>
+                    <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone"
+                        class="w-full" formControlName="zone"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('zone')">
+                        Please choose zone.
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="ward">Ward</label>
+                    <p-select id="ward" [options]="wards" optionLabel="wardNumber" placeholder="Select Ward"
+                        class="w-full" formControlName="ward"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('ward')">
+                        Please choose ward.
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="ward">Mohalla</label>
+                    <p-select id="ward" [options]="mohallas" optionLabel="mohallaName" placeholder="Select Mohalla Name"
+                        class="w-full" formControlName="mohallaName"></p-select>
+                    <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mohallaName')">
+                        Please choose mohalla.
+                    </div>
+                </div>
 
             </div>
 
-            
 
+
+        </div>
+        <div>
+            <p-button type="button" [disabled]="quickAddPropertyForm.invalid" label="Add Property" (click)="onAddProperty()"/>
         </div>
     </form>
 </p-fluid>

@@ -17,6 +17,9 @@ import { APIResponse } from '../../../models/user.model';
 import { LoaderService } from '../../../services/loader.service';
 import { OwnerServiceService } from '../../../services/owner-service.service';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
+import { FormsModule } from '@angular/forms';
+import { TextareaModule } from 'primeng/textarea';
+import { DialogModule } from 'primeng/dialog';
 
 
 @Component({
@@ -30,7 +33,9 @@ import { PageHeaderComponent } from "../../utils/page-header/page-header.compone
     TooltipModule,
     CommonModule,
     ConfirmDialogModule,
-    MenuModule,],
+    FormsModule,
+    TextareaModule,
+    MenuModule, DialogModule],
   templateUrl: './property-detail.component.html',
   styleUrl: './property-detail.component.scss'
 })
@@ -45,6 +50,7 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   $destroy: Subject<boolean> = new Subject();
 
   ownerDetail: OwnerDetail | null = null;
+  rejectPopupVisible: boolean = false;
 
   ownerService: OwnerServiceService = inject(OwnerServiceService);
   private messageService: MessageService = inject(MessageService);
@@ -123,7 +129,13 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
               severity: MessageSeverity.SUCCESS, summary: 'Approved',
               detail: `Propety approved successfully.`, life: MessageDuaraion.STANDARD
             });
-            this._location.back();
+            this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0)
+            .pipe(takeUntil(this.$destroy), tap(resp => {
+              if(resp.code === 200) {
+                this.property = resp.data[0]
+              }
+            }))
+            .subscribe()
 
           }
         })).subscribe()
@@ -147,6 +159,7 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
       header: 'Did you verify',
       closable: true,
       closeOnEscape: true,
+      key: 'global',
       icon: 'pi pi-exclamation-triangle',
       rejectButtonProps: {
         label: 'Cancel',
@@ -160,19 +173,47 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
         this.approveProperty();
       },
       reject: () => {
-        // this.messageService.add({
-        //   severity: 'error',
-        //   summary: 'Rejected',
-        //   detail: 'You have rejected',
-        //   life: 3000,
-        // });
+
       },
     })
 
   }
 
-  onApprovalHistory(e: Event) {
 
+  rejectComment: string = ''
+  onRejectClick(e: Event) {
+    this.rejectPopupVisible = true;
   }
+
+  onRejectConfirm() {
+    console.log(this.rejectComment);
+    const payload: ApproveRejectPayload = {
+      logId: Number(this.property.attribute2),
+      comments: this.rejectComment,
+      status: 'Rejected',
+      approverUserId: this.userId,
+      propertyId: this.propertyId() || 0
+    }
+
+    this.loaderService.show();
+    this.ownerService.approveRejectProperty(payload)
+      .pipe(takeUntil(this.$destroy), finalize(() => this.loaderService.hide()),
+        map((resp) => {
+          if (resp.code === 200 && resp.status === 'Success') {
+            this.messageService.add({
+              severity: MessageSeverity.SUCCESS, summary: 'Rejected',
+              detail: `Propety rejected successfully.`, life: MessageDuaraion.STANDARD
+            });
+            this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0)
+            .pipe(takeUntil(this.$destroy), tap(resp => {
+              if(resp.code === 200) {
+                this.property = resp.data[0]
+              }
+            }))
+            .subscribe()
+          }
+        })).subscribe()
+  }
+
 
 }

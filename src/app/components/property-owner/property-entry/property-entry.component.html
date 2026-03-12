@@ -180,7 +180,7 @@
                     </div>
 
                     <!-- Individual Building -->
-                    @if(propertyForm.get('typeOfOwnership')?.value.value === '1' ) {
+                    @if(propertyForm.get('typeOfOwnership')?.value?.value === '1' ) {
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="noOfFloors">No. Of Floors</label>
                         <input pInputText id="noOfFloors" placeholder="No. Of Floors" type="text"
@@ -195,7 +195,7 @@
                     }
 
                     <!-- Flat in Appartment -->
-                    @if(propertyForm.get('typeOfOwnership')?.value.value === '2' ) {
+                    @if(propertyForm.get('typeOfOwnership')?.value?.value === '2' ) {
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="buildingNo">Building No.</label>
                         <input pInputText id="buildingNo" placeholder="Building No." type="text"
@@ -210,7 +210,7 @@
                     }
 
                     <!-- Other Types -->
-                    @if(propertyForm.get('typeOfOwnership')?.value.value > 2 ) {
+                    @if(propertyForm.get('typeOfOwnership')?.value?.value > 2 ) {
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
                         <label for="otherTypeOfOwnerShip">Specify Ownership Type</label>
                         <input pInputText id="otherTypeOfOwnerShip" placeholder="Specify Ownership Type" type="text"

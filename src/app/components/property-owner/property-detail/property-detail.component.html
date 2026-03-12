@@ -1,20 +1,33 @@
 <app-page-header title="Property Details" [backButton]="true" />
 
 <div class="flex justify-end gap-4">
-    <p-button label="Edit" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined" severity="info" />
-    @if(userId == +(property.attribute1 || 0)){
+    <p-button label="Edit Details" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined"
+        severity="info" />
+
+    <!-- Only Show approve reject button if its pending and to the approver -->
+    @if(userId == +(property.attribute1 || 0) && (property.attribute0 === 'Pending')){
     <p-button label="Approve" (click)="onApproveClick($event)" icon="pi pi-check" variant="outlined"
         severity="success" />
+    <p-button label="Reject" (click)="onRejectClick($event)" icon="pi pi-check" variant="outlined" severity="danger" />
     }
-    <!-- <p-button label="Demands" (click)="onApprovalHistory($event)" icon="pi pi-file-check" variant="outlined"
-        severity="help" /> -->
-    <a [routerLink]="['/property','property-demand-list', this.propertyId()]" pButton icon="pi pi-file-check" severity="help">
-Demands
+
+    <a [routerLink]="['/property','property-demand-list', this.propertyId()]" pButton icon="pi pi-file-check"
+        severity="help">
+        Demands
     </a>
-    <p-button label="Approval History" (click)="onApprovalHistory($event)" icon="pi pi-list" variant="outlined"
-        severity="contrast" />
+    <a [routerLink]="['/property', 'approval-history', this.propertyId()]" pButton icon="pi pi-list" [outlined]="true"
+        severity="contrast">
+        Approval History
+    </a>
+
 </div>
 <div class="gesil-card mb-2 mt-4">
+    <div class="flex items-end mb-4 flex-col">
+        <p><strong [style]="{color: 'var(--primary-color)'}">Approval Status : </strong>{{property.attribute0}}</p>
+        @if(property.attribute1) {
+            <p class="text-sm"><strong>Approver : </strong>{{property.approverName}} ({{property.approverUserTypeName}})</p>
+        }
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-start">
         <!-- Image -->
         <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0">
@@ -191,3 +204,32 @@ Demands
         </div>
     </div>
 </div>
+
+
+<p-confirmdialog key="rejectConfirmDialog">
+    <ng-template pTemplate="content" let-message>
+        <div class="flex flex-column align-items-center p-3 gap-3">
+            <span>{{message.header}}</span>
+
+        </div>
+    </ng-template>
+</p-confirmdialog>
+
+<p-dialog header="Provide rejection reason." [modal]="true" [(visible)]="rejectPopupVisible" 
+    [breakpoints]="{ '1199px': '45vw', '575px': '90vw' }" [style]="{ width: '50vw' }"   
+    [draggable]="false" [resizable]="false">
+    <div class="flex flex-col">
+        <div class="">
+            <textarea rows="3" [style]="{'width': '100%'}"
+                pInputTextarea 
+                [autoResize]="true"
+                [(ngModel)]="rejectComment" 
+                placeholder="Enter your rejection reason">
+            </textarea>    
+        </div>
+        <div class="flex justify-end gap-2 mt-4">
+            <p-button label="Cancel" severity="secondary" (click)="rejectPopupVisible = false" />
+            <p-button label="Reject" severity="danger" (click)="onRejectConfirm()" />
+        </div>
+    </div>
+</p-dialog>

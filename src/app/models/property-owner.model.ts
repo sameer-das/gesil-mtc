@@ -309,3 +309,54 @@ export interface DemandTransactionRecord {
   attribute4: string;
   remarkLabel?: string;
 }
+
+
+export interface AddDemandTxnType {
+  billDate: string;
+  txnDate: string;
+  billNo: number;
+  propertyId: number;
+  demandId: number;
+  amountPaid: string | number;
+  remarks: string;
+  customReason: string;
+  paymentTxnNumber: string;
+  nextVisitDate: string | null;
+  attribute0: string;
+  attribute1: string;
+  attribute2: string;
+  attribute3: string;
+  attribute4: string;
+}
+
+
+export interface ApprovalLog {
+  logId: number;
+  propertyId: number;
+  approverUserId: number;
+  approverName: string | null;
+  approverMobile: string | null;
+  approverEmail: string | null;
+  approverUserTypeName: string | null;
+  status: string;
+  comments: string | null;
+  stepOrder: number;
+  actionDate: string | Date | null;
+}
+
+
+export interface QuickCreatePropertyType {
+  salutation: string | number;
+  ownerName: string;
+  careOf: string;
+  guardianName: string;
+  mobile: string;
+  householdNo: string;
+  propertyType: string;
+  zone: number | string;
+  ward: number | string;
+  mohallaName: string;
+  category: number | string;
+  subCategory: number | string;
+  updatedBy: string;
+}

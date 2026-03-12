@@ -7,11 +7,13 @@ import { QuickAddPropertyComponent } from './quick-add-property/quick-add-proper
 import { ApprovalListComponent } from './approval-list/approval-list.component';
 import { DemandListComponent } from './demand/demand-list/demand-list.component';
 import { DemandTransactionsComponent } from './demand/demand-transactions/demand-transactions.component';
+import { ApprovalHistoryComponent } from './approval-history/approval-history.component';
+import { AddUpdateDemandAmountComponent } from './demand/add-update-demand-amount/add-update-demand-amount.component';
 
 
 
 export default [
-    // { path: 'quick-add-property', component: QuickAddPropertyComponent },
+    { path: 'quick-add-property', component: QuickAddPropertyComponent },
     { path: 'property-search', component: PropertySearchComponent },
     { path: 'detail/:propertyId', component: PropertyDetailComponent },
     { path: 'approval-list', component: ApprovalListComponent },
@@ -19,5 +21,7 @@ export default [
     { path: 'property-demand-list/:propertyId', component: DemandListComponent },
     { path: 'property-payment/:propertyId/:demandId', component: DemandPaymentComponent },
     { path: 'property-transactions/:propertyId/:demandId', component: DemandTransactionsComponent },
+    { path: 'approval-history/:propertyId', component: ApprovalHistoryComponent },
+    { path: 'add-demand/:propertyId', component: AddUpdateDemandAmountComponent },
 
 ] as Routes;

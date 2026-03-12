@@ -57,7 +57,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   propertyId = input<number>();
 
   isCorrespondenceSame: boolean = false;
-  currentLoggedUserType: string = localStorage.getItem('username') || 'GESIL';
+  currentLoggedUserName: string = localStorage.getItem('username') || 'GESIL';
 
 
   property: Partial<PropertySearchResultType> = {};
@@ -213,12 +213,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       takeUntil(this.$destroy),
       tap((propertyType: SelectType) => {
         console.log(propertyType);
-        if (+propertyType.value === 1) {
+        if (+propertyType?.value === 1) {
           this.enableIndividualBuildingType = true;
           this.propertyForm.patchValue({ 'noOfFloors': 1 }, { emitEvent: true });
           this.enableFlatType = false;
           this.minFloorValue = 1;
-        } else if (+propertyType.value === 2) {
+        } else if (+propertyType?.value === 2) {
           this.enableFlatType = true;
           this.enableIndividualBuildingType = false;
           this.minFloorValue = 0;
@@ -237,7 +237,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
       takeUntil(this.$destroy),
       tap((val: number) => {
-        if (this.propertyForm.value.propertyType.propertyTypeId === 2 && !val) {
+        if (this.propertyForm.value.propertyType?.propertyTypeId === 2 && !val) {
           console.log('mark the form invalid')
         }
         this.floorWiseDataFormArray.clear();
@@ -332,7 +332,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       this.masterDataService.mohallaList(),
       this.masterDataService.categoryList()])
       .pipe(takeUntil(this.$destroy),
-        map(([propertyDetailResp, zoneResp, propertyTypeResp, mohallaResp, categoryResp]) => {
+        tap(([propertyDetailResp, zoneResp, propertyTypeResp, mohallaResp, categoryResp]) => {
           if (zoneResp.code === 200 && propertyTypeResp.code === 200 &&
             mohallaResp.code === 200 && categoryResp.code === 200) {
             this.masterDataFetched.set(true);
@@ -600,7 +600,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             widthOfRoad: String(this.propertyForm.value.widthOfRoad),
             areaOfPlot: String(this.propertyForm.value.areaOfPlot),
             
-            typeOfOwnership: this.propertyForm.value.typeOfOwnerShip?.value,
+            typeOfOwnership: this.propertyForm.value.typeOfOwnership?.value,
             buildingNo: this.propertyForm.value.buildingNo,
             flatNo: this.propertyForm.value.flatNo,
             noOfFloors: this.propertyForm.value.noOfFloors,
@@ -621,7 +621,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             ownerAddressHouseNo: this.propertyForm.value.ownerAddressHouseNo,
             ownerAddressLandmark: this.propertyForm.value.ownerAddressLandmark, 
 
-            updatedBy: this.currentLoggedUserType,
+            updatedBy: this.currentLoggedUserName,
         };
 
         console.log(updateDetailsPayload);

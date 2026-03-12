@@ -11,12 +11,12 @@
         @for(txn of filteredTransactions; track txn.txnId) {
         <div class="mt-2 border-b">
             <div class="flex justify-between">
-                @if(txn.billNo === '0') {
+                @if(+txn.amountPaid === 0) {
                 <p><strong>Visit Comment</strong></p>
                 } @else {
                 <p><strong>Bill No. : </strong>{{txn.billNo}}</p>
                 }
-                <p><strong>Transaction Date : </strong>{{txn.billDate | date:'dd-MM-yyyy'}}</p>
+                <!-- <p><strong>Transaction Date : </strong>{{txn.billDate | date:'dd-MM-yyyy'}}</p> -->
             </div>
             <div class="flex justify-between">
                 <p><strong>{{txn.remarkLabel}}</strong></p>
@@ -36,7 +36,7 @@
                 <p>{{null}}</p>
                 }
 
-                <p><strong>Date : </strong>{{txn.txnDate | date:'medium'}}</p>
+                <p><strong>Transaction Date : </strong>{{txn.txnDate | date:'medium'}}</p>
             </div>
         </div>
 

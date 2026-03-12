@@ -3,12 +3,13 @@ import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
 import { OwnerServiceService } from '../../../../services/owner-service.service';
 import { MessageService } from 'primeng/api';
-import { Subject, takeUntil, tap } from 'rxjs';
-import { DemandList, DemandListResp } from '../../../../models/property-owner.model';
+import { forkJoin, Subject, takeUntil, tap } from 'rxjs';
+import { DemandList, DemandListResp, PropertySearchResultType } from '../../../../models/property-owner.model';
 import { APIResponse } from '../../../../models/user.model';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from "@angular/router";
 import { environment } from '../../../../../environments/environment';
+import { MessageDuaraion, MessageSeverity } from '../../../../models/config.enum';
 
 @Component({
   selector: 'app-demand-list',
@@ -21,16 +22,17 @@ export class DemandListComponent implements OnInit, OnDestroy {
   propertyId = input<number>();
 
   $destroy: Subject<boolean> = new Subject();
-  demands:DemandList[] = [];
+  demands: DemandList[] = [];
+  property: Partial<PropertySearchResultType> = {};
   environment = environment;
 
   ownerService: OwnerServiceService = inject(OwnerServiceService);
   private messageService: MessageService = inject(MessageService);
 
-
+  currentLoggedUserId: string = localStorage.getItem('loginUserId') || '0';
 
   ngOnDestroy(): void {
-      this.$destroy.next(true);
+    this.$destroy.next(true);
   }
 
 
@@ -38,15 +40,21 @@ export class DemandListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log(this.propertyId())
 
-    this.ownerService.getDemandsOfProperty(this.propertyId() || 0, 0, 0).pipe(
-      takeUntil(this.$destroy),
-      tap((resp: APIResponse<DemandListResp>) => {
-        console.log(resp)
-        if(resp.code === 200) {
-          this.demands = resp.data.demands;
-        }
-      })
-    ).subscribe()
+    forkJoin([
+      this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0),
+      this.ownerService.getDemandsOfProperty(this.propertyId() || 0, 0, 0)
+    ])
+      .pipe(
+        takeUntil(this.$destroy),
+        tap(([propertyResp, demandsResp]) => {
+          if (demandsResp.code === 200) {
+            this.demands = demandsResp.data.demands;
+          }
+          if (propertyResp.code === 200) {
+            this.property = propertyResp.data[0];
+          }
+        })
+      ).subscribe()
 
 
   }
@@ -56,4 +64,35 @@ export class DemandListComponent implements OnInit, OnDestroy {
     return `${environment.API_URL}/Master/ownerDocumentDownload?fileName=${filename}`
   }
 
+
+  onDemandGenerationClick(demandId: number) {
+    this.ownerService.generateDemand(this.propertyId() || 0, demandId, +this.currentLoggedUserId)
+      .pipe(takeUntil(this.$destroy),
+        tap((resp) => {
+          console.log(resp)
+          if (resp.code === 200 && resp.status === 'Success') {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Demand Generated Successfully.', life: MessageDuaraion.STANDARD });
+
+            forkJoin([
+              this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0),
+              this.ownerService.getDemandsOfProperty(this.propertyId() || 0, 0, 0)
+            ])
+              .pipe(
+                takeUntil(this.$destroy),
+                tap(([propertyResp, demandsResp]) => {
+                  if (demandsResp.code === 200) {
+                    this.demands = demandsResp.data.demands;
+                  }
+                  if (propertyResp.code === 200) {
+                    this.property = propertyResp.data[0];
+                  }
+                })
+              ).subscribe()
+
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: 'Demand Generation failed.', life: MessageDuaraion.STANDARD });
+          }
+        }))
+      .subscribe()
+  }
 }

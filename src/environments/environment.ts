@@ -97,5 +97,9 @@ export const environment = {
     approveRejectProperty: '/Master/approveRejectProperty',
     getApprovalLog: '/Master/getApprovalLog',
     getDemandsOfProperty: '/Master/getAllDemands',
-    getAllDemandTxn: '/Master/getAllDemandTxn'
+    getAllDemandTxn: '/Master/getAllDemandTxn',
+    addDemandTxn: '/Master/AddDemandTxn',
+    quickCreateProperty:'/Master/QuickCreateProperty',
+    demandGenerate:'/Pdf/demandGenerate',
+    addUpdateDemandAmount:'/Master/AddUpdateDemandAmount',
 };

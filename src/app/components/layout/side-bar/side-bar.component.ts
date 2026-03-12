@@ -190,16 +190,16 @@ export class SideBarComponent {
             // this.router.navigate([''])
           }
         },
-        // {
-        //   label: 'Quick Add Property',
-        //   icon: 'pi pi-building-columns',
-        //   routerLink: '/owner/quick-add-property',
-        //   routerLinkActiveOptions: { exact: true },
-        //   command: (e: MenuItemCommandEvent) => {
-        //     // console.log(e)
-        //     // this.router.navigate([''])
-        //   }
-        // },
+        {
+          label: 'Quick Add Property',
+          icon: 'pi pi-building-columns',
+          routerLink: '/property/quick-add-property',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e)
+            // this.router.navigate([''])
+          }
+        },
         {
           label: 'Approve Property',
           icon: 'pi pi-check',

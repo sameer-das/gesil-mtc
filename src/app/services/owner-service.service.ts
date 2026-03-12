@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APIResponse } from '../models/user.model';
-import { ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, OwnerDetail, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType, UpdateOwnerDetail } from '../models/property-owner.model';
+import { AddDemandTxnType, ApprovalLog, ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, OwnerDetail, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType, QuickCreatePropertyType, UpdateOwnerDetail } from '../models/property-owner.model';
 import { SHOW_LOADER } from './httpContexts';
 
 @Injectable({
@@ -48,7 +48,7 @@ export class OwnerServiceService {
   }
 
   getApprovalLog(propertyId: number) {
-    return this.http.get<APIResponse<any[]>>(`${this.API_URL}${environment.getApprovalLog}`, { params: { propertyId } })
+    return this.http.get<APIResponse<ApprovalLog[]>>(`${this.API_URL}${environment.getApprovalLog}`, { params: { propertyId } })
   }
 
 
@@ -155,6 +155,18 @@ export class OwnerServiceService {
 
   getDemandsTxnOfProperty(propertyId: number, demandId: number) {
     return this.http.get<APIResponse<DemandTransactionRecord[]>>(`${this.API_URL}${environment.getAllDemandTxn}`, { params: { propertyId, demandId } })
+  }
+
+  addDemandTransaction(payload: AddDemandTxnType) {
+    return this.http.post<APIResponse<any>>(`${this.API_URL}${environment.addDemandTxn}`, payload)
+  }
+
+  quickCreateProperty(payload: QuickCreatePropertyType) {
+    return this.http.post<APIResponse<any>>(`${this.API_URL}${environment.quickCreateProperty}`, payload)
+  }
+
+  generateDemand(propertyId: number, demandId: number, userId: number, lang: string = 'en',) {
+    return this.http.get<APIResponse<any>>(`${this.API_URL}${environment.demandGenerate}`, { params: { lang, propertyId, demandId, userId } });
   }
 
 }
