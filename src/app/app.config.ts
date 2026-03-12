@@ -43,7 +43,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: definePreset(Aura, {
           semantic: {
-            primary: Aura.primitive?.green,
+            primary: Aura.primitive?.blue,
             colorScheme: {
               light: {
                 primary: {

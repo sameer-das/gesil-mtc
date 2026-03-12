@@ -12,7 +12,7 @@
     }
 
     <a [routerLink]="['/property','property-demand-list', this.propertyId()]" pButton icon="pi pi-file-check"
-        severity="help">
+        [outlined]="true" severity="help">
         Demands
     </a>
     <a [routerLink]="['/property', 'approval-history', this.propertyId()]" pButton icon="pi pi-list" [outlined]="true"
@@ -23,9 +23,16 @@
 </div>
 <div class="gesil-card mb-2 mt-4">
     <div class="flex items-end mb-4 flex-col">
-        <p><strong [style]="{color: 'var(--primary-color)'}">Approval Status : </strong>{{property.attribute0}}</p>
+        <p><strong>Approval Status : </strong>
+            <span class="inline-block py-1 px-4 text-white rounded-full" [ngClass]="{
+                'bg-red-500': property.attribute0 === 'Rejected', 
+                'bg-green-500': property.attribute0 === 'Fully Approved',
+                'bg-purple-500': property.attribute0 === 'Pending'}">{{property.attribute0}}
+            </span>
+        </p>
         @if(property.attribute1) {
-            <p class="text-sm"><strong>Approver : </strong>{{property.approverName}} ({{property.approverUserTypeName}})</p>
+            <p class="text-sm"><strong>Approver : </strong>{{property.approverName}}</p>
+            <p class="text-xs">{{property.approverUserTypeName}}</p>
         }
     </div>
     <div class="flex flex-col sm:flex-row sm:items-start">

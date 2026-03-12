@@ -8,6 +8,9 @@
         @for(log of logs; track log.logId) {
             <div class="flex justify-between mb-2 border-b-1">
                 <p [style]="{color:'var(--primary-color)'}"><strong>{{log.status}}</strong></p>
+                <!-- @if() {
+
+                } -->
                 <div class="flex flex-col gap-2">
                     <p>{{log.approverName}} ({{log.approverUserTypeName}})</p>
                     <p>{{log.actionDate | date: 'medium'}}</p>

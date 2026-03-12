@@ -27,6 +27,8 @@ export class TopBarComponent implements OnInit {
   private translateService: TranslateService = inject(TranslateService);
   private authService: AuthService = inject(AuthService);
 
+  loginName = localStorage.getItem('loginUserFirstName') || '';
+
 
   isDarkMode!: boolean;
   layoutService = inject(LayoutService);

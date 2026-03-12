@@ -145,7 +145,7 @@ export class OwnerServiceService {
       "surveyNo": payload.surveyNo || null,
     }
     console.log(payloadToApi)
-    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateProperty}`, payload);
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateProperty}`, payloadToApi);
   }
 
 

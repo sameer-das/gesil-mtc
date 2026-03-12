@@ -204,6 +204,7 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
               severity: MessageSeverity.SUCCESS, summary: 'Rejected',
               detail: `Propety rejected successfully.`, life: MessageDuaraion.STANDARD
             });
+            this.rejectPopupVisible = false;
             this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0)
             .pipe(takeUntil(this.$destroy), tap(resp => {
               if(resp.code === 200) {
