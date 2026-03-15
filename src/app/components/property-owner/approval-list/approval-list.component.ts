@@ -49,7 +49,7 @@ export class ApprovalListComponent implements OnInit, OnDestroy {
 
 
   propertyClick(propertyId: number) {
-    this.router.navigate(['/owner', 'detail', propertyId])
+    this.router.navigate(['/property', 'detail', propertyId])
   }
 
 }

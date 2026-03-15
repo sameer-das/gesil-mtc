@@ -13,11 +13,13 @@ import { SALUTATION_OPTIONS } from '../../../models/constants';
 import { ButtonModule } from 'primeng/button';
 import { QuickCreatePropertyType } from '../../../models/property-owner.model';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
+import { DialogModule } from 'primeng/dialog';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-quick-add-property',
   imports: [PageHeaderComponent, Fluid, ReactiveFormsModule,
-    SelectModule, InputTextModule, ButtonModule],
+    SelectModule, InputTextModule, ButtonModule, DialogModule, RouterLink],
   templateUrl: './quick-add-property.component.html',
   styleUrl: './quick-add-property.component.scss'
 })
@@ -42,7 +44,9 @@ export class QuickAddPropertyComponent implements OnInit, OnDestroy {
   masterDataService: MasterDataService = inject(MasterDataService);
 
   currentLoggedUserName: string = localStorage.getItem('username') || 'GESIL';
-
+  
+  dialogVisible = false;
+  surveyNo: string | null = null;
 
 
   quickAddPropertyForm: FormGroup = new FormGroup({
@@ -136,7 +140,9 @@ export class QuickAddPropertyComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.$destroy),
         tap((resp) => {
           if (resp.code === 200 && resp.status === 'Success') {
-            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Property added successfully.', life: MessageDuaraion.STANDARD });
+            // this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Property added successfully.', life: MessageDuaraion.STANDARD });
+            this.dialogVisible = true;
+            this.surveyNo = resp.data;
             this.quickAddPropertyForm.reset();
           } else {
             this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Property add failed.', life: MessageDuaraion.STANDARD });

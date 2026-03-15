@@ -1,0 +1,18 @@
+<app-page-header title="Survey List" [backButton]="true"></app-page-header>
+
+<div class="gesil-card mt-4">
+    @for(property of properties; track property.propertyId) {
+        <div class="border-b-1 flex justify-between py-2" [style]="{'pointer': 'cursor'}">
+            <div class="flex-1">
+                <p><strong>Survey No : </strong><p-button [link]="true" [routerLink]="['/property','detail', property.propertyId]" [label]="property.surveyNo || ''" /></p>
+                @if(property.householdNo){<p><strong>Household No : </strong><p-button [link]="true" [routerLink]="['/property','detail', property.propertyId]" [label]="property.householdNo || ''" /></p>}
+            </div>
+            <div class="flex-1">
+                <p [style]="{color: 'var(--primary-color)'}"><strong>Owner Name : </strong>{{property.ownerName}}</p>
+                <p><strong>Zone: </strong>{{property.zoneName}}</p>
+                <p><strong>Ward: </strong>{{property.ward}}</p>
+                <p><strong>Mohalla: </strong>{{property.mohallaName}}</p>
+            </div>
+        </div>
+    }
+</div>

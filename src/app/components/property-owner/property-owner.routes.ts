@@ -9,6 +9,7 @@ import { DemandListComponent } from './demand/demand-list/demand-list.component'
 import { DemandTransactionsComponent } from './demand/demand-transactions/demand-transactions.component';
 import { ApprovalHistoryComponent } from './approval-history/approval-history.component';
 import { AddUpdateDemandAmountComponent } from './demand/add-update-demand-amount/add-update-demand-amount.component';
+import { SurveyListComponent } from './survey-list/survey-list.component';
 
 
 
@@ -23,5 +24,6 @@ export default [
     { path: 'property-transactions/:propertyId/:demandId', component: DemandTransactionsComponent },
     { path: 'approval-history/:propertyId', component: ApprovalHistoryComponent },
     { path: 'add-demand/:propertyId', component: AddUpdateDemandAmountComponent },
+    { path: 'survey-list', component: SurveyListComponent },
 
 ] as Routes;

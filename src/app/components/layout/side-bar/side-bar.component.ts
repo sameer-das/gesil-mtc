@@ -201,6 +201,16 @@ export class SideBarComponent {
           }
         },
         {
+          label: 'Survery List',
+          icon: 'pi pi-list',
+          routerLink: '/property/survey-list',
+          routerLinkActiveOptions: { exact: true },
+          command: (e: MenuItemCommandEvent) => {
+            // console.log(e)
+            // this.router.navigate([''])
+          }
+        },
+        {
           label: 'Approve Property',
           icon: 'pi pi-check',
           routerLink: '/property/approval-list',

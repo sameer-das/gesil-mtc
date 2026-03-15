@@ -10,8 +10,8 @@
             <div class="flex flex-col md:flex-row gap-2 md:gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="salutation">Salutation</label>
-                    <p-select id="salutation" [options]="salutations" optionLabel="label" placeholder="Select" class="w-full"
-                        formControlName="salutation"></p-select>
+                    <p-select id="salutation" [options]="salutations" optionLabel="label" placeholder="Select"
+                        class="w-full" formControlName="salutation"></p-select>
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('salutation')">
                         Please choose a salutation for the owner.
                     </div>
@@ -98,7 +98,26 @@
 
         </div>
         <div>
-            <p-button type="button" [disabled]="quickAddPropertyForm.invalid" label="Add Property" (click)="onAddProperty()"/>
+            <p-button type="button" [disabled]="quickAddPropertyForm.invalid" label="Add Property"
+                (click)="onAddProperty()" />
         </div>
     </form>
 </p-fluid>
+
+
+<p-dialog [(visible)]="dialogVisible" [modal]="true" 
+    [breakpoints]="{ '1199px': '40vw', '575px': '90vw' }" 
+    [draggable]="false" [resizable]="false">
+    <ng-template #headless>
+        <div class="p-4">
+            <div class="flex flex-col items-center gap-2 my-8">
+                <p class="text-green-500 text-lg">Property added succesfully</p>
+                <p><strong>Survey No. : </strong>{{surveyNo}}</p>
+            </div>        
+            <div class="flex justify-center gap-2">
+                <p-button label="Add another property" severity="secondary" (click)="dialogVisible = false;surveyNo = null" />
+                <a [routerLink]="['/property', 'survey-list']" pButton>Show property detail</a>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>

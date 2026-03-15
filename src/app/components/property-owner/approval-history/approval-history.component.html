@@ -7,10 +7,13 @@
     <div class="mt-4">
         @for(log of logs; track log.logId) {
             <div class="flex justify-between mb-2 border-b-1">
-                <p [style]="{color:'var(--primary-color)'}"><strong>{{log.status}}</strong></p>
-                <!-- @if() {
+                <div>
+                    <p [style]="{color:'var(--primary-color)'}"><strong>{{log.status}}</strong></p>
+                    @if(log.status === 'Rejected') {
+                        <p class="text-sm"><strong>Comments : </strong>{{log.comments}}</p>
+                    }
+                </div>
 
-                } -->
                 <div class="flex flex-col gap-2">
                     <p>{{log.approverName}} ({{log.approverUserTypeName}})</p>
                     <p>{{log.actionDate | date: 'medium'}}</p>
