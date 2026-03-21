@@ -31,21 +31,45 @@
 </div>
 
 
-<div class="grid grid-cols-12 gap-8 mt-4">
-    <div class="col-span-12 lg:col-span-6 xl:col-span-6">
-        <div class="gesil-card">
-               <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
+    <div class="">
+        <div class="gesil-card h-[250px]">
+            <h3 class="text-md font-bold mb-4">Month Wise Collection</h3>
+            <app-month-wise-collection />
         </div>
     </div>
-    <div class="col-span-12 lg:col-span-6 xl:col-span-6">
-        <div class="gesil-card">
-                <p-chart type="pie" [data]="pieData" [options]="pieOptions"></p-chart>
+    <div class="">
+        <div class="gesil-card h-[250px]">
+            <h3 class="text-md font-bold mb-4">Zone Wise Collection</h3>
+            <app-zone-wise-collection />
         </div>
     </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+    <div class="">
+        <div class="gesil-card h-[300px]">
+            <h3 class="text-md font-bold mb-4">Zone Wise Collection %</h3>
+            <p-chart type="pie" [data]="pieData" [options]="pieOptions" height="100%"></p-chart>
+        </div>
+    </div>
+    <div class="">
+        <div class="gesil-card h-[300px]">
+            <h3 class="text-md font-bold mb-4">Daily Collection %</h3>
+            <app-last-week-collection />
+        </div>
+    </div>
+    <div class="">
+        <div class="gesil-card h-[300px]">
+            <h3 class="text-md font-bold mb-4">Top Outstanding Area</h3>
+            <app-top-outstanding-area />
+        </div>
+    </div>
+</div>
 
 
 
-    <!-- <div class="col-span-12  xl:col-span-6">
+<!-- <div class="col-span-12  xl:col-span-6">
         <div class="gesil-card">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam veniam quasi vitae, voluptates soluta
             accusamus fugit, voluptate iure voluptatum modi commodi laudantium tempore, saepe quae? Vero recusandae
@@ -61,4 +85,3 @@
             necessitatibus ex, nihil fugiat ab placeat magnam ducimus explicabo.
         </div>
     </div> -->
-</div>

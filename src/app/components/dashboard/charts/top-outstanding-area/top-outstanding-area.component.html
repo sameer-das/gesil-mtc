@@ -1,0 +1,44 @@
+<p-table [value]="topOutStandingData" dataKey="id" [rows]="10" [rowHover]="true" [showGridlines]="true"
+    [paginator]="false" responsiveLayout="" [lazy]="true">
+
+    <ng-template #header>
+        <tr>
+            <th class="toa-th">
+                Sl No
+            </th>
+            <th class="toa-th">
+                Zone
+            </th>
+            <th class="toa-th">
+                Ward
+            </th>
+            <th class="toa-th">
+                Pending
+            </th>
+            <th class="toa-th">
+                Total
+            </th>
+        </tr>
+    </ng-template>
+
+
+    <ng-template #body let-item let-index="rowIndex">
+        <tr>
+            <td class="toa-td">
+                {{ index + 1 }}
+            </td>
+            <td class="toa-td">
+                {{ item.zone }}
+            </td>
+            <td class="toa-td">
+                {{ item.ward }}
+            </td>
+            <td class="toa-td">
+                {{ item.outstanding }}
+            </td>
+            <td class="toa-td">
+                {{ item.total }}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
