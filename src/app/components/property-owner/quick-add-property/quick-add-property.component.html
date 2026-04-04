@@ -84,8 +84,8 @@
                 </div>
 
                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="ward">Mohalla</label>
-                    <p-select id="ward" [options]="mohallas" optionLabel="mohallaName" placeholder="Select Mohalla Name"
+                    <label for="mohalla">Mohalla</label>
+                    <p-select id="mohalla" [options]="mohallas" optionLabel="mohallaName" placeholder="Select Mohalla Name"
                         class="w-full" formControlName="mohallaName"></p-select>
                     <div class="text-red-500 text-xs" [class.invisible]="!isInvalid('mohallaName')">
                         Please choose mohalla.

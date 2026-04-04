@@ -101,11 +101,15 @@ export interface Mohalla {
     mohallaId: number;
     mohallaName: string;
     active?: number;
+    zoneId: number;
+    wardId: number;
 }
 
 export interface CreateUpdateMohalla {
     mohallaId?: number;
     mohallaName: string;
+    wardId: number;
+    zoneId: number;
 }
 
 export type SelectType = { label: string; value: string | number };

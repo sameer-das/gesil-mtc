@@ -3,13 +3,28 @@
     <div class="font-semibold text-xl">Mohalla Details</div>
 
     <div class="flex flex-col gap-6">
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="gender">Zone</label>
+                <p-select id="zone" [options]="zones" optionLabel="zoneName" placeholder="Select Zone" class="w-full"
+                    formControlName="zone"></p-select>
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <div class="flex flex-col w-full md:w-1/2 gap-2">
+                <label for="ward">Ward</label>
+                <p-select id="ward" [options]="wards" optionLabel="wardNumber" placeholder="Select Ward" class="w-full"
+                    formControlName="ward"></p-select>
+            </div>
+        </div>
 
         <div class="flex justify-center">
             <div class="flex flex-col w-full md:w-1/2 gap-2">
                 <label for="mohallaName">Mohalla Name</label>
                 <input pInputText id="mohallaName" class="w-full" type="text" placeholder="Mohalla Name"
                     formControlName="mohallaName" />
-            </div>           
+            </div>
         </div>
     </div>
 

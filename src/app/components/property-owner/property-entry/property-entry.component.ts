@@ -260,6 +260,26 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         }
       })).subscribe();
 
+    this.propertyForm.get('ward')?.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      tap(w => console.log(w)),
+      switchMap((ward: Ward) => this.masterDataService.mohallaList(this.propertyForm.value.zone.zoneId, ward.wardId, 0, 0)),
+      tap((mohallaResp) => {
+        console.log(mohallaResp)
+        if (mohallaResp.code === 200) {
+          this.mohallas = mohallaResp.data.mohallas;
+          if (this.propertyId()) {
+            const found = this.mohallas.find(mohalla => mohalla.mohallaId === +(this.property.mohallaName || 0))
+            console.log(found)
+            this.propertyForm.patchValue({
+              mohallaName: found
+            })
+          }
+        }
+      }
+      )
+    ).subscribe();
+
     this.propertyForm.get('category')?.valueChanges.pipe(
       takeUntil(this.$destroy),
       tap(c => console.log(c)),
@@ -329,16 +349,13 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
     forkJoin([propertyDetail, this.masterDataService.zoneList(),
       this.masterDataService.propertyTypeList(),
-      this.masterDataService.mohallaList(),
       this.masterDataService.categoryList()])
       .pipe(takeUntil(this.$destroy),
-        tap(([propertyDetailResp, zoneResp, propertyTypeResp, mohallaResp, categoryResp]) => {
-          if (zoneResp.code === 200 && propertyTypeResp.code === 200 &&
-            mohallaResp.code === 200 && categoryResp.code === 200) {
+        tap(([propertyDetailResp, zoneResp, propertyTypeResp, categoryResp]) => {
+          if (zoneResp.code === 200 && propertyTypeResp.code === 200) {
             this.masterDataFetched.set(true);
             this.zones = zoneResp.data.zones;
             this.propertyTypes = propertyTypeResp.data.propertyTypes;
-            this.mohallas = mohallaResp.data.mohallas;
             this.categories = categoryResp.data.categories;
 
 
@@ -374,7 +391,6 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       dob: this.property.dob ? new Date(this.property.dob) : new Date(),
 
       zone: this.zones.find(zone => zone.zoneId === +(this.property.zone || 0)),
-      mohallaName: this.mohallas.find(m => m.mohallaId === +(this.property.mohallaName || 0)),
       propertyType: this.propertyTypes.find(p => p.propertyTypeName === this.property.propertyType),
       category: this.categories.find(c => c.categoryId === +(this.property.category || 0)),
 

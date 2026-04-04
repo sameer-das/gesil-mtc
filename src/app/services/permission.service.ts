@@ -18,15 +18,15 @@ export class PermissionService {
     if (!userId || userId === 0) {
       this._permissions.set([]);
     } else {
-      // this._permissions.set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-      this.userService.getFeatureMapping(userId, 0).pipe(tap((resp) => {
-        console.log(resp);
-        if (resp.code === 200 && resp.status === 'Success') {
-          const allowedPermissions = resp.data.filter(curr => curr.mappingActive).map(curr => curr.featureId);
-          console.log(allowedPermissions)
-          this._permissions.set(allowedPermissions);
-        }
-      })).subscribe()
+      this._permissions.set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+      // this.userService.getFeatureMapping(userId, 0).pipe(tap((resp) => {
+      //   console.log(resp);
+      //   if (resp.code === 200 && resp.status === 'Success') {
+      //     const allowedPermissions = resp.data.filter(curr => curr.mappingActive).map(curr => curr.featureId);
+      //     console.log(allowedPermissions)
+      //     this._permissions.set(allowedPermissions);
+      //   }
+      // })).subscribe()
     }
   }
 

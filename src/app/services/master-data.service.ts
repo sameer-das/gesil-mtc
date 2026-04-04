@@ -111,7 +111,7 @@ export class MasterDataService {
   propertyTypeList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ propertyTypes: PropertyType[], totalCount: number }>> {
     return this.http.get<APIResponse<{ propertyTypes: PropertyType[], totalCount: number }>>(`${this.API_URL}${environment.propertyTypeList}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
-  getPropertyTypeDetail(propertyTypeId: number):Observable<APIResponse<PropertyType>> {
+  getPropertyTypeDetail(propertyTypeId: number): Observable<APIResponse<PropertyType>> {
     return this.http.get<APIResponse<PropertyType>>(`${this.API_URL}${environment.propertyTypeDetail}?propertytypeId=${propertyTypeId}`);
   }
   updatePropertyType(payload: PropertyType): Observable<APIResponse<string>> {
@@ -125,7 +125,7 @@ export class MasterDataService {
   ownershipTypeList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ oTypes: OwnershipType[], totalCount: number }>> {
     return this.http.get<APIResponse<{ oTypes: OwnershipType[], totalCount: number }>>(`${this.API_URL}${environment.getOwnershipType}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
-  getOwnershipTypeDetail(ownershipTypeId: number):Observable<APIResponse<OwnershipType>> {
+  getOwnershipTypeDetail(ownershipTypeId: number): Observable<APIResponse<OwnershipType>> {
     return this.http.get<APIResponse<OwnershipType>>(`${this.API_URL}${environment.ownershipTypeDetail}?ownershipTypeId=${ownershipTypeId}`);
   }
   updateOwnershipType(payload: OwnershipType): Observable<APIResponse<string>> {
@@ -139,7 +139,7 @@ export class MasterDataService {
   electricityConnectionTypeList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ econnections: ElectricityConnectionType[], totalCount: number }>> {
     return this.http.get<APIResponse<{ econnections: ElectricityConnectionType[], totalCount: number }>>(`${this.API_URL}${environment.getElectricConnections}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
-  getElectricityConnectionTypeDetail(electricConnectionId: number):Observable<APIResponse<ElectricityConnectionType>> {
+  getElectricityConnectionTypeDetail(electricConnectionId: number): Observable<APIResponse<ElectricityConnectionType>> {
     return this.http.get<APIResponse<ElectricityConnectionType>>(`${this.API_URL}${environment.electricityConnectionDetail}?electricConnectionId=${electricConnectionId}`);
   }
   updateElectricityConnectionType(payload: ElectricityConnectionType): Observable<APIResponse<string>> {
@@ -151,8 +151,8 @@ export class MasterDataService {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.mohallaCreate}`, createMohallaPayload);
   }
 
-  mohallaList(pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ mohallas: Mohalla[], totalCount: number }>> {
-    return this.http.get<APIResponse<{ mohallas: Mohalla[], totalCount: number }>>(`${this.API_URL}${environment.mohallaList}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  mohallaList(ZoneId: number, WardId: number, pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ mohallas: Mohalla[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ mohallas: Mohalla[], totalCount: number }>>(`${this.API_URL}${environment.mohallaList}`, { params: { ZoneId, WardId, pageSize, pageNumber } });
   }
 
   mohallaDetails(mohallaId: number): Observable<APIResponse<Mohalla>> {

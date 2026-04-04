@@ -53,7 +53,7 @@ TABLE_CONFIG = TABLE_CONFIG;
 
 
   loadMohalaList(pageNumber: number = 1, pageSize: number = 5) {
-    this.masterDataService.mohallaList(pageNumber, pageSize)
+    this.masterDataService.mohallaList(0,0,pageNumber, pageSize)
       .pipe(takeUntil(this.$destroy))
       .subscribe({
         next: (resp: APIResponse<{mohallas: Mohalla[], totalCount: number}>) => {

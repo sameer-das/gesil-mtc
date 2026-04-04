@@ -83,11 +83,20 @@ export class QuickAddPropertyComponent implements OnInit, OnDestroy {
 
     this.quickAddPropertyForm.get('category')?.valueChanges.pipe(
       takeUntil(this.$destroy),
-      tap(c => console.log(c)),
       switchMap((category: Category) => this.masterDataService.subCategoriesOfCategory(category.categoryId, 0, 0)),
       tap((subCategoryResp) => {
         if (subCategoryResp.code === 200) {
           this.subCategories = subCategoryResp.data.subCategories;
+        }
+      })).subscribe();  
+
+    this.quickAddPropertyForm.get('ward')?.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      tap(w => console.log(w)),
+      switchMap((ward: Ward) => this.masterDataService.mohallaList(this.quickAddPropertyForm.value.zone.zoneId, ward.wardId, 0, 0)),
+      tap((mohallaResp) => {
+        if (mohallaResp.code === 200) {
+          this.mohallas = mohallaResp.data.mohallas;
         }
       }
       )
@@ -100,16 +109,13 @@ export class QuickAddPropertyComponent implements OnInit, OnDestroy {
 
     forkJoin([this.masterDataService.zoneList(),
     this.masterDataService.propertyTypeList(),
-    this.masterDataService.mohallaList(),
     this.masterDataService.categoryList()])
       .pipe(takeUntil(this.$destroy),
-        tap(([zoneResp, propertyTypeResp, mohallaResp, categoryResp]) => {
-          if (zoneResp.code === 200 && propertyTypeResp.code === 200 &&
-            mohallaResp.code === 200 && categoryResp.code === 200) {
+        tap(([zoneResp, propertyTypeResp, categoryResp]) => {
+          if (zoneResp.code === 200 && propertyTypeResp.code === 200) {
 
             this.zones = zoneResp.data.zones;
             this.propertyTypes = propertyTypeResp.data.propertyTypes;
-            this.mohallas = mohallaResp.data.mohallas;
             this.categories = categoryResp.data.categories;
 
           }
