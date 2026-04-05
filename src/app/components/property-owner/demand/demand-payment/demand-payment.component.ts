@@ -1,23 +1,24 @@
+import { Location } from '@angular/common';
 import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
-import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
-import { forkJoin, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DatePickerModule } from 'primeng/datepicker';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { forkJoin, map, Subject, takeUntil, tap } from 'rxjs';
+import { MessageDuaraion, MessageSeverity } from '../../../../models/config.enum';
+import { TRANSACTION_REMARKS } from '../../../../models/constants';
 import { AddDemandTxnType, DemandList, PropertySearchResultType } from '../../../../models/property-owner.model';
 import { OwnerServiceService } from '../../../../services/owner-service.service';
-import { MessageService } from 'primeng/api';
-import { TRANSACTION_REMARKS } from '../../../../models/constants';
-import { SelectModule } from 'primeng/select';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { DatePickerModule } from 'primeng/datepicker';
-import { ButtonModule } from 'primeng/button';
-import { MessageDuaraion, MessageSeverity } from '../../../../models/config.enum';
-import { Location } from '@angular/common';
+import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
 
 @Component({
   selector: 'app-demand-payment',
   imports: [PageHeaderComponent, SelectModule,
     ReactiveFormsModule, InputTextModule,
-    DatePickerModule, ButtonModule
+    DatePickerModule, ButtonModule, FileUploadModule
   ],
   templateUrl: './demand-payment.component.html',
   styleUrl: './demand-payment.component.scss'
@@ -46,6 +47,10 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
   showCustomReason = false;
   hideAmountTxn = false;
 
+  file!: File;
+  fileName: string | null = '';
+  fileContent: string = '';
+  latLong: string = '';
 
   paymentForm: FormGroup = new FormGroup({
     remarks: new FormControl(''),
@@ -160,6 +165,34 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
 
 
 
+  onFileUpload(e: FileSelectEvent) {
+    console.log(e.files[0]);
+    this.file = e.files[0];
+    this.fileName = e.files[0].name;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(e.files[0]);
+    reader.onload = () => {
+      this.fileContent = reader.result as string;
+    }
+  }
+
+
+  getCurrentLocation() {
+    console.log('getCurrentLocation ');
+    this.ownerService.getCurrentLocation().subscribe({
+      next: (position) => {
+        this.latLong = position.coords.latitude + '; ' + position.coords.longitude;
+        console.log('User Location:', position.coords);
+      },
+      error: (err) => {
+        console.error('Error getting location:', err);
+        this.latLong = '';
+      }
+    });
+  }
+
+
   onSubmit() {
     console.log(this.paymentForm.value);
     const regex = /^\d+(\.\d{2})?$/;
@@ -195,9 +228,12 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
       nextVisitDate: this.paymentForm.value.remarks.value === 4 ? this.getDate(this.paymentForm.value.nextVisitDate.toISOString()) : null,
       attribute0: this.currentLoggedUserId,
       attribute1: '',
-      attribute2: '',
+      attribute2: this.latLong,
       attribute3: '',
       attribute4: '',
+      imageFilename: this.file.name.split('.').slice(0,-1).join(), // remove the extension
+      imageContent: this.fileContent,
+      imageType: this.file.type
     }
 
 

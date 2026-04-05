@@ -55,6 +55,7 @@ export const environment = {
     subCategoryDetail: '/Master/subCategoryDetail',
     updateSubCategory: '/Master/updateSubCategory',
     subCategoriesOfCategory: '/Master/subCategoriesOfCategory',
+    searchSubCategory: '/Master/searchSubCategory',
 
     createFy: '/Master/createFy',
     fyList: '/Master/fyList',
@@ -80,6 +81,7 @@ export const environment = {
     mohallaCreate: '/Master/createMohalla',
     mohallaDetail: '/Master/mohallaDetail',
     updateMohalla: '/Master/updateMohalla',
+    searchMohalla: '/Master/searchMohalla',
 
 
 

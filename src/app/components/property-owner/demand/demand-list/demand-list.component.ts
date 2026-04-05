@@ -1,19 +1,20 @@
 
 import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
-import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
-import { OwnerServiceService } from '../../../../services/owner-service.service';
-import { MessageService } from 'primeng/api';
-import { forkJoin, Subject, takeUntil, tap } from 'rxjs';
-import { DemandList, DemandListResp, PropertySearchResultType } from '../../../../models/property-owner.model';
-import { APIResponse } from '../../../../models/user.model';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from "@angular/router";
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { forkJoin, Subject, takeUntil, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { MessageDuaraion, MessageSeverity } from '../../../../models/config.enum';
+import { DemandList, PropertySearchResultType } from '../../../../models/property-owner.model';
+import { OwnerServiceService } from '../../../../services/owner-service.service';
+import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-demand-list',
-  imports: [PageHeaderComponent, ButtonModule, RouterLink],
+  imports: [PageHeaderComponent, ButtonModule, RouterLink, DialogModule],
   templateUrl: './demand-list.component.html',
   styleUrl: './demand-list.component.scss'
 })
@@ -28,9 +29,12 @@ export class DemandListComponent implements OnInit, OnDestroy {
 
   ownerService: OwnerServiceService = inject(OwnerServiceService);
   private messageService: MessageService = inject(MessageService);
+  private sanitizer: DomSanitizer = inject(DomSanitizer);
 
   currentLoggedUserId: string = localStorage.getItem('loginUserId') || '0';
 
+  displayPdfModal = false;
+  pdfUrl: SafeResourceUrl = ''
   ngOnDestroy(): void {
     this.$destroy.next(true);
   }
@@ -94,5 +98,11 @@ export class DemandListComponent implements OnInit, OnDestroy {
           }
         }))
       .subscribe()
+  }
+
+
+  showModal(fileName: string) {
+    this.displayPdfModal = true;
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.getDemandFileUrl(fileName)); 
   }
 }

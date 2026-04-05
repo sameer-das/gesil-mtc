@@ -22,19 +22,32 @@
 
 </div>
 <div class="gesil-card mb-2 mt-4">
-    <div class="flex items-end mb-4 flex-col">
-        <p><strong>Approval Status : </strong>
-            <span class="inline-block py-1 px-4 text-white rounded-full" [ngClass]="{
+    <div class="flex justify-between mb-4">
+        <div>
+            @if(property.householdNo) {
+                <p [style]="{color: 'var(--primary-color)'}"><strong>Household No/PIN : </strong> {{property.householdNo}} </p>
+            }
+
+            @if(property.surveyNo) {
+                <p [style]="{color: 'var(--primary-color)'}"><strong>Survey No : </strong> {{property.surveyNo}}</p>
+            }
+        </div>
+
+        <div class="flex items-end flex-col">
+            <p><strong>Approval Status : </strong>
+                <span class="inline-block py-1 px-4 text-white rounded-full" [ngClass]="{
                 'bg-red-500': property.attribute0 === 'Rejected', 
                 'bg-green-500': property.attribute0 === 'Fully Approved',
                 'bg-purple-500': property.attribute0 === 'Pending'}">{{property.attribute0}}
-            </span>
-        </p>
-        @if(property.attribute1) {
+                </span>
+            </p>
+            @if(property.attribute1) {
             <p class="text-sm"><strong>Approver : </strong>{{property.approverName}}</p>
-            <p class="text-xs">{{property.approverUserTypeName}}</p>
-        }
+            <p class="text-xs">({{property.approverUserTypeName}})</p>
+            }
+        </div>
     </div>
+
     <div class="flex flex-col sm:flex-row sm:items-start">
         <!-- Image -->
         <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0">
@@ -222,17 +235,14 @@
     </ng-template>
 </p-confirmdialog>
 
-<p-dialog header="Provide rejection reason." [modal]="true" [(visible)]="rejectPopupVisible" 
-    [breakpoints]="{ '1199px': '45vw', '575px': '90vw' }" [style]="{ width: '50vw' }"   
-    [draggable]="false" [resizable]="false">
+<p-dialog header="Provide rejection reason." [modal]="true" [(visible)]="rejectPopupVisible"
+    [breakpoints]="{ '1199px': '45vw', '575px': '90vw' }" [style]="{ width: '50vw' }" [draggable]="false"
+    [resizable]="false">
     <div class="flex flex-col">
         <div class="">
-            <textarea rows="3" [style]="{'width': '100%'}"
-                pInputTextarea 
-                [autoResize]="true"
-                [(ngModel)]="rejectComment" 
-                placeholder="Enter your rejection reason">
-            </textarea>    
+            <textarea rows="3" [style]="{'width': '100%'}" pInputTextarea [autoResize]="true"
+                [(ngModel)]="rejectComment" placeholder="Enter your rejection reason">
+            </textarea>
         </div>
         <div class="flex justify-end gap-2 mt-4">
             <p-button label="Cancel" severity="secondary" (click)="rejectPopupVisible = false" />

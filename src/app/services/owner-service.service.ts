@@ -169,6 +169,23 @@ export class OwnerServiceService {
     return this.http.get<APIResponse<any>>(`${this.API_URL}${environment.demandGenerate}`, { params: { lang, propertyId, demandId, userId } });
   }
 
+
+  getCurrentLocation(): Observable<GeolocationPosition> {
+    return new Observable((observer) => {
+      if (!navigator.geolocation) {
+        observer.error('Geolocation is not supported by your browser');
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          observer.next(position);
+          observer.complete();
+        },
+        (error) => observer.error(error)
+      );
+    });
+  }
+
 }
 
 

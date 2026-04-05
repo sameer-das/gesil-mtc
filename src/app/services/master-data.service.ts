@@ -89,6 +89,9 @@ export class MasterDataService {
   subCategoriesOfCategory(categoryId = 1, pageNumber: number = 1, pageSize: number = 5): Observable<APIResponse<{ subCategories: SubCategory[], totalCount: number }>> {
     return this.http.get<APIResponse<{ subCategories: SubCategory[], totalCount: number }>>(`${this.API_URL}${environment.subCategoriesOfCategory}?categoryId=${categoryId}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
+  searchSubCategory(searchValue: string, pageNo: number = 0, pageSize: number = 0): Observable<APIResponse<{ subCategories: SubCategory[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ subCategories: SubCategory[], totalCount: number }>>(`${this.API_URL}${environment.searchSubCategory}`, { params: { searchValue, pageNo, pageSize } })
+  }
 
 
   createFy(fyName: string): Observable<APIResponse<string>> {
@@ -161,6 +164,10 @@ export class MasterDataService {
 
   updateMohalla(createMohallaPayload: CreateUpdateMohalla): Observable<APIResponse<string>> {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateMohalla}`, createMohallaPayload);
+  }
+
+  searchMohalla(searchValue: string, pageNo: number = 0, pageSize: number = 0): Observable<APIResponse<{ mohallas: Mohalla[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ mohallas: Mohalla[], totalCount: number }>>(`${this.API_URL}${environment.searchMohalla}`, { params: { searchValue, pageNo, pageSize } })
   }
 
 

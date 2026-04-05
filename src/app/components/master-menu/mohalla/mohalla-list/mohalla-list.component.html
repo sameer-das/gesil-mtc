@@ -1,19 +1,18 @@
 <app-page-header title="Mohalla List"></app-page-header>
 
 <div class="gesil-card mt-4">
-    <p-table [value]="mohallas"
-        dataKey="mohallaId" 
-        [rows]="TABLE_CONFIG.rows"
-        [rowHover]="TABLE_CONFIG.rowHover"
-        [showGridlines]="TABLE_CONFIG.showGridlines" 
-        [paginator]="TABLE_CONFIG.paginator" 
-        responsiveLayout="TABLE_CONFIG.responsiveLayout"
-        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        [totalRecords]="totalRecords"
-        [lazy]="true"
-        (onPage)="onPaginate($event)">
+    <p-table [value]="mohallas" dataKey="mohallaId" [rows]="TABLE_CONFIG.rows" [rowHover]="TABLE_CONFIG.rowHover"
+        [showGridlines]="TABLE_CONFIG.showGridlines" [paginator]="TABLE_CONFIG.paginator"
+        responsiveLayout="TABLE_CONFIG.responsiveLayout" [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
+        [totalRecords]="totalRecords" [lazy]="true" (onPage)="onPaginate($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
+                <div class="flex flex-col gap-2">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input type="text" pInputText placeholder="Search Mohalla" [formControl]="search"  />
+                    </p-iconfield>  
+                </div>
                 <a [routerLink]="['../','mohalla-create']" class="p-button ml-auto">
                     <i class="pi pi-plus-circle"></i>Add New Mohalla
                 </a>
@@ -50,9 +49,9 @@
                     {{ item.mohallaName }}
                 </td>
                 <td>
-                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'mohalla-edit', item.mohallaId]" [rounded]="true" class="mr-2" severity="help"
-                     pTooltip="Edit"></a>
-                     <!-- <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
+                    <a pButton icon="pi pi-pencil" [routerLink]="['../', 'mohalla-edit', item.mohallaId]"
+                        [rounded]="true" class="mr-2" severity="help" pTooltip="Edit"></a>
+                    <!-- <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
                         [routerLink]="['../','mohalla-details', item.mohallaId]" pTooltip="View"></a> -->
                 </td>
 

@@ -11,32 +11,45 @@
         @for(txn of filteredTransactions; track txn.txnId) {
         <div class="mt-2 border-b">
             <div class="flex justify-between">
-                @if(+txn.amountPaid === 0) {
-                <p><strong>Visit Comment</strong></p>
-                } @else {
-                <p><strong>Bill No. : </strong>{{txn.billNo}}</p>
-                }
+                <div>
+                    @if(+txn.amountPaid === 0) {
+                    <p><strong>Visit Comment</strong></p>
+                    } @else {
+                    <p><strong>Bill No. : </strong>{{txn.billNo}}</p>
+                    }
+
+                    <p><strong>{{txn.remarkLabel}}</strong></p>
+
+                    @if(txn.remarks === '4') {
+                    <p><strong>Next Vist Date : </strong>{{txn.nextVisitDate | date: 'dd-MM-yyyy'}}</p>
+                    } @else if (txn.remarks === '8') {
+                    <p><strong>Reason : </strong>{{txn.customReason}}</p>
+                    } @else {
+                    <p>{{null}}</p>
+                    }
+
+                    @if(txn.amountPaid > 0) {
+                    <p><strong>Amount Paid : </strong>{{txn.amountPaid}}</p>
+                    } @else {
+                    <p>{{null}}</p>
+                    }
+
+                    <p><strong>Transaction Date : </strong>{{txn.txnDate | date:'medium'}}</p>
+
+                </div>
+                <div class="flex flex-col items-end">
+                    <img width="100" height="50" [src]="getImage(txn)" alt="Company Logo">
+                    <p><strong>Location : </strong>{{txn.attribute2}}</p>
+                </div>
+
                 <!-- <p><strong>Transaction Date : </strong>{{txn.billDate | date:'dd-MM-yyyy'}}</p> -->
             </div>
             <div class="flex justify-between">
-                <p><strong>{{txn.remarkLabel}}</strong></p>
-                @if(txn.remarks === '4') {
-                <p><strong>Next Vist Date : </strong>{{txn.nextVisitDate | date: 'dd-MM-yyyy'}}</p>
-                } @else if (txn.remarks === '8') {
-                <p><strong>Reason : </strong>{{txn.customReason}}</p>
-                } @else {
-                <p>{{null}}</p>
-                }
+
 
             </div>
             <div class="flex justify-between">
-                @if(txn.amountPaid > 0) {
-                <p><strong>Amount Paid : </strong>{{txn.amountPaid}}</p>
-                } @else {
-                <p>{{null}}</p>
-                }
 
-                <p><strong>Transaction Date : </strong>{{txn.txnDate | date:'medium'}}</p>
             </div>
         </div>
 

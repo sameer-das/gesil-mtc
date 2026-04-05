@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { TRANSACTION_REMARKS } from '../../../../models/constants';
 import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-demand-transactions',
@@ -72,5 +73,10 @@ export class DemandTransactionsComponent implements OnInit, OnDestroy {
     } else {
       this.filteredTransactions = this.allTransactions.filter(c => +c.amountPaid > 0);
     }
+  }
+
+
+  getImage(txn: DemandTransactionRecord){
+     return `${environment.API_URL}/Master/ownerDocumentDownload?fileName=${txn.attribute3}`
   }
 }

@@ -2,57 +2,85 @@
 
 <div class="flex flex-col gap-4">
     <div class="flex mt-4 justify-end">
-        <a [routerLink]="['/property', 'add-demand', this.property.propertyId]" pButton [outlined]="true" >New Demand</a>
+        <a [routerLink]="['/property', 'add-demand', this.property.propertyId]" pButton [outlined]="true">New Demand</a>
     </div>
     @for(demand of demands; track demand.demandId) {
-        <div class="gesil-card mt-2">
-            <div class="flex justify-between">
-                <p><strong>Demand No: </strong>{{demand.demandNo}}</p>
-                <p><strong>FY: </strong>{{demand.fyName}}</p>
+    <div class="gesil-card mt-2">
+        <div class="flex justify-between">
+            <p><strong>Demand No: </strong>{{demand.demandNo}}</p>
+            <p><strong>FY: </strong>{{demand.fyName}}</p>
+        </div>
+        <div class="mt-4 flex flex-col gap-4 items-center justify-center">
+            <table class="">
+                <tbody>
+                    <tr>
+                        <td>Previous Due</td>
+                        <td>{{demand.dueFromPrevYear}}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Due</td>
+                        <td>{{demand.currentFyAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>{{demand.totalAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Amount Paid by today</td>
+                        <td>{{demand.amountPaid}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong [style]="{color: 'var(--primary-color)'}">Amount Pending</strong></td>
+                        <td><strong [style]="{color: 'var(--primary-color)'}">{{demand.amountPending}}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="w-100 md:w-1/3">
+                @if(demand.demandNo) {
+                <a pButton severity="primary" class="w-full"
+                    [routerLink]="['/property', 'property-payment', this.propertyId(), demand.demandId]"> Collect
+                    Payment</a>
+                }
             </div>
-            <div class="mt-4 flex flex-col gap-4 items-center justify-center">
-                <table class="">
-                    <tbody>
-                        <tr>
-                            <td>Previous Due</td>
-                            <td>{{demand.dueFromPrevYear}}</td>
-                        </tr>
-                        <tr>
-                            <td>Current Due</td>
-                            <td>{{demand.currentFyAmount}}</td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>{{demand.totalAmount}}</td>
-                        </tr>
-                        <tr>
-                            <td>Amount Paid by today</td>
-                            <td>{{demand.amountPaid}}</td>
-                        </tr>
-                        <tr>
-                            <td ><strong [style]="{color: 'var(--primary-color)'}">Amount Pending</strong></td>
-                            <td><strong [style]="{color: 'var(--primary-color)'}">{{demand.amountPending}}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="flex flex-row sm:flex-wrap flex gap-2">
-                    @if(demand.demandNo) {
-                    <a pButton severity="primary"
-                        [routerLink]="['/property', 'property-payment', this.propertyId(), demand.demandId]"> Collect Payment</a>
-                    <a pButton severity="help" [outlined]="true" [href]="getDemandFileUrl(demand.demandFile)"
-                        target="_blank">
-                        View Demand </a>
-                    <a pButton severity="contrast" [outlined]="true"
-                        [routerLink]="['/property', 'property-transactions', this.propertyId(), demand.demandId]"> All Transactions</a>
-                    } @else {
-                    <p-button type="button" severity="info" variant="outlined" (click)="onDemandGenerationClick(demand.demandId)" label="Generate Demand" />
-                    }
-                </div>
+            <div class="flex flex-row sm:flex-wrap flex gap-2">
+                @if(demand.demandNo) {
+                <!-- <a pButton severity="primary"
+                    [routerLink]="['/property', 'property-payment', this.propertyId(), demand.demandId]"> Collect
+                    Payment</a> -->
+
+                <a pButton severity="contrast" [outlined]="true"
+                    [routerLink]="['/property', 'property-transactions', this.propertyId(), demand.demandId]"> All
+                    Transactions</a>
+
+                <!-- <p-button severity="help" [outlined]="true" (click)="showModal(demand.demandFile)"> View Demand
+                </p-button> -->
+
+                <a pButton severity="help" [outlined]="true" [href]="getDemandFileUrl(demand.demandFile)"
+                    target="_blank">
+                    Download Demand </a>
+                } @else {
+                <p-button type="button" severity="info" variant="outlined"
+                    (click)="onDemandGenerationClick(demand.demandId)" label="Generate Demand" />
+                }
             </div>
         </div>
+    </div>
     }
     @empty {
-        <p class="text-center">No demands found</p>
+    <p class="text-center">No demands found</p>
     }
 
 </div>
+
+
+<p-dialog header="Demand" [(visible)]="displayPdfModal" [modal]="true" [style]="{width: '70vw', height: '90vh'}"
+    [resizable]="false">
+
+    @if(pdfUrl) {
+    <div style="height: 100%; width: 100%;">
+        <iframe [src]="pdfUrl" width="100%" height="600px" style="border: none;">
+        </iframe>
+    </div>
+
+    }
+</p-dialog>

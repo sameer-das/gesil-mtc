@@ -327,6 +327,9 @@ export interface AddDemandTxnType {
   attribute2: string;
   attribute3: string;
   attribute4: string;
+  imageFilename: string;
+  imageContent: string;
+  imageType: string;
 }
 
 

@@ -1,16 +1,16 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
-import { Subject, takeUntil, tap } from 'rxjs';
-import { OwnerServiceService } from '../../../services/owner-service.service';
-import { MessageService } from 'primeng/api';
-import { MasterDataService } from '../../../services/master-data.service';
-import { PropertySearchResultType } from '../../../models/property-owner.model';
 import { RouterLink } from "@angular/router";
-import { ButtonDirective, Button } from "primeng/button";
+import { MessageService } from 'primeng/api';
+import { Button } from "primeng/button";
+import { Subject, takeUntil, tap } from 'rxjs';
+import { PropertySearchResultType } from '../../../models/property-owner.model';
+import { MasterDataService } from '../../../services/master-data.service';
+import { OwnerServiceService } from '../../../services/owner-service.service';
+import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 
 @Component({
   selector: 'app-survey-list',
-  imports: [PageHeaderComponent, RouterLink, ButtonDirective, Button],
+  imports: [PageHeaderComponent, RouterLink, Button],
   templateUrl: './survey-list.component.html',
   styleUrl: './survey-list.component.scss'
 })
