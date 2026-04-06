@@ -3,16 +3,10 @@
 
 <div class="gesil-card mt-4">
     <!-- <img src="/assets/avatar.png" alt="avatar" /> -->
-    <p-table #dt1 dataKey="id" 
-        [value]="userList" 
-        [rowHover]="TABLE_CONFIG.rowHover"
-        [showGridlines]="TABLE_CONFIG.showGridlines" 
-        responsiveLayout="TABLE_CONFIG.responsiveLayout"
-        [paginator]="TABLE_CONFIG.paginator" 
-        [rows]="TABLE_CONFIG.rows" 
-        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        [totalRecords]="totalRecords"
-        [lazy]="true"
+    <p-table #dt1 dataKey="id" [value]="userList" [rowHover]="TABLE_CONFIG.rowHover"
+        [showGridlines]="TABLE_CONFIG.showGridlines" responsiveLayout="TABLE_CONFIG.responsiveLayout"
+        [paginator]="TABLE_CONFIG.paginator" [rows]="TABLE_CONFIG.rows"
+        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions" [totalRecords]="totalRecords" [lazy]="true"
         (onLazyLoad)="loadUserData($event)">
         <!-- <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
@@ -47,6 +41,20 @@
                         Designation
                     </div>
                 </th>
+
+                @if(permissionService.hasPermission(PERMISSIONS.VIEW_USER_LOGIN_CEDENTIALS)) {
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Login Username
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Login Password
+                        </div>
+                    </th>
+                }
+
                 <th style="min-width: 12rem">
                     <div class="flex justify-between items-center">
                         Action
@@ -57,13 +65,6 @@
 
         <ng-template #body let-user>
             <tr>
-                <!-- <td>
-                    <div class="flex items-center gap-2">
-                        <img [alt]="user.name" src="/assets/avatar.png" width="32" style="vertical-align: middle" />
-                        <span class="image-text">{{ user.name }}</span>
-                    </div>
-                </td> -->
-
                 <td>
                     {{ user.firstName }}
                 </td>
@@ -77,16 +78,26 @@
                     {{ user.userTypeName }}
                 </td>
 
+                @if(permissionService.hasPermission(PERMISSIONS.VIEW_USER_LOGIN_CEDENTIALS)) { 
+                    <td>
+                        {{ user.loginId }}
+                    </td>
+                    <td class="flex justify-between items-center">
+                        {{ user.showPassword ? user.password : '-*-*-*-*-' }}
+                        <p-button [icon]="user.showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" [rounded]="true"
+                            [text]="true" severity="secondary" (click)="user.showPassword = !user.showPassword" />
+                    </td>                    
+                }
 
                 <td>
                     <a pButton icon="pi pi-eye" [rounded]="true" class="mr-2"
                         [routerLink]="['..','details', `${user.userId}`]" pTooltip="View"></a>
                     <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-4" severity="help"
-                        [routerLink]="['..','edit', `${user.userId}`]" [queryParams]="{tab: 'basic-details'}" pTooltip="Edit"></a>
+                        [routerLink]="['..','edit', `${user.userId}`]" [queryParams]="{tab: 'basic-details'}"
+                        pTooltip="Edit"></a>
                     <!-- <p-button icon="pi pi-trash" [rounded]="true" class="" severity="danger"
                         (click)="deleteUser(user)" pTooltip="Delete"></p-button> -->
                 </td>
-
             </tr>
         </ng-template>
     </p-table>

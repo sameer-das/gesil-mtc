@@ -115,6 +115,8 @@ export interface UserList {
   employeeid: string;
   userType: number;
   userTypeName: string;
+  password: string;
+  showPassword?: boolean;
 }
 
 export interface UserDetail {

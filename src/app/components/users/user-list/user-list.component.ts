@@ -1,3 +1,4 @@
+import { PERMISSIONS } from './../../../models/constants';
 import { APIResponse } from './../../../models/user.model';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
@@ -13,6 +14,9 @@ import { UserList } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from '../../utils/page-header/page-header.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { PermissionService } from '../../../services/permission.service';
+
+
 @Component({
   selector: 'app-user-list',
   imports: [TableModule,
@@ -37,7 +41,9 @@ export class UserListComponent implements OnInit {
 
   router: Router = inject(Router);
   private usersService: UsersService = inject(UsersService);
-
+  permissionService: PermissionService = inject(PermissionService);
+  PERMISSIONS = PERMISSIONS;
+  
   ngOnInit(): void {
 
   }
@@ -72,7 +78,9 @@ export class UserListComponent implements OnInit {
             this.totalRecords = resp.data.totalCount;
             this.userList = resp.data?.userLists.map((curr: UserList) => {
               return {
-                ...curr, firstName: curr.firstName + ' ' + curr.middleName + ' ' + curr.lastName
+                ...curr, 
+                firstName: curr.firstName + ' ' + curr.middleName + ' ' + curr.lastName,
+                showPassword: false
               }
             });
           } else {
