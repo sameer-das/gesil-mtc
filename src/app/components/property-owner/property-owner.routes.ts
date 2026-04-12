@@ -10,6 +10,7 @@ import { DemandTransactionsComponent } from './demand/demand-transactions/demand
 import { ApprovalHistoryComponent } from './approval-history/approval-history.component';
 import { AddUpdateDemandAmountComponent } from './demand/add-update-demand-amount/add-update-demand-amount.component';
 import { SurveyListComponent } from './survey-list/survey-list.component';
+import { PropertyDocumentComponent } from './property-document/property-document.component';
 
 
 
@@ -21,6 +22,7 @@ export default [
     { path: 'property-entry/:propertyId', component: PropertyEntryComponent },
     { path: 'property-demand-list/:propertyId', component: DemandListComponent },
     { path: 'property-payment/:propertyId/:demandId', component: DemandPaymentComponent },
+    { path: 'property-documents/:propertyId', component: PropertyDocumentComponent },
     { path: 'property-transactions/:propertyId/:demandId', component: DemandTransactionsComponent },
     { path: 'approval-history/:propertyId', component: ApprovalHistoryComponent },
     { path: 'add-demand/:propertyId', component: AddUpdateDemandAmountComponent },

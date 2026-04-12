@@ -49,18 +49,33 @@
                 }
 
                 <div class="w-full flex flex-col md:flex-row items-center gap-2">
-                    <p-button severity="info" icon="pi pi-map-marker" label="Get Current Location" (click)="getCurrentLocation()" />
-                      <p class="text-sm">{{latLong}}</p>
+                    <p-button severity="info" icon="pi pi-map-marker" label="Get Current Location"
+                        (click)="getCurrentLocation()" />
+                    <p class="text-sm">{{latLong}}</p>
                 </div>
-                <div class="w-full flex flex-col md:flex-row items-center gap-2">
+                <div class="w-full hidden sm:flex flex-col md:flex-row items-center gap-2">
                     <p-fileupload chooseStyleClass="p-button-info" mode="basic" chooseIcon="pi pi-upload"
-                    accept="image/*" maxFileSize="50000000"  (onSelect)="onFileUpload($event)" 
-                    [auto]="true" chooseLabel="Upload your photo" />
+                        accept="image/*" maxFileSize="50000000" (onSelect)="onFileSelectWeb($event)" [auto]="true"
+                        chooseLabel="Upload your photo" />
                     <p class="text-sm">{{fileName}}</p>
                 </div>
 
+                @if(currentLoggedUserId === '20') {
+                <div class="w-full flex flex-col md:flex-row items-center gap-2 sm:hidden">
+                    <label for="mobile-camera-file" class="mobile-file-upload">
+                        Upload your photo
+                    </label>
+                    <input id="mobile-camera-file" type="file" accept="image/*" (change)="onFileSelectMob($event)"
+                        capture="environment" />
+                    <p class="text-sm">{{fileName}}</p>
+                </div>
+                }
+
+
+
                 <div class="w-full mt-8">
-                    <p-button styleClass="w-full" label="Submit" [disabled]="!latLong || !fileName" (click)="onSubmit()" />
+                    <p-button styleClass="w-full" label="Submit" [disabled]="!latLong || !fileName"
+                        (click)="onSubmit()" />
                 </div>
             </div>
         </form>

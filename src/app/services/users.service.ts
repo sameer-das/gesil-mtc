@@ -91,4 +91,8 @@ export class UsersService {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateFeatureMapping}`, payload, {context: new HttpContext().set(SHOW_LOADER, false)})
   }
 
+  searchUser(searchValue: string, userId: number, pageNo: number, pageSize: number) {
+        return this.http.get<APIResponse<{ userLists: UserList[], totalCount: number }>>(`${this.API_URL}${environment.searchUser}`, {context: new HttpContext().set(SHOW_LOADER, true), params: {searchValue,userId,pageNo,pageSize}});
+  }
+
 }

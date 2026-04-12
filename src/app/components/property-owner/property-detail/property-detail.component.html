@@ -3,6 +3,7 @@
 <div class="flex justify-end gap-4">
     <p-button label="Edit Details" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined"
         severity="info" />
+    <a pButton icon="pi pi-file-arrow-up" [routerLink]="['/property','property-documents', this.propertyId()]" [outlined]="true" severity="info">Documents</a>
 
     <!-- Only Show approve reject button if its pending and to the approver -->
     @if(userId == +(property.attribute1 || 0) && (property.attribute0 === 'Pending')){
@@ -22,7 +23,7 @@
 
 </div>
 <div class="gesil-card mb-2 mt-4">
-    <div class="flex justify-between mb-4">
+    <div class="flex flex-col sm:flex-row justify-between mb-4">
         <div>
             @if(property.householdNo) {
                 <p [style]="{color: 'var(--primary-color)'}"><strong>Household No/PIN : </strong> {{property.householdNo}} </p>
@@ -31,9 +32,14 @@
             @if(property.surveyNo) {
                 <p [style]="{color: 'var(--primary-color)'}"><strong>Survey No : </strong> {{property.surveyNo}}</p>
             }
+            <hr/>
+            <p class="mt-2" [style]="{color: 'var(--primary-color)'}"><strong>Zone : </strong>{{property.zoneName}}</p>
+            <p [style]="{color: 'var(--primary-color)'}"><strong>Ward : </strong>{{property.ward}}</p>
+            <p [style]="{color: 'var(--primary-color)'}"><strong>Mohalla :</strong>{{property.mohallaNameDetail}}</p>
+
         </div>
 
-        <div class="flex items-end flex-col">
+        <div class="flex items-start sm:items-end flex-col">
             <p><strong>Approval Status : </strong>
                 <span class="inline-block py-1 px-4 text-white rounded-full" [ngClass]="{
                 'bg-red-500': property.attribute0 === 'Rejected', 
@@ -48,7 +54,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row sm:items-start">
+    <div class="flex flex-col sm:flex-row sm:items-start gap-2">
         <!-- Image -->
         <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0">
             @if(property.photo) {
@@ -59,80 +65,80 @@
             }
 
         </div> -->
-        <div class="flex-1 sm:mx-4">
+        <div class="flex-1">
 
             <h3 class="font-bold underline mb-2">Owner Details</h3>
             <!-- <p-button icon="pi pi-pencil" [routerLink]="['/owner', 'owner-edit',  property?.propertyId ]"
                     severity="info" [link]="true" [rounded]="true" [text]="true" /> -->
 
 
-            <table>
+            <table class="w-[100%]">
                 <tbody>
                     <tr>
-                        <th class="table-head">Name : </th>
+                        <th class="table-head">Name</th>
                         <td> {{property.salutation}} {{property.ownerName}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">{{property.careOf}} : </th>
+                        <th class="table-head">{{property.careOf}}</th>
                         <td>{{property.guardianName}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Mobile : </th>
+                        <th class="table-head">Mobile</th>
                         <td>{{property.mobile}}</td>
                     </tr>
                     <!-- <tr><th class="table-head">Email ID</th> <td>{{property.email}}</td></tr>
                 <tr><th class="table-head">Aadhar</th> <td>{{property.aadhar | aadharMask}}</td></tr>
                 <tr><th class="table-head">PAN</th> <td>{{property.pan}}</td></tr> -->
                     <tr>
-                        <th class="table-head">Gender : </th>
+                        <th class="table-head">Gender</th>
                         <td>{{property.gender}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Date of Birth : </th>
+                        <th class="table-head">Date of Birth</th>
                         <td>{{property.dob | date:'dd-MMM-yyy'}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="flex-1 sm:mx-4">
+        <div class="flex-1">
             <h3 class="font-bold underline mb-2">Property Details</h3>
-            <table>
+            <table class="w-[100%]">
                 <tbody>
                     <tr>
-                        <th class="table-head">Property Type :</th>
+                        <th class="table-head">Property Type</th>
                         <td>{{property.propertyType}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Catergory :</th>
+                        <th class="table-head">Catergory</th>
                         <td>{{property.categoryName}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Sub Category :</th>
+                        <th class="table-head">Sub Category</th>
                         <td>{{property.subCategoryName}}</td>
                     </tr>
 
                     <tr>
-                        <th class="table-head">Area of Plot (Sq. Ft.) :</th>
+                        <th class="table-head">Area of Plot (Sq. Ft.)</th>
                         <td>{{property.areaOfPlot}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Width of Road Sorrunding (Ft.) :</th>
+                        <th class="table-head">Width of Road Sorr. (Ft.)</th>
                         <td>{{property.widthOfRoad}}</td>
                     </tr>
 
-                    <tr>
-                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Zone :</th>
+                    <!-- <tr>
+                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Zone</th>
                         <td [style]="{color: 'var(--primary-color)'}"> {{property.zoneName}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Ward :</th>
+                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Ward</th>
                         <td [style]="{color: 'var(--primary-color)'}">{{property.ward}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Mohalla Name :</th>
+                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Mohalla Name</th>
                         <td [style]="{color: 'var(--primary-color)'}">{{property.mohallaNameDetail}}</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -169,20 +175,20 @@
     </div>   -->
     </div>
 
-    <div class="flex flex-col sm:flex-row sm:items-start mt-4">
+    <div class="flex flex-col sm:flex-row sm:items-start mt-4 gap-2">
         <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0"></div> -->
-        <div class="flex-1 sm:mx-4 ">
+        <div class="flex-1">
             <div class="flex items-center justify-between ">
-                <h3 class="font-bold underline">Address of Property</h3>
+                <h3 class="font-bold underline mb-2">Address of Property</h3>
             </div>
-            <table>
+            <table class="w-[100%]">
                 <tbody>
                     <tr>
-                        <th class="table-head">House No :</th>
+                        <th class="table-head">House No</th>
                         <td>{{property.propertyAddressHouseNo}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Address :</th>
+                        <th class="table-head">Address</th>
                         <td>{{property.propertyAddress}}</td>
                     </tr>
                     <tr>
@@ -191,23 +197,23 @@
                             {{property.propertyAddressPin}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Land Mark :</th>
+                        <th class="table-head">Land Mark</th>
                         <td>{{property.propertyAddressLandmark}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="flex-1 sm:mx-4">
+        <div class="flex-1">
             <h3 class="font-bold underline mb-2">Address of Owner</h3>
-            <table>
+            <table class="w-[100%]">
                 <tbody>
                     <tr>
-                        <th class="table-head">House No :</th>
+                        <th class="table-head">House No</th>
                         <td>{{property.ownerAddressHouseNo}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Address :</th>
+                        <th class="table-head">Address</th>
                         <td>{{property.ownerAddress}}</td>
                     </tr>
                     <tr>
@@ -216,7 +222,7 @@
                             {{property.ownerAddressPin}}</td>
                     </tr>
                     <tr>
-                        <th class="table-head">Land Mark. :</th>
+                        <th class="table-head">Land Mark</th>
                         <td>{{property.ownerAddressLandmark}}</td>
                     </tr>
                 </tbody>

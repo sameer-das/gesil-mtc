@@ -30,6 +30,7 @@ export const environment = {
     updateUserAadharPan: '/Admin/updateUserAadharPan',
     userDownloadDocument: '/Admin/userDocumentDownload',
     getUserWholeList: '/Admin/getUserWholeList',
+    searchUser: '/Master/searchUser',
 
     getFeatureList: '/Admin/getFeatureList',
     getFeatureMapping: '/Admin/getFeatureMapping',
@@ -51,6 +52,7 @@ export const environment = {
     categoryList: '/Master/categoryList',
     categoryDetail: '/Master/categoryDetail',
     updateCategory: '/Master/updateCategory',
+    searchCategory: '/Master/searchCategory',
 
     createSubCategory: '/Master/createSubCategory',
     subCategoryList: '/Master/subCategoryList',
@@ -85,6 +87,11 @@ export const environment = {
     updateMohalla: '/Master/updateMohalla',
     searchMohalla: '/Master/searchMohalla',
 
+    getFloorDetails: '/Master/getFloorDetails',
+    updateFloorData: '/Master/updateFloorData',
+    propertyDocumentUpload: '/Master/propertyDocumentUpload',
+    propertyDocumentList: '/Master/propertyDocumentList',
+
     // ********************** OWNER DETAILS Related API URLs *****************
 
     createOwner: '/Master/createOwner',
@@ -101,7 +108,7 @@ export const environment = {
     getDemandsOfProperty: '/Master/getAllDemands',
     getAllDemandTxn: '/Master/getAllDemandTxn',
     addDemandTxn: '/Master/AddDemandTxn',
-    quickCreateProperty:'/Master/QuickCreateProperty',
-    demandGenerate:'/Pdf/demandGenerate',
-    addUpdateDemandAmount:'/Master/AddUpdateDemandAmount',
+    quickCreateProperty: '/Master/QuickCreateProperty',
+    demandGenerate: '/Pdf/demandGenerate',
+    addUpdateDemandAmount: '/Master/AddUpdateDemandAmount',
 };

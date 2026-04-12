@@ -363,3 +363,30 @@ export interface QuickCreatePropertyType {
   subCategory: number | string;
   updatedBy: string;
 }
+
+export interface FloorData {
+  floorWiseDataId: number,
+  propertyId: number,
+  floorNo: string,
+  builtUpArea: string,
+  constructionType: string,
+  circleRate: string,
+  attribute0: string,
+  attribute1: string,
+  attribute2: string,
+  attribute3: string,
+  attribute4: string
+}
+
+
+export interface PropertyDocumentUploadPayload {
+  documentId: number;
+  documentType: string;
+  propertyId: number;
+  documentName: string;
+  documentUploadedBy: number;
+  documentUploadedOn: string;
+  documentContent: string;
+}
+
+

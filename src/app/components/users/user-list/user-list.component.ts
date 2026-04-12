@@ -1,3 +1,4 @@
+import { MasterDataService } from './../../../services/master-data.service';
 import { PERMISSIONS } from './../../../models/constants';
 import { APIResponse } from './../../../models/user.model';
 import { Component, inject, OnInit } from '@angular/core';
@@ -8,13 +9,14 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { TABLE_CONFIG } from '../../../models/tableConfig';
 import { UserList } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
 import { PageHeaderComponent } from '../../utils/page-header/page-header.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { PermissionService } from '../../../services/permission.service';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
@@ -26,8 +28,9 @@ import { PermissionService } from '../../../services/permission.service';
     PageHeaderComponent,
     ButtonModule,
     TooltipModule,
-    RouterModule, 
-    TranslateModule],
+    RouterModule,
+    TranslateModule,
+    ReactiveFormsModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
@@ -43,8 +46,37 @@ export class UserListComponent implements OnInit {
   private usersService: UsersService = inject(UsersService);
   permissionService: PermissionService = inject(PermissionService);
   PERMISSIONS = PERMISSIONS;
-  
+
+  search: FormControl = new FormControl('');
+  pageNumber = 1;
+  pageSize = 5;
+
   ngOnInit(): void {
+
+    this.search.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((searchValue) => {
+        if (searchValue.trim().length > 0)
+          return this.usersService.searchUser(searchValue, this.currentLoggedUserType, this.pageNumber, this.pageSize);
+        else
+          return this.usersService.getUserList(this.currentLoggedUserType, this.pageNumber, this.pageSize)
+      }),
+      tap(resp => {
+        if (resp.code === 200) {
+          console.log(resp);
+          this.totalRecords = resp.data.totalCount;
+          this.userList = resp.data?.userLists?.map((curr: UserList) => {
+            return {
+              ...curr,
+              firstName: curr.firstName + ' ' + curr.middleName + ' ' + curr.lastName,
+              showPassword: false
+            }
+          });
+        }
+      })
+    ).subscribe()
 
   }
 
@@ -63,7 +95,29 @@ export class UserListComponent implements OnInit {
     if (e.first) {
       pageNumber = (e.first / (e.rows || 5)) + 1
     }
-    this.getUserListUnderCurrentUserType(pageNumber, (e.rows || 5));
+    this.pageNumber = pageNumber;
+    this.pageSize = e.rows || 5;
+
+    if (this.search.value.trim().length === 0) {
+      this.getUserListUnderCurrentUserType(pageNumber, (e.rows || 5));
+    } else {
+      this.usersService.searchUser(this.search.value.trim(), this.currentLoggedUserType, this.pageNumber, this.pageSize)
+        .pipe(takeUntil(this.$destroy),
+          tap((resp) => {
+            if (resp.code === 200) {
+              this.totalRecords = resp.data.totalCount;
+              this.userList = resp.data?.userLists?.map((curr: UserList) => {
+                return {
+                  ...curr,
+                  firstName: curr.firstName + ' ' + curr.middleName + ' ' + curr.lastName,
+                  showPassword: false
+                }
+              });
+            }
+          }))
+        .subscribe()
+    }
+
   }
 
 
@@ -72,13 +126,13 @@ export class UserListComponent implements OnInit {
     this.usersService.getUserList(this.currentLoggedUserType, pageNumber, pageSize)
       .pipe(takeUntil(this.$destroy))
       .subscribe({
-        next: (resp: APIResponse<{userLists: UserList[], totalCount: number}>) => {
+        next: (resp: APIResponse<{ userLists: UserList[], totalCount: number }>) => {
 
           if (resp.code === 200) {
             this.totalRecords = resp.data.totalCount;
             this.userList = resp.data?.userLists.map((curr: UserList) => {
               return {
-                ...curr, 
+                ...curr,
                 firstName: curr.firstName + ' ' + curr.middleName + ' ' + curr.lastName,
                 showPassword: false
               }

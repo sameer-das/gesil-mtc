@@ -18,12 +18,13 @@ import { FileSelectEvent, FileUpload, FileUploadHandlerEvent, FileUploadModule }
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MasterDataService } from '../../../services/master-data.service';
-import { OwnerDocumentUpload, PropertyMaster, PropertySearchResultType } from '../../../models/property-owner.model';
+import { FloorData, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType } from '../../../models/property-owner.model';
 import { OwnerServiceService } from '../../../services/owner-service.service';
 import { Router } from '@angular/router';
 import { CAREOF_OPTIONS, GENDER_OPTIONS, OWNERSHIP_TYPE, SALUTATION_OPTIONS } from '../../../models/constants';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-property-entry',
@@ -41,7 +42,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     CheckboxModule,
     FileUploadModule,
     ToggleSwitchModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    DialogModule
   ],
   templateUrl: './property-entry.component.html',
   styleUrl: './property-entry.component.scss'
@@ -92,7 +94,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
     // For Independent Building
     noOfFloors: new FormControl(0),
-    floorWiseData: new FormArray([]),
+    // floorWiseData: new FormArray([]),
 
     // For Flats/Units in multi storied builing
     buildingNo: new FormControl(),
@@ -188,7 +190,6 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   $destroy: Subject<null> = new Subject();
   enableIndividualBuildingType = false;
   enableFlatType = false;
-  minFloorValue = 0;
 
 
   messageService: MessageService = inject(MessageService);
@@ -196,6 +197,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   ownerService: OwnerServiceService = inject(OwnerServiceService);
   private router = inject(Router);
 
+
+  floorDataPopupVisible = false;
+
+  floorDataForm: FormGroup = new FormGroup({
+    floorWiseData: new FormArray([])
+  });
 
 
   ngOnDestroy(): void {
@@ -215,36 +222,33 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         console.log(propertyType);
         if (+propertyType?.value === 1) {
           this.enableIndividualBuildingType = true;
-          this.propertyForm.patchValue({ 'noOfFloors': 1 }, { emitEvent: true });
+          this.propertyForm.patchValue({ 'noOfFloors': this.property.noOfFloors || '1' }, { emitEvent: true });
           this.enableFlatType = false;
-          this.minFloorValue = 1;
         } else if (+propertyType?.value === 2) {
           this.enableFlatType = true;
           this.enableIndividualBuildingType = false;
-          this.minFloorValue = 0;
           this.propertyForm.patchValue({ 'noOfFloors': 0 }, { emitEvent: true });
           this.floorWiseDataFormArray.clear();
         } else {
           this.enableFlatType = false;
           this.enableIndividualBuildingType = false;
-          this.minFloorValue = 0;
           this.propertyForm.patchValue({ 'noOfFloors': 0 }, { emitEvent: true });
           this.floorWiseDataFormArray.clear();
         }
       })
     ).subscribe();
 
-    this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
-      takeUntil(this.$destroy),
-      tap((val: number) => {
-        if (this.propertyForm.value.propertyType?.propertyTypeId === 2 && !val) {
-          console.log('mark the form invalid')
-        }
-        this.floorWiseDataFormArray.clear();
-        for (let i = 1; i <= val; i++) {
-          this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
-        }
-      })).subscribe();
+    // this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
+    //   takeUntil(this.$destroy),
+    //   tap((val: number) => {
+    //     if (this.propertyForm.value.propertyType?.propertyTypeId === 2 && !val) {
+    //       console.log('mark the form invalid')
+    //     }
+    //     this.floorWiseDataFormArray.clear();
+    //     for (let i = 1; i <= val; i++) {
+    //       this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
+    //     }
+    //   })).subscribe();
 
     this.propertyForm.get('zone')?.valueChanges.pipe(
       takeUntil(this.$destroy),
@@ -422,10 +426,41 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   }
 
+  showPopup() {
+    this.floorWiseDataFormArray.clear();
+    this.ownerService.getFloorDetails(this.propertyId() || 0).pipe(
+      takeUntil(this.$destroy),
+      tap((resp) => {
+
+        console.log(resp);
+        if (resp.code === 200) {
+          resp.data.forEach((curr:FloorData) => {
+            this.floorWiseDataFormArray.push(new FormGroup({
+              floorNo: new FormControl(curr.floorNo),
+              builtUpArea: new FormControl(curr.builtUpArea),
+              constructionType: new FormControl(curr.constructionType),
+              circleRate: new FormControl(curr.circleRate),
+              attribute0: new FormControl(curr.attribute0),
+              attribute1: new FormControl(curr.attribute1),
+              attribute2: new FormControl(curr.attribute2),
+              attribute3: new FormControl(curr.attribute3),
+              attribute4: new FormControl(curr.attribute4)
+            }))
+          })
+        }
+
+        if(resp.data.length === 0) {
+           this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
+        }
+
+        this.floorDataPopupVisible = true;
+      })
+    ).subscribe()
+  }
 
 
   get floorWiseDataFormArray(): FormArray {
-    return this.propertyForm.get('floorWiseData') as FormArray;
+    return this.floorDataForm.get('floorWiseData') as FormArray;
   }
 
 
@@ -436,6 +471,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       builtUpArea: new FormControl(),
       constructionType: new FormControl(),
       circleRate: new FormControl(),
+      attribute0: new FormControl(),
+      attribute1: new FormControl(),
+      attribute2: new FormControl(),
+      attribute3: new FormControl(),
+      attribute4: new FormControl()
     })
   }
 
@@ -443,6 +483,29 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   addFlooWiseDataRow() {
     this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
+  }
+
+  removeFlooWiseDataRow(i: number) {
+    this.floorWiseDataFormArray.removeAt(i);
+  }
+
+  saveFloorData() {
+    console.log(this.floorDataForm.value)
+    const payload = this.floorDataForm.value.floorWiseData.map((c: any) => {
+      return { propertyId: +(this.propertyId() || '0'), ...c }
+    })
+    console.log(payload);
+    this.ownerService.saveFloorData(payload).pipe(
+      tap((resp) => {
+        console.log(resp);
+        if (resp.code === 200 && resp.status === 'Success') {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Floor details saved successfully.', life: MessageDuaraion.STANDARD });
+            this.floorDataPopupVisible = false;
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Floor details saved failed.', life: MessageDuaraion.STANDARD })
+          }
+      })
+    ).subscribe()
   }
 
 
@@ -595,64 +658,64 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   onSubmit() {
     console.log(this.propertyForm.value)
     const updateDetailsPayload: PropertyMaster = {
-            propertyId: this.property?.propertyId || 0,
-            householdNo: this.property?.householdNo,
+      propertyId: this.property?.propertyId || 0,
+      householdNo: this.property?.householdNo,
 
-            salutation: this.propertyForm.value.salutation.value,
-            ownerName: this.propertyForm.value.ownerName,
-            careOf: this.propertyForm.value.careOf.value,
-            guardianName: this.propertyForm.value.guardianName,
-            gender: this.propertyForm.value.gender.value,
-            dob: this.getDate(this.propertyForm.value.dob),
-            mobile: this.propertyForm.value.mobile,
+      salutation: this.propertyForm.value.salutation.value,
+      ownerName: this.propertyForm.value.ownerName,
+      careOf: this.propertyForm.value.careOf.value,
+      guardianName: this.propertyForm.value.guardianName,
+      gender: this.propertyForm.value.gender.value,
+      dob: this.getDate(this.propertyForm.value.dob),
+      mobile: this.propertyForm.value.mobile,
 
-            zone: this.propertyForm.value.zone?.zoneId,
-            ward: this.propertyForm.value.ward?.wardId,
-            category: String(this.propertyForm.value.category.categoryId),
-            subcategory: String(this.propertyForm.value.subCategory.subCategoryId),
-            mohallaName: String(this.propertyForm.value.mohallaName.mohallaId),
+      zone: this.propertyForm.value.zone?.zoneId,
+      ward: this.propertyForm.value.ward?.wardId,
+      category: String(this.propertyForm.value.category.categoryId),
+      subcategory: String(this.propertyForm.value.subCategory.subCategoryId),
+      mohallaName: String(this.propertyForm.value.mohallaName.mohallaId),
 
-            propertyType: this.propertyForm.value.propertyType.propertyTypeName,
-            widthOfRoad: String(this.propertyForm.value.widthOfRoad),
-            areaOfPlot: String(this.propertyForm.value.areaOfPlot),
-            
-            typeOfOwnership: this.propertyForm.value.typeOfOwnership?.value,
-            buildingNo: this.propertyForm.value.buildingNo,
-            flatNo: this.propertyForm.value.flatNo,
-            noOfFloors: this.propertyForm.value.noOfFloors,
+      propertyType: this.propertyForm.value.propertyType.propertyTypeName,
+      widthOfRoad: String(this.propertyForm.value.widthOfRoad),
+      areaOfPlot: String(this.propertyForm.value.areaOfPlot),
 
-            propertyAddress: this.propertyForm.value.propertyAddress,
-            propertyAddressCity: this.propertyForm.value.propertyAddressCity,
-            propertyAddressDistrict: this.propertyForm.value.propertyAddressDistrict  ,
-            propertyAddressPin: this.propertyForm.value.propertyAddressPin,
-            propertyAddressHouseNo: this.propertyForm.value.propertyAddressHouseNo  ,
-            propertyAddressLandmark: this.propertyForm.value.propertyAddressLandmark,
+      typeOfOwnership: this.propertyForm.value.typeOfOwnership?.value,
+      buildingNo: this.propertyForm.value.buildingNo,
+      flatNo: this.propertyForm.value.flatNo,
+      noOfFloors: this.propertyForm.value.noOfFloors,
 
-            isOwnerAddressSame: this.propertyForm.value.isOwnerAddressSame,
+      propertyAddress: this.propertyForm.value.propertyAddress,
+      propertyAddressCity: this.propertyForm.value.propertyAddressCity,
+      propertyAddressDistrict: this.propertyForm.value.propertyAddressDistrict,
+      propertyAddressPin: this.propertyForm.value.propertyAddressPin,
+      propertyAddressHouseNo: this.propertyForm.value.propertyAddressHouseNo,
+      propertyAddressLandmark: this.propertyForm.value.propertyAddressLandmark,
 
-            ownerAddress: this.propertyForm.value.ownerAddress,
-            ownerAddressCity: this.propertyForm.value.ownerAddressCity,
-            ownerAddressDistrict: this.propertyForm.value.ownerAddressDistrict,
-            ownerAddressPin: this.propertyForm.value.ownerAddressPin,
-            ownerAddressHouseNo: this.propertyForm.value.ownerAddressHouseNo,
-            ownerAddressLandmark: this.propertyForm.value.ownerAddressLandmark, 
+      isOwnerAddressSame: this.propertyForm.value.isOwnerAddressSame,
 
-            updatedBy: this.currentLoggedUserName,
-        };
+      ownerAddress: this.propertyForm.value.ownerAddress,
+      ownerAddressCity: this.propertyForm.value.ownerAddressCity,
+      ownerAddressDistrict: this.propertyForm.value.ownerAddressDistrict,
+      ownerAddressPin: this.propertyForm.value.ownerAddressPin,
+      ownerAddressHouseNo: this.propertyForm.value.ownerAddressHouseNo,
+      ownerAddressLandmark: this.propertyForm.value.ownerAddressLandmark,
 
-        console.log(updateDetailsPayload);
+      updatedBy: this.currentLoggedUserName,
+    };
 
-        this.ownerService.updatePropertyMaster(updateDetailsPayload)
-        .pipe(takeUntil(this.$destroy))
-        .subscribe({
-          next: (resp: APIResponse<string>) => {
-            if (resp.code === 200 && resp.status === 'Success') {
-              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data, life: MessageDuaraion.STANDARD });
-            } else {
-              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Property update failed.', life: MessageDuaraion.STANDARD })
-            }
+    console.log(updateDetailsPayload);
+
+    this.ownerService.updatePropertyMaster(updateDetailsPayload)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: (resp: APIResponse<string>) => {
+          if (resp.code === 200 && resp.status === 'Success') {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data, life: MessageDuaraion.STANDARD });
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Property update failed.', life: MessageDuaraion.STANDARD })
           }
-        })
+        }
+      })
 
   }
 

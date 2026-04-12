@@ -1,0 +1,116 @@
+<app-page-header [title]="'Property Document Details'" [backButton]="true" />
+
+<div class="gesil-card mt-4">
+
+    <div>
+        <div class="py-2">
+            <div class="flex flex-row justify-between items-center">
+                <h3>Image 1</h3>
+                <!-- @if(alreadyAvailableFiles['Property_Image1']) {
+                    <p-image [src]="getDownloadLink('Property_Image1')" alt="Image" width="250" [preview]="true" />
+                <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" [link]="true" [routerLink]="getDownloadLink('Property_Image1')" />
+                } -->
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mt-2">
+                <div class="">
+                    <p-fileupload #fileUploadRef_Property_Image1 mode="basic" chooseLabel="Choose"
+                        chooseIcon="pi pi-upload" maxFileSize="50000000"
+                        (onSelect)="onFileSelect($event, 'Property_Image1')" />
+                </div>
+                <!-- <p class="text-center">{{file['Property_Image1']?.name}}</p> -->
+                <div class="flex justify-center gap-4 items-center">
+
+                    @if(file['Property_Image1']) {
+                    <button pButton icon="pi pi-upload" (click)="onUpload('Property_Image1')">Upload</button>
+                    <button pButton icon="pi pi-trash" severity="danger"
+                        (click)="onRemove('Property_Image1')">Remove</button>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            <div class="flex flex-row justify-between items-center">
+                <h3>Image 2</h3>
+                <!-- @if(alreadyAvailableFiles['Property_Image2']) {
+                <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" />
+                } -->
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mt-2">
+                <p-fileupload #fileUploadRef_Property_Image2 mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                    maxFileSize="50000000" (onSelect)="onFileSelect($event, 'Property_Image2')" />
+                <!-- <p class="text-center">{{file['Property_Image2']?.name}}</p> -->
+                <div class="flex justify-center gap-4 items-center">
+                    @if(file['Property_Image2']) {
+                    <button pButton icon="pi pi-upload" (click)="onUpload('Property_Image2')">Upload</button>
+                    <button pButton icon="pi pi-trash" severity="danger"
+                        (click)="onRemove('Property_Image2')">Remove</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            <div class="flex flex-row justify-between items-center">
+                <h3>Image 3</h3>
+                <!-- @if(alreadyAvailableFiles['Property_Image3']) {
+                <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" />
+                } -->
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mt-2">
+                <p-fileupload #fileUploadRef_Property_Image3 mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                    maxFileSize="50000000" (onSelect)="onFileSelect($event, 'Property_Image3')" />
+                <!-- <p class="text-center">{{file['Property_Image3']?.name}}</p> -->
+                <div class="flex justify-center gap-4 items-center">
+                    @if(file['Property_Image3']) {
+                    <button pButton icon="pi pi-upload" (click)="onUpload('Property_Image3')">Upload</button>
+                    <button pButton icon="pi pi-trash" severity="danger"
+                        (click)="onRemove('Property_Image3')">Remove</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            <div class="flex flex-row justify-between items-center">
+                <h3>Image 4</h3>
+                <!-- @if(alreadyAvailableFiles['Property_Image4']) {
+                <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" />
+                } -->
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mt-2">
+                <p-fileupload #fileUploadRef_Property_Image4 mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                    maxFileSize="50000000" (onSelect)="onFileSelect($event, 'Property_Image4')" />
+                <!-- <p class="text-center">{{file['Property_Image4']?.name}}</p> -->
+                <div class="flex justify-center gap-4 items-center">
+                    @if(file['Property_Image4']) {
+                    <button pButton icon="pi pi-upload" (click)="onUpload('Property_Image4')">Upload</button>
+                    <button pButton icon="pi pi-trash" severity="danger"
+                        (click)="onRemove('Property_Image4')">Remove</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            <div class="flex flex-row justify-between items-center">
+                <h3>Owner Photo</h3>
+                <!-- @if(alreadyAvailableFiles['Owner_Photo']) {
+                <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" />
+                } -->
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mt-2">
+                <p-fileupload #fileUploadRef_Owner_Photo mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
+                    maxFileSize="50000000" (onSelect)="onFileSelect($event, 'Owner_Photo')" />
+                <!-- <p class="text-center">{{file['Owner_Photo']?.name}}</p> -->
+                <div class="flex justify-center gap-4 items-center">
+                    @if(file['Owner_Photo']) {
+                    <button pButton icon="pi pi-upload" (click)="onUpload('Owner_Photo')">Upload</button>
+                    <button pButton icon="pi pi-trash" severity="danger"
+                        (click)="onRemove('Owner_Photo')">Remove</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

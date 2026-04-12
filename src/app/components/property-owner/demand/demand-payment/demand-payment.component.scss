@@ -1,0 +1,13 @@
+input[type="file"] {
+    display: none;
+}
+
+.mobile-file-upload {
+    border: 1px solid #ccc;
+    background-color: var(--p-button-info-background);
+    color: var(--p-button-info-color);
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}

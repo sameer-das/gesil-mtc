@@ -72,6 +72,9 @@ export class MasterDataService {
   updateCategory(updateCategoryPayload: CreateUpdateCategory): Observable<APIResponse<string>> {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateCategory}`, updateCategoryPayload);
   }
+  searchCategory(searchValue: string, pageNo: number = 0, pageSize: number = 0): Observable<APIResponse<{ categories: Category[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ categories: Category[], totalCount: number }>>(`${this.API_URL}${environment.searchCategory}`, { params: { searchValue, pageNo, pageSize } })
+  }
 
 
   createSubCategory(createSubCategoryPayload: CreateUpdateSubCategory): Observable<APIResponse<string>> {

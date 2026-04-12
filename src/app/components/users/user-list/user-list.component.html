@@ -8,16 +8,25 @@
         [paginator]="TABLE_CONFIG.paginator" [rows]="TABLE_CONFIG.rows"
         [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions" [totalRecords]="totalRecords" [lazy]="true"
         (onLazyLoad)="loadUserData($event)">
-        <!-- <ng-template #caption>
+        <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
-                <p-iconfield iconPosition="left" class="ml-auto">
+                <!-- <p-iconfield iconPosition="left" class="ml-auto">
                     <p-inputicon>
                         <i class="pi pi-search"></i>
                     </p-inputicon>
                     <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
-                </p-iconfield>
+                </p-iconfield> -->
+
+                <div class="">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input type="text" pInputText placeholder="Search User" [formControl]="search" />
+                    </p-iconfield>
+                </div>
             </div>
-        </ng-template> -->
+
+            
+        </ng-template>
 
         <ng-template #header>
             <tr>

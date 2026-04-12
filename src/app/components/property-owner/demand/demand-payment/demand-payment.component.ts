@@ -164,14 +164,17 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
   }
 
 
+  onFileSelectWeb(e: FileSelectEvent) {
+    this.processFile(e.files[0])
+  }
 
-  onFileUpload(e: FileSelectEvent) {
-    console.log(e.files[0]);
-    this.file = e.files[0];
-    this.fileName = e.files[0].name;
+  processFile(f: File) {
+    console.log(f);
+    this.file = f;
+    this.fileName = f.name;
 
     const reader = new FileReader();
-    reader.readAsDataURL(e.files[0]);
+    reader.readAsDataURL(f);
     reader.onload = () => {
       this.fileContent = reader.result as string;
     }
@@ -257,5 +260,14 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
   getDate(date: Date | string) {
     const d = new Date(date).getTime() + 19800000;
     return new Date(d).toISOString();
+  }
+
+  onFileSelectMob(event: Event): void {
+    const element = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = element.files;
+
+    if (fileList && fileList.length > 0) {
+      this.processFile(fileList[0])
+    }
   }
 }

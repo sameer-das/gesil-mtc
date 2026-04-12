@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APIResponse } from '../models/user.model';
-import { AddDemandTxnType, ApprovalLog, ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, OwnerDetail, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType, QuickCreatePropertyType, UpdateOwnerDetail } from '../models/property-owner.model';
+import { AddDemandTxnType, ApprovalLog, ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, FloorData, OwnerDetail, OwnerDocumentUpload, PropertyDocumentUploadPayload, PropertyMaster, PropertySearchResultType, QuickCreatePropertyType, UpdateOwnerDetail } from '../models/property-owner.model';
 import { SHOW_LOADER } from './httpContexts';
 
 @Injectable({
@@ -167,6 +167,22 @@ export class OwnerServiceService {
 
   generateDemand(propertyId: number, demandId: number, userId: number, lang: string = 'en',) {
     return this.http.get<APIResponse<any>>(`${this.API_URL}${environment.demandGenerate}`, { params: { lang, propertyId, demandId, userId } });
+  }
+
+  getFloorDetails(propertyId: number) {
+    return this.http.get<APIResponse<FloorData[]>>(`${this.API_URL}${environment.getFloorDetails}`, {params: {propertyId}})
+  }
+
+  saveFloorData(payload: FloorData[]) {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateFloorData}`, payload)
+  }
+
+  propertyDocumentUpload(payload: PropertyDocumentUploadPayload) {
+    return this.http.post<APIResponse<any>>(`${this.API_URL}${environment.propertyDocumentUpload}`, payload)
+  }
+
+  propertyDocumentList(propertyId: number) {
+    return this.http.get<APIResponse<PropertyDocumentUploadPayload[]>>(`${this.API_URL}${environment.propertyDocumentList}`, {params: {propertyId}})
   }
 
 
