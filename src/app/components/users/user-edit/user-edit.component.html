@@ -4,11 +4,15 @@
 <div class="gesil-card mt-4">
     <p-tabs [value]="selectedTab">
         <p-tablist>
-            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DETAILS)" [routerLink]="[]" [queryParams]="{tab: 'basic-details'}" value="basic-details">User Basic
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DETAILS)" [routerLink]="[]"
+                [queryParams]="{tab: 'basic-details'}" value="basic-details">User Basic
                 Details</p-tab>
-            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DOCUMENT)" [routerLink]="[]" [queryParams]="{tab: 'documents'}" value="documents">User Documents</p-tab>
-            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_REPORTING_STRUCTURE)" [routerLink]="[]" [queryParams]="{tab: 'reporting'}" value="reporting">User Reporting</p-tab>
-            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_PERMISSION)" [routerLink]="[]" [queryParams]="{tab: 'permission'}" value="permission">User Permission</p-tab>
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DOCUMENT)" [routerLink]="[]"
+                [queryParams]="{tab: 'documents'}" value="documents">User Documents</p-tab>
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_REPORTING_STRUCTURE)"
+                [routerLink]="[]" [queryParams]="{tab: 'reporting'}" value="reporting">User Reporting</p-tab>
+            <p-tab [disabled]="!permissionService.hasPermission(PERMISSIONS.MODIFY_USER_PERMISSION)" [routerLink]="[]"
+                [queryParams]="{tab: 'permission'}" value="permission">User Permission</p-tab>
             <!-- <p-tab [routerLink]="[]" [queryParams]="{tab: 'doc'}" value="3">Wards Assignment</p-tab> -->
         </p-tablist>
         <p-tabpanels>
@@ -133,7 +137,18 @@
                 <div class="mt-4">
                     <!-- <div class="font-semibold text-xl">Persmission</div> -->
                     <div class="permission-table">
-                        <p-table [value]="userPermission" dataKey="featureId">
+                        <p-table [value]="showingUserPermission" dataKey="featureId">
+                            <ng-template #caption>
+                                <div class="flex justify-between items-center flex-column sm:flex-row">
+                                    <div class="">
+                                        <p-iconfield>
+                                            <p-inputicon styleClass="pi pi-search" />
+                                            <input type="text" pInputText placeholder="Search Permission"
+                                                [formControl]="search" />
+                                        </p-iconfield>
+                                    </div>
+                                </div>
+                            </ng-template>
                             <ng-template #header>
                                 <tr>
                                     <th style="max-width: 2rem">
@@ -164,7 +179,9 @@
                                         {{ permission.featureName }}
                                     </td>
                                     <td>
-                                        <p-togglebutton [(ngModel)]="permission.isAllowed" (onChange)="onPermissionChange($event, permission)" onLabel="On" offLabel="Off" styleClass="w-24" />
+                                        <p-togglebutton [(ngModel)]="permission.isAllowed"
+                                            (onChange)="onPermissionChange($event, permission)" onLabel="On"
+                                            offLabel="Off" styleClass="w-24" />
                                     </td>
                                 </tr>
                             </ng-template>

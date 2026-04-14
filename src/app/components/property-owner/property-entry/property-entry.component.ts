@@ -21,10 +21,11 @@ import { MasterDataService } from '../../../services/master-data.service';
 import { FloorData, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType } from '../../../models/property-owner.model';
 import { OwnerServiceService } from '../../../services/owner-service.service';
 import { Router } from '@angular/router';
-import { CAREOF_OPTIONS, GENDER_OPTIONS, OWNERSHIP_TYPE, SALUTATION_OPTIONS } from '../../../models/constants';
+import { CAREOF_OPTIONS, GENDER_OPTIONS, OWNERSHIP_TYPE, PERMISSIONS, SALUTATION_OPTIONS } from '../../../models/constants';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogModule } from 'primeng/dialog';
+import { PermissionService } from '../../../services/permission.service';
 
 @Component({
   selector: 'app-property-entry',
@@ -70,7 +71,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   careOfs = CAREOF_OPTIONS;
   typeOfOwnerships = OWNERSHIP_TYPE;
 
+  editPin = false;
+  PERMISSIONS = PERMISSIONS;
+
   propertyForm: FormGroup = new FormGroup({
+    householdNo: new FormControl(''),
     salutation: new FormControl(''),
     ownerName: new FormControl(''),
     careOf: new FormControl(''),
@@ -195,6 +200,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   messageService: MessageService = inject(MessageService);
   masterDataService: MasterDataService = inject(MasterDataService);
   ownerService: OwnerServiceService = inject(OwnerServiceService);
+  permissionService: PermissionService = inject(PermissionService);
   private router = inject(Router);
 
 
@@ -386,6 +392,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   patchFormData() {
 
     this.propertyForm.patchValue({
+      householdNo: this.property.householdNo,
       salutation: SALUTATION_OPTIONS.find(opt => opt.value === this.property.salutation) || SALUTATION_OPTIONS[0],
       careOf: CAREOF_OPTIONS.find(opt => opt.value === this.property.careOf) || CAREOF_OPTIONS[0],
       gender: GENDER_OPTIONS.find(opt => opt.value === this.property.gender) || GENDER_OPTIONS[0],
@@ -434,7 +441,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
         console.log(resp);
         if (resp.code === 200) {
-          resp.data.forEach((curr:FloorData) => {
+          resp.data.forEach((curr: FloorData) => {
             this.floorWiseDataFormArray.push(new FormGroup({
               floorNo: new FormControl(curr.floorNo),
               builtUpArea: new FormControl(curr.builtUpArea),
@@ -449,8 +456,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           })
         }
 
-        if(resp.data.length === 0) {
-           this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
+        if (resp.data.length === 0) {
+          this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
         }
 
         this.floorDataPopupVisible = true;
@@ -499,11 +506,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       tap((resp) => {
         console.log(resp);
         if (resp.code === 200 && resp.status === 'Success') {
-            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Floor details saved successfully.', life: MessageDuaraion.STANDARD });
-            this.floorDataPopupVisible = false;
-          } else {
-            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Floor details saved failed.', life: MessageDuaraion.STANDARD })
-          }
+          this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Floor details saved successfully.', life: MessageDuaraion.STANDARD });
+          this.floorDataPopupVisible = false;
+        } else {
+          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Floor details saved failed.', life: MessageDuaraion.STANDARD })
+        }
       })
     ).subscribe()
   }
@@ -659,7 +666,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     console.log(this.propertyForm.value)
     const updateDetailsPayload: PropertyMaster = {
       propertyId: this.property?.propertyId || 0,
-      householdNo: this.property?.householdNo,
+      // householdNo: this.property?.householdNo,
 
       salutation: this.propertyForm.value.salutation.value,
       ownerName: this.propertyForm.value.ownerName,
@@ -722,6 +729,51 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   getDate(date: Date | string) {
     const d = new Date(date).getTime() + 19800000;
     return new Date(d).toISOString();
+  }
+
+
+
+  updatePin() {
+    console.log(this.propertyForm.value.householdNo)
+    if (!this.propertyForm.value.householdNo) {
+      this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Validation Error', detail: 'PIN/Household No cannot be empty.', life: MessageDuaraion.STANDARD })
+      return;
+    }
+
+    const updateDetailsPayload: PropertyMaster = {
+      propertyId: this.property?.propertyId || 0,
+      householdNo: this.propertyForm.value.householdNo
+    }
+
+    this.ownerService.updatePropertyMaster(updateDetailsPayload)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: (resp: APIResponse<string>) => {
+          if (resp.code === 200 && resp.status === 'Success') {
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'PIN/Household no. updated successfully', life: MessageDuaraion.STANDARD });
+            this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId()))
+              .pipe(takeUntil(this.$destroy),
+                tap(resp => {
+                  if (resp.code === 200 && resp.status === 'Success') {
+                    if (resp.data.length > 0) {
+                      this.property = resp.data[0];
+                      console.log(this.property);
+                      this.patchFormData();
+                      this.editPin = false;
+                    }
+                    else {
+                      // new mode
+                      this.property = {};
+                      // this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
+                    }
+                  }
+                }))
+              .subscribe()
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'PIN/Household no. update failed.', life: MessageDuaraion.STANDARD })
+          }
+        }
+      })
   }
 
 

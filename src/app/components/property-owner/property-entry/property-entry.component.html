@@ -4,19 +4,38 @@
     <form [formGroup]="propertyForm" class="mt-4">
         <div class="flex flex-col w-full">
             <div class="gesil-card">
-                <div class="flex flex-col md:flex-row gap-6">
-                    @if(property.householdNo){
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <p><strong [style]="{color:'var(--primary-color)'}">Household No./PIN :
-                            </strong>{{property.householdNo || ''}}</p>
+                <div class="flex flex-col md:flex-row gap-6 items-center ">
+
+                    <div class="flex flex-wrap gap-2 w-full items-center">
+                        @if(!editPin) {
+                        <p [style.color]=" property.householdNo ? 'var(--primary-color)' : 'orangered' "><strong>Household No./PIN : </strong>{{property.householdNo || 'Not Updated'}}</p>
+                        @if(permissionService.hasPermission(PERMISSIONS.MODIFY_PIN)) {
+                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+                            (click)="editPin = true" />
+                        }
+
+                        }
+                        @else {
+                        <div class="flex flex-col gap-2">
+                            <!-- <label for="pin">PIN/Household No</label>   -->
+                            <div class="flex flex-row gap-2 items-center ">
+                                <input pInputText id="pin" placeholder="Enter PIN/Household No" type="text"
+                                    formControlName="householdNo" />
+                                <p-button icon="pi pi-check" [rounded]="true" (click)="updatePin()" />
+                                <p-button icon="pi pi-times" [rounded]="true" severity="secondary"
+                                    (click)="editPin = false" />
+                            </div>
+
+                        </div>
+                        }
+
                     </div>
-                    }
+
 
                     @if(property.surveyNo) {
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <p><strong [style]="{color:'var(--primary-color)'}">Survey No. : </strong>{{property.surveyNo ||
-                            ''}}</p>
-                    </div>
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <p  [style]="{color:'var(--primary-color)'}"><strong>Survey No. : </strong>{{property.surveyNo || ''}}</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -576,38 +595,43 @@
 
 <p-dialog header="Add Floor Data" [modal]="true" [(visible)]="floorDataPopupVisible" [style]="{ width: '75%' }">
     <div class="flex justify-end">
-        <button [disabled]="+propertyForm.get('noOfFloors')?.value === floorWiseDataFormArray.length" pButton (click)="addFlooWiseDataRow()">Add Floor</button>
+        <button [disabled]="+propertyForm.get('noOfFloors')?.value === floorWiseDataFormArray.length" pButton
+            (click)="addFlooWiseDataRow()">Add Floor</button>
     </div>
 
     <form [formGroup]="floorDataForm" class="mt-4">
-         <div formArrayName="floorWiseData">
+        <div formArrayName="floorWiseData">
             @for (data of floorWiseDataFormArray.controls; track data; let i = $index) {
-                <div [formGroupName]="i" class="flex flex-col md:flex-row md:gap-6">
-                     <div class="flex flex-col gap-2 w-full md:w-1/3">
-                        <label [for]="'floorNo' + i">Floor No</label>
-                        <input pInputText [id]="'floorNo' + i" placeholder="Floor No." type="text"
-                            formControlName="floorNo" />
-                        <div [class.invisible]="true">error</div>
-                    </div>
-                     <div class="flex flex-col gap-2 w-full md:w-1/3">
-                        <label [for]="'builtUpArea' + i">Built-up Area (Sq. Ft.)</label>
-                        <input pInputText [id]="'builtUpArea' + i" placeholder="Built-up Area (Sq. Ft.)" type="text"
-                            formControlName="builtUpArea" />
-                        <div [class.invisible]="true">error</div>
-                    </div>
-                     <div class="flex flex-col gap-2 w-full md:w-1/3">
-                        <label [for]="'constructionType' + i">Construction Type</label>
-                        <input pInputText [id]="'constructionType' + i" placeholder="Construction Type" type="text"
-                            formControlName="constructionType" />
-                        <div [class.invisible]="true">error</div>
-                    </div>
-                    <div class="flex flex-col justify-center items-end">
-                        <p-button class="hidden sm:block" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="removeFlooWiseDataRow(i)" [disabled]="floorWiseDataFormArray.length === 1" />
-                        <p-button class="block sm:hidden" severity="danger" [outlined]="true" (click)="removeFlooWiseDataRow(i)" [disabled]="floorWiseDataFormArray.length === 1">Remove</p-button>
-                    </div>
+            <div [formGroupName]="i" class="flex flex-col md:flex-row md:gap-6">
+                <div class="flex flex-col gap-2 w-full md:w-1/3">
+                    <label [for]="'floorNo' + i">Floor No</label>
+                    <input pInputText [id]="'floorNo' + i" placeholder="Floor No." type="text"
+                        formControlName="floorNo" />
+                    <div [class.invisible]="true">error</div>
                 </div>
+                <div class="flex flex-col gap-2 w-full md:w-1/3">
+                    <label [for]="'builtUpArea' + i">Built-up Area (Sq. Ft.)</label>
+                    <input pInputText [id]="'builtUpArea' + i" placeholder="Built-up Area (Sq. Ft.)" type="text"
+                        formControlName="builtUpArea" />
+                    <div [class.invisible]="true">error</div>
+                </div>
+                <div class="flex flex-col gap-2 w-full md:w-1/3">
+                    <label [for]="'constructionType' + i">Construction Type</label>
+                    <input pInputText [id]="'constructionType' + i" placeholder="Construction Type" type="text"
+                        formControlName="constructionType" />
+                    <div [class.invisible]="true">error</div>
+                </div>
+                <div class="flex flex-col justify-center items-end">
+                    <p-button class="hidden sm:block" icon="pi pi-trash" [rounded]="true" [text]="true"
+                        severity="danger" (click)="removeFlooWiseDataRow(i)"
+                        [disabled]="floorWiseDataFormArray.length === 1" />
+                    <p-button class="block sm:hidden" severity="danger" [outlined]="true"
+                        (click)="removeFlooWiseDataRow(i)"
+                        [disabled]="floorWiseDataFormArray.length === 1">Remove</p-button>
+                </div>
+            </div>
             }
-         </div>
+        </div>
     </form>
 
     <div class="flex justify-end gap-2 sm:mt-0 mt-4">

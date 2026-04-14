@@ -10,7 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { TooltipModule } from 'primeng/tooltip';
-import { Subject, switchMap, takeUntil, tap, filter } from 'rxjs';
+import { Subject, switchMap, takeUntil, tap, filter, startWith, debounceTime } from 'rxjs';
 import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { APIResponse, ParentOptions, ParentUserTypeForMapping, Permissions, UpdatePermission, UpdateUserAadharPan, UpdateUserBasicDetails, UpdateUserParentTypePayload, UserDetail, UserListWithUserType, UserPermissions } from '../../../models/user.model';
 import { UsersService } from '../../../services/users.service';
@@ -19,6 +19,8 @@ import { UserCreateComponent } from "../user-create/user-create.component";
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ToggleButtonChangeEvent, ToggleButtonModule } from 'primeng/togglebutton';
 import { PermissionService } from '../../../services/permission.service';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
 
 export enum TABTYPE {
   BASIC_DETAIL = 'basic-details',
@@ -46,7 +48,7 @@ interface UserPermissionTable {
     ReactiveFormsModule,
     TooltipModule,
     RouterModule,
-    TableModule, ToggleButtonModule],
+    TableModule, ToggleButtonModule, IconFieldModule, InputIconModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.scss'
 })
@@ -74,11 +76,24 @@ export class UserEditComponent implements OnInit {
   selectedTab: string = 'basic-details';
 
   userPermission: UserPermissionTable[] = [];
+  showingUserPermission: UserPermissionTable[] = [];
   permissions: Permissions[] = [];
+
+  search: FormControl = new FormControl('')
 
   ngOnInit(): void {
     this.fetchUserDetails();
     this.setActiveTab();
+
+    this.search.valueChanges.pipe(
+      takeUntil(this.$destroy),
+      startWith(''),
+      debounceTime(400),
+      tap((searchValue: string) => {
+      this.showingUserPermission = this.userPermission.filter((curr) => {
+        return curr.featureName.toLowerCase().includes(searchValue.toLowerCase())
+      })
+    })).subscribe()
   }
 
 
@@ -110,6 +125,7 @@ export class UserEditComponent implements OnInit {
               mappingId: existingPermission?.mappingId ?? 0
             }
           })
+          this.showingUserPermission = this.userPermission;
           console.log(this.userPermission)
         })
       ).subscribe()
