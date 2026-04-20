@@ -1,0 +1,105 @@
+<app-page-header title="Property Survey Report" />
+
+<div class=" gesil-card mt-4 flex flex-col gap-2 sm:flex-row">
+    <div class="w-full sm:w-[33%]">
+        <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" dateFormat="dd/M/yy" fluid
+            [readonlyInput]="true" />
+    </div>
+    <div class="flex justify-end sm:justify-start">
+        <p-button (click)="onSearch()">Search</p-button>
+    </div>
+</div>
+
+<div class="gesil-card mt-4">
+    <p-table #dt1 dataKey="id" [value]="reportData" [rowHover]="TABLE_CONFIG.rowHover"
+        [showGridlines]="TABLE_CONFIG.showGridlines" responsiveLayout="TABLE_CONFIG.responsiveLayout"
+        [paginator]="TABLE_CONFIG.paginator" [rows]="TABLE_CONFIG.rows"
+        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions" [totalRecords]="totalRecords" [lazy]="true"
+        (onLazyLoad)="loadUserData($event)">
+        <!-- <ng-template #caption>
+            <div class="flex justify-between items-center flex-column sm:flex-row">
+                <p-iconfield iconPosition="left" class="ml-auto">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
+                </p-iconfield>
+
+                <div class="">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input type="text" pInputText placeholder="Search User" [formControl]="search" />
+                    </p-iconfield>
+                </div>
+            </div>
+        </ng-template> -->
+
+        <ng-template #header>
+            <tr>
+                <th style="min-width: 12rem">
+                    <div class="flex justify-between items-center">
+                        Survey No
+                    </div>
+                </th>
+                <th style="min-width: 12rem">
+                    <div class="flex justify-between items-center">
+                        Owner Name
+                    </div>
+                </th>
+                <th style="min-width: 12rem">
+                    <div class="flex justify-between items-center">
+                        Zone
+                    </div>
+                </th>
+                <th style="min-width: 12rem">
+                    <div class="flex justify-between items-center">
+                        Ward
+                    </div>
+                </th>
+
+                <th style="min-width: 12rem">
+                    <div class="flex justify-between items-center">
+                        Mohalla
+                    </div>
+                </th>
+                <th style="min-width: 12rem">
+                    <div class="flex justify-between items-center">
+                        Details
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-user>
+            <tr>
+                <td>
+                    {{ user.firstName }}
+                </td>
+                <td>
+                    {{ user.mobile }}
+                </td>
+                <td>
+                    {{ user.emailId }}
+                </td>
+                <td>
+                    {{ user.userTypeName }}
+                </td>
+
+                
+                <td>
+                    {{ user.loginId }}
+                </td>
+                <td class="flex justify-between items-center">
+                    {{ user.showPassword ? user.password : '-*-*-*-*-' }}
+                    <p-button [icon]="user.showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" [rounded]="true"
+                        [text]="true" severity="secondary" (click)="user.showPassword = !user.showPassword" />
+                </td>
+                
+
+                <td>
+
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

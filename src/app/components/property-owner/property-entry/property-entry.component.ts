@@ -742,7 +742,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
     const updateDetailsPayload: PropertyMaster = {
       propertyId: this.property?.propertyId || 0,
-      householdNo: this.propertyForm.value.householdNo
+      householdNo: this.propertyForm.value.householdNo,
+      attribute9: 'pin' // dont remove this
     }
 
     this.ownerService.updatePropertyMaster(updateDetailsPayload)

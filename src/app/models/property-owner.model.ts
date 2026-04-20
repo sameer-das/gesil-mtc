@@ -390,3 +390,18 @@ export interface PropertyDocumentUploadPayload {
 }
 
 
+export interface AddDemandType {
+  fyId: number;
+  dueFromPrevYear: number;
+  currentMonthlyCharge: number;
+  noOfMonths: number;
+  currentFyAmount: number;
+  totalAmount: number;
+  demandNo: string;
+  amountPaid: number;
+  amountPending: number;
+  propertyId: number;
+  demandGeneratedDate: string | null;
+  demandGeneratedBy: number;
+  demandFile: string;
+};

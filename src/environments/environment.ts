@@ -1,7 +1,8 @@
 export const environment = {
 
     // ***************** API BASE URL *****************
-    API_URL: "http://181.214.10.5/api",
+    // API_URL: "http://181.214.10.5/api",
+    API_URL: "https://gms.esebakendra.com/api",
 
 
     // ***************** Authentication URLs *****************
@@ -110,5 +111,5 @@ export const environment = {
     addDemandTxn: '/Master/AddDemandTxn',
     quickCreateProperty:'/Master/QuickCreateProperty',
     demandGenerate:'/Pdf/demandGenerate',
-    addUpdateDemandAmount:'/Master/AddUpdateDemandAmount',
+    addDemand:'/Master/AddDemand',
 };

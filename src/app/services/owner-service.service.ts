@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APIResponse } from '../models/user.model';
-import { AddDemandTxnType, ApprovalLog, ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, FloorData, OwnerDetail, OwnerDocumentUpload, PropertyDocumentUploadPayload, PropertyMaster, PropertySearchResultType, QuickCreatePropertyType, UpdateOwnerDetail } from '../models/property-owner.model';
+import { AddDemandTxnType, AddDemandType, ApprovalLog, ApproveRejectPayload, CreateOwnerDetail, DemandList, DemandListResp, DemandTransactionRecord, FloorData, OwnerDetail, OwnerDocumentUpload, PropertyDocumentUploadPayload, PropertyMaster, PropertySearchResultType, QuickCreatePropertyType, UpdateOwnerDetail } from '../models/property-owner.model';
 import { SHOW_LOADER } from './httpContexts';
 
 @Injectable({
@@ -170,7 +170,7 @@ export class OwnerServiceService {
   }
 
   getFloorDetails(propertyId: number) {
-    return this.http.get<APIResponse<FloorData[]>>(`${this.API_URL}${environment.getFloorDetails}`, {params: {propertyId}})
+    return this.http.get<APIResponse<FloorData[]>>(`${this.API_URL}${environment.getFloorDetails}`, { params: { propertyId } })
   }
 
   saveFloorData(payload: FloorData[]) {
@@ -182,7 +182,7 @@ export class OwnerServiceService {
   }
 
   propertyDocumentList(propertyId: number) {
-    return this.http.get<APIResponse<PropertyDocumentUploadPayload[]>>(`${this.API_URL}${environment.propertyDocumentList}`, {params: {propertyId}})
+    return this.http.get<APIResponse<PropertyDocumentUploadPayload[]>>(`${this.API_URL}${environment.propertyDocumentList}`, { params: { propertyId } })
   }
 
 
@@ -200,6 +200,12 @@ export class OwnerServiceService {
         (error) => observer.error(error)
       );
     });
+  }
+
+
+
+  addDemand(paylaod: AddDemandType[]) {
+    return this.http.post<APIResponse<any>>(`${this.API_URL}${environment.addDemand}`, paylaod)
   }
 
 }

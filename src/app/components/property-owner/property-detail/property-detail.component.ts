@@ -1,3 +1,4 @@
+import { PERMISSIONS } from './../../../models/constants';
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -20,6 +21,7 @@ import { PageHeaderComponent } from "../../utils/page-header/page-header.compone
 import { FormsModule } from '@angular/forms';
 import { TextareaModule } from 'primeng/textarea';
 import { DialogModule } from 'primeng/dialog';
+import { PermissionService } from '../../../services/permission.service';
 
 
 @Component({
@@ -56,6 +58,8 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   private messageService: MessageService = inject(MessageService);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
   loaderService: LoaderService = inject(LoaderService);
+  permissionService: PermissionService = inject(PermissionService);
+  PERMISSIONS = PERMISSIONS;
 
   router: Router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);

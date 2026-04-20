@@ -1,3 +1,4 @@
+import { PERMISSIONS } from './../../../models/constants';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { UsersService } from '../../../services/users.service';
@@ -8,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { RouterModule } from '@angular/router';
 import { TABLE_CONFIG } from '../../../models/tableConfig';
+import { PermissionService } from '../../../services/permission.service';
 
 @Component({
   selector: 'app-user-type-list',
@@ -31,7 +33,8 @@ export class UserTypeListComponent implements OnInit, OnDestroy {
     TABLE_CONFIG = TABLE_CONFIG;
 
     childUserType: ChildUserType[] = [];
-
+    permissionService: PermissionService = inject(PermissionService);
+    PERMISSIONS = PERMISSIONS;
     ngOnDestroy(): void {
       this.$destroy.next(null);
     }

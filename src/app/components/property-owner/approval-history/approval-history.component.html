@@ -1,7 +1,8 @@
 <app-page-header title="Apprval History" [backButton]="true" />
 <div class="gesil-card mt-4">
     <div>
-        <p><strong>Household No. : </strong>{{property.householdNo}}</p>
+        <p><strong>Household No. : </strong>{{property.householdNo ? property.householdNo : 'New'}}</p>
+        <p><strong>Survey No. : </strong>{{property.surveyNo}}</p>
     </div>
 
     <div class="mt-4">

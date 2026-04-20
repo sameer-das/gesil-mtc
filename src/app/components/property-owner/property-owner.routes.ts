@@ -19,7 +19,7 @@ export default [
     { path: 'property-search', component: PropertySearchComponent },
     { path: 'detail/:propertyId', component: PropertyDetailComponent },
     { path: 'approval-list', component: ApprovalListComponent },
-    { path: 'property-entry/:propertyId', component: PropertyEntryComponent },
+    { path: 'property-entry/:propertyId', component: PropertyEntryComponent }, // add canActivate
     { path: 'property-demand-list/:propertyId', component: DemandListComponent },
     { path: 'property-payment/:propertyId/:demandId', component: DemandPaymentComponent },
     { path: 'property-documents/:propertyId', component: PropertyDocumentComponent },

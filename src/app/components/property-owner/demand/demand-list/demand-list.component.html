@@ -36,7 +36,7 @@
                 </tbody>
             </table>
             <div class="w-100 md:w-1/3">
-                @if(demand.demandNo) {
+                @if(demand.demandNo && permissionService.hasPermission(PERMISSIONS.COLLECT_PAYMENT)) {
                 <a pButton severity="primary" class="w-full"
                     [routerLink]="['/property', 'property-payment', this.propertyId(), demand.demandId]"> Collect
                     Payment</a>
@@ -59,7 +59,7 @@
                     target="_blank">
                     Download Demand </a>
                 } @else {
-                <p-button type="button" severity="info" variant="outlined"
+                <p-button type="button" severity="info" variant="outlined" [disabled]="!permissionService.hasPermission(PERMISSIONS.GENERATE_DEMAND)"
                     (click)="onDemandGenerationClick(demand.demandId)" label="Generate Demand" />
                 }
             </div>

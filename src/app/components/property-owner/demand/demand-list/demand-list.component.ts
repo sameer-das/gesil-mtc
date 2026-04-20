@@ -11,6 +11,8 @@ import { DemandList, PropertySearchResultType } from '../../../../models/propert
 import { OwnerServiceService } from '../../../../services/owner-service.service';
 import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { PermissionService } from '../../../../services/permission.service';
+import { PERMISSIONS } from '../../../../models/constants';
 
 @Component({
   selector: 'app-demand-list',
@@ -30,6 +32,8 @@ export class DemandListComponent implements OnInit, OnDestroy {
   ownerService: OwnerServiceService = inject(OwnerServiceService);
   private messageService: MessageService = inject(MessageService);
   private sanitizer: DomSanitizer = inject(DomSanitizer);
+  permissionService: PermissionService = inject(PermissionService);
+  PERMISSIONS = PERMISSIONS;
 
   currentLoggedUserId: string = localStorage.getItem('loginUserId') || '0';
 
@@ -53,6 +57,7 @@ export class DemandListComponent implements OnInit, OnDestroy {
         tap(([propertyResp, demandsResp]) => {
           if (demandsResp.code === 200) {
             this.demands = demandsResp.data.demands;
+            sessionStorage.setItem('demandids', JSON.stringify(this.demands ? this.demands.map(c => c.fyId) : []))
           }
           if (propertyResp.code === 200) {
             this.property = propertyResp.data[0];
@@ -103,6 +108,6 @@ export class DemandListComponent implements OnInit, OnDestroy {
 
   showModal(fileName: string) {
     this.displayPdfModal = true;
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.getDemandFileUrl(fileName)); 
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.getDemandFileUrl(fileName));
   }
 }

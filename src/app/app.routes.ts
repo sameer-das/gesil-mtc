@@ -14,6 +14,7 @@ export const routes: Routes = [
             { path: 'user', loadChildren: () => import('./components/users/user.routes') },
             { path: 'master', loadChildren: () => import('./components/master-menu/master-menu.routes') },
             { path: 'property', loadChildren: () => import('./components/property-owner/property-owner.routes') },
+            { path: 'reports', loadChildren: () => import('./components/reports/reports.route') },
         ]
     },
     {path: 'login', component: LoginComponent}

@@ -1,21 +1,17 @@
 <app-page-header title="User Type List"></app-page-header>
 
 <div class="gesil-card mt-4">
-    <p-table [value]="childUserType"
-        dataKey="childUserType" 
-        [loading]="tableLoading" 
-        [rows]="TABLE_CONFIG.rows"
-        [rowHover]="TABLE_CONFIG.rowHover"
-        [showGridlines]="TABLE_CONFIG.showGridlines" 
-        [paginator]="TABLE_CONFIG.paginator" 
-        responsiveLayout="TABLE_CONFIG.responsiveLayout"
-        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions"
-        (onPage)="loadUserData($event)">
+    <p-table [value]="childUserType" dataKey="childUserType" [loading]="tableLoading" [rows]="TABLE_CONFIG.rows"
+        [rowHover]="TABLE_CONFIG.rowHover" [showGridlines]="TABLE_CONFIG.showGridlines"
+        [paginator]="TABLE_CONFIG.paginator" responsiveLayout="TABLE_CONFIG.responsiveLayout"
+        [rowsPerPageOptions]="TABLE_CONFIG.rowsPerPageOptions" (onPage)="loadUserData($event)">
         <ng-template #caption>
             <div class="flex justify-between items-center flex-column sm:flex-row">
+                @if(permissionService.hasPermission(PERMISSIONS.CREATE_USER_TYPE)) {
                 <a routerLink="create" class="p-button ml-auto">
                     <i class="pi pi-plus-circle"></i>Add User Type
                 </a>
+                }
             </div>
         </ng-template>
 
@@ -49,8 +45,11 @@
                     {{ item.childUserTypeName }}
                 </td>
                 <td>
-                    <a pButton icon="pi pi-pencil" [routerLink]="['edit', item.childUserType]" [rounded]="true" class="mr-2" severity="help"
-                     pTooltip="Edit"></a>
+                    @if(permissionService.hasPermission(PERMISSIONS.MODIFY_USER_TYPE)) {
+                        <a pButton icon="pi pi-pencil" [routerLink]="['edit', item.childUserType]" [rounded]="true"
+                            class="mr-2" severity="help" pTooltip="Edit"></a>
+                        }
+
                     <!-- <p-button icon="pi pi-trash" [rounded]="true" class="" severity="danger"
                         (click)="deleteUserType(item)" pTooltip="Delete"></p-button> -->
                 </td>

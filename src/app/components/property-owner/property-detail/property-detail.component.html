@@ -1,8 +1,10 @@
 <app-page-header title="Property Details" [backButton]="true" />
 
 <div class="flex justify-end gap-4">
-    <p-button label="Edit Details" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined"
-        severity="info" />
+    @if((+userId === +(property.attribute1 || 0) || property.attribute1 === null) && permissionService.hasPermission(PERMISSIONS.MODIFY_PROPERTY)) {
+        <p-button label="Edit Details" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined"
+            severity="info" />
+    }
     <a pButton icon="pi pi-file-arrow-up" [routerLink]="['/property','property-documents', this.propertyId()]" [outlined]="true" severity="info">Documents</a>
 
     <!-- Only Show approve reject button if its pending and to the approver -->
@@ -44,11 +46,12 @@
                 <span class="inline-block py-1 px-4 text-white rounded-full" [ngClass]="{
                 'bg-red-500': property.attribute0 === 'Rejected', 
                 'bg-green-500': property.attribute0 === 'Fully Approved',
-                'bg-purple-500': property.attribute0 === 'Pending'}">{{property.attribute0}}
+                'bg-purple-500': property.attribute0 === 'Pending',
+                'bg-yellow-500': property.attribute0 === 'New'}">{{property.attribute0}}
                 </span>
             </p>
             @if(property.attribute1) {
-            <p class="text-sm"><strong>Approver : </strong>{{property.approverName}}</p>
+            <p class="text-sm"><strong>Pending with : </strong>{{property.approverName}}</p>
             <p class="text-xs">({{property.approverUserTypeName}})</p>
             }
         </div>
