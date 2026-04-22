@@ -90,7 +90,7 @@ export class AddUpdateDemandAmountComponent implements OnInit, OnDestroy {
         "demandNo": "",
         "amountPaid": 0,
         "amountPending": Number(this.demandForm.value.dueFromPrevYear) + Number(this.demandForm.value.currentFyAmount),
-        "propertyId": this.propertyId() || 0,
+        "propertyId": +(this.propertyId() || 0),
         "demandGeneratedDate": null,
         "demandGeneratedBy": 0,
         "demandFile": ""

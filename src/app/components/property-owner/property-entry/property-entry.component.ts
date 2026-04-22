@@ -74,6 +74,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   editPin = false;
   PERMISSIONS = PERMISSIONS;
 
+  gettingCurrentLocation = false;
+
   propertyForm: FormGroup = new FormGroup({
     householdNo: new FormControl(''),
     salutation: new FormControl(''),
@@ -138,8 +140,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     propertyAddressHouseNo: new FormControl(),
     propertyAddressLandmark: new FormControl(),
 
-    // latitude: new FormControl(),
-    // longitude: new FormControl(),
+    latitude: new FormControl(),
+    longitude: new FormControl(),
 
     // Owner Address
     isOwnerAddressSame: new FormControl(null),
@@ -429,6 +431,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       noOfFloors: this.property.noOfFloors,
       buildingNo: this.property.buildingNo,
       flatNo: this.property.flatNo,
+      latitude: this.property.latitude,
+      longitude: this.property.longitude
     });
 
   }
@@ -518,6 +522,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
   getThisLocation() {
+    this.gettingCurrentLocation = true;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
@@ -530,8 +535,10 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             latitude: latitude,
             longitude: longitude
           })
+          this.gettingCurrentLocation = false;
         },
         (error: GeolocationPositionError) => {
+          this.gettingCurrentLocation = false;
           // Error callback
           switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -706,6 +713,9 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       ownerAddressPin: this.propertyForm.value.ownerAddressPin,
       ownerAddressHouseNo: this.propertyForm.value.ownerAddressHouseNo,
       ownerAddressLandmark: this.propertyForm.value.ownerAddressLandmark,
+
+      latitude: this.propertyForm.value.latitude ? String(this.propertyForm.value.latitude) : '',
+      longitude: this.propertyForm.value.longitude ? String(this.propertyForm.value.longitude) : '',
 
       updatedBy: this.currentLoggedUserName,
     };

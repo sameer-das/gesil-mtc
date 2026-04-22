@@ -8,7 +8,8 @@
 
                     <div class="flex flex-wrap gap-2 w-full items-center">
                         @if(!editPin) {
-                        <p [style.color]=" property.householdNo ? 'var(--primary-color)' : 'orangered' "><strong>Household No./PIN : </strong>{{property.householdNo || 'Not Updated'}}</p>
+                        <p [style.color]=" property.householdNo ? 'var(--primary-color)' : 'orangered' ">
+                            <strong>Household No./PIN : </strong>{{property.householdNo || 'Not Updated'}}</p>
                         @if(permissionService.hasPermission(PERMISSIONS.MODIFY_PIN)) {
                         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
                             (click)="editPin = true" />
@@ -33,9 +34,10 @@
 
 
                     @if(property.surveyNo) {
-                        <div class="flex flex-wrap gap-2 w-full">
-                            <p  [style]="{color:'var(--primary-color)'}"><strong>Survey No. : </strong>{{property.surveyNo || ''}}</p>
-                        </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <p [style]="{color:'var(--primary-color)'}"><strong>Survey No. : </strong>{{property.surveyNo ||
+                            ''}}</p>
+                    </div>
                     }
                 </div>
             </div>
@@ -239,6 +241,24 @@
                     </div>
                     }
 
+                </div>                
+            </div>
+            <div class="gesil-card">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+                        <p-button class="w-full" (click)="getThisLocation()" [disabled]="gettingCurrentLocation" >{{gettingCurrentLocation ? 'Getting ...' : 'Get Current Location'}}</p-button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3 items-center">
+                        @if(propertyForm.value.latitude) {
+                            <p [style.color]="'var(--primary-color)'">Lat: {{propertyForm.value.latitude}}</p>
+                        }
+                        @if(propertyForm.value.longitude) {
+                            <p [style.color]="'var(--primary-color)'">Long: {{propertyForm.value.longitude}}</p>
+                        }
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-1/3">
+
+                    </div>
                 </div>
             </div>
 

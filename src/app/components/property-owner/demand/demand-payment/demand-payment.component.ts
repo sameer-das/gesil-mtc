@@ -51,6 +51,7 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
   fileName: string | null = '';
   fileContent: string = '';
   latLong: string = '';
+  gettingLocation = false;
 
   paymentForm: FormGroup = new FormGroup({
     remarks: new FormControl(''),
@@ -183,14 +184,19 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
 
   getCurrentLocation() {
     console.log('getCurrentLocation ');
+    this.gettingLocation = true;
     this.ownerService.getCurrentLocation().subscribe({
       next: (position) => {
         this.latLong = position.coords.latitude + '; ' + position.coords.longitude;
         console.log('User Location:', position.coords);
+        this.gettingLocation = false;
       },
       error: (err) => {
+        this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Error getting location.', detail: err, life: MessageDuaraion.STANDARD })
+
         console.error('Error getting location:', err);
         this.latLong = '';
+        this.gettingLocation = false;
       }
     });
   }
@@ -234,7 +240,7 @@ export class DemandPaymentComponent implements OnInit, OnDestroy {
       attribute2: this.latLong,
       attribute3: '',
       attribute4: '',
-      imageFilename: this.file.name.split('.').slice(0,-1).join(), // remove the extension
+      imageFilename: this.file.name.split('.').slice(0, -1).join(), // remove the extension
       imageContent: this.fileContent,
       imageType: this.file.type
     }
