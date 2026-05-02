@@ -2,7 +2,8 @@
 
 <div class=" gesil-card mt-4 flex flex-col gap-2 sm:flex-row">
     <div class="w-full sm:w-[33%]">
-        <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" dateFormat="dd/M/yy" fluid [readonlyInput]="true" />
+        <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" dateFormat="dd/M/yy" fluid
+            [readonlyInput]="true" />
     </div>
     <div class="flex justify-end sm:justify-start">
         <p-button (click)="onSearch()">Search</p-button>
@@ -35,9 +36,14 @@
 
         <ng-template #header>
             <tr>
-                <th style="min-width: 12rem">
+                <!-- <th style="min-width: 12rem">
                     <div class="flex justify-between items-center">
-                        Survey No/HouseholdNo/PIN
+                        Survey No
+                    </div>
+                </th> -->
+                <th style="min-width: 8rem">
+                    <div class="flex justify-between items-center">
+                        HouseholdNo/PIN
                     </div>
                 </th>
                 <th style="min-width: 12rem">
@@ -45,58 +51,94 @@
                         Owner Name
                     </div>
                 </th>
-                <th style="min-width: 12rem">
+                <th style="min-width: 8rem">
+                    <div class="flex justify-between items-center">
+                        Owner Mobile
+                    </div>
+                </th>
+                <th style="min-width: 8rem">
                     <div class="flex justify-between items-center">
                         Zone
                     </div>
                 </th>
-                <th style="min-width: 12rem">
+                <th style="min-width: 5rem">
                     <div class="flex justify-between items-center">
                         Ward
                     </div>
                 </th>
 
-                <th style="min-width: 12rem">
+                <th style="min-width: 8rem">
                     <div class="flex justify-between items-center">
                         Mohalla
                     </div>
                 </th>
+
+                <th style="min-width: 5rem">
+                    <div class="flex justify-between items-center">
+                        Amount
+                    </div>
+                </th>
+                <th style="min-width: 8rem">
+                    <div class="flex justify-between items-center">
+                        Remarks
+                    </div>
+                </th>
+                <th style="min-width: 8rem">
+                    <div class="flex justify-between items-center">
+                        Txn Date
+                    </div>
+                </th>
+                <th style="min-width: 3rem">
+                    <div class="flex justify-between items-center">
+                        Photo
+                    </div>
+                </th>
                 <th style="min-width: 12rem">
                     <div class="flex justify-between items-center">
-                        Details
+                        Lat/Long
                     </div>
                 </th>
             </tr>
         </ng-template>
 
-        <ng-template #body let-user>
+        <ng-template #body let-data>
             <tr>
+                <!-- <td>
+                    <a [routerLink]="['/property','detail', data.propertyId]">{{ data.surveyNo }}</a> 
+                </td> -->
                 <td>
-                    {{ user.firstName }}
+                    {{ data.householdNo ? data.householdNo : 'NA' }}
                 </td>
                 <td>
-                    {{ user.mobile }}
+                    {{ data.ownerName }}
                 </td>
                 <td>
-                    {{ user.emailId }}
+                    {{ data.mobile }}
                 </td>
                 <td>
-                    {{ user.userTypeName }}
+                    {{ data.zoneName }}
+                </td>
+                <td>
+                    {{ data.ward }}
+                </td>
+                <td>
+                    {{ data.mohallaNameDetail }}
                 </td>
 
-                
                 <td>
-                    {{ user.loginId }}
+                    {{+data.amountPaid > 0 ? data.amountPaid : 'NA'}}
                 </td>
-                <td class="flex justify-between items-center">
-                    {{ user.showPassword ? user.password : '-*-*-*-*-' }}
-                    <p-button [icon]="user.showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" [rounded]="true"
-                        [text]="true" severity="secondary" (click)="user.showPassword = !user.showPassword" />
-                </td>
-                
-
                 <td>
-
+                    {{data.remarkLabel}}
+                </td>
+                <td>
+                    {{data.transactionDate | date: 'dd-MM-yyyy hh:mm:ss a'}}
+                </td>
+                <td>
+                    <p-image [src]="getImage(data.attribute3)" alt="Image" width="32" preview="true" />
+                </td>
+                <td>
+                    {{data.attribute2}}
                 </td>
             </tr>
         </ng-template>

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { APIResponse } from '../models/user.model';
+import { APIResponse, IUserTransactionReport } from '../models/user.model';
 import {
   Category, CreateUpdateCategory,
   CreateUpdateSubCategory,
@@ -12,6 +12,7 @@ import {
   Ward,
   Zone
 } from '../models/master-data.model';
+import { PropertySearchResultType } from '../models/property-owner.model';
 
 
 @Injectable({
@@ -171,6 +172,18 @@ export class MasterDataService {
 
   searchMohalla(searchValue: string, pageNo: number = 0, pageSize: number = 0): Observable<APIResponse<{ mohallas: Mohalla[], totalCount: number }>> {
     return this.http.get<APIResponse<{ mohallas: Mohalla[], totalCount: number }>>(`${this.API_URL}${environment.searchMohalla}`, { params: { searchValue, pageNo, pageSize } })
+  }
+
+
+
+  getVisitingReport(reportPayload: any): Observable<APIResponse<{
+    totalCount: number,
+    searchProperties: IUserTransactionReport[]
+  }>> {
+    return this.http.post<APIResponse<{
+      totalCount: number,
+      searchProperties: IUserTransactionReport[]
+    }>>(`${this.API_URL}${environment.searchProperty}`, reportPayload);
   }
 
 

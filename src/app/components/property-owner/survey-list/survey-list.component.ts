@@ -1,8 +1,8 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { MessageService } from 'primeng/api';
 import { Button } from "primeng/button";
-import { Subject, takeUntil, tap } from 'rxjs';
+import { map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { PropertySearchResultType } from '../../../models/property-owner.model';
 import { MasterDataService } from '../../../services/master-data.service';
 import { OwnerServiceService } from '../../../services/owner-service.service';
@@ -20,6 +20,7 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.$destroy.next(true)
   }
 
+
   $destroy: Subject<boolean> = new Subject();
 
   ownerService: OwnerServiceService = inject(OwnerServiceService);
@@ -29,16 +30,43 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   currentUserUserName = localStorage.getItem('username') || '';
   properties: PropertySearchResultType[] = [];
 
+  route: ActivatedRoute = inject(ActivatedRoute);
+  type: string = 'c';
+
   ngOnInit(): void {
-    this.ownerService.getPropertyMasterDetail('createdBy', this.currentUserUserName)
-    .pipe(takeUntil(this.$destroy),
-    tap((resp) => {
-      if(resp.code === 200) {
-        this.properties = resp.data;
-        console.log(this.properties)
-      }
-    }))
-    .subscribe()
+    type ParamType = { type: string }
+    this.route.params.pipe(
+      takeUntil(this.$destroy),
+      switchMap((x) => {
+        if (x['type'] === 'c') {
+          this.type = 'c';
+          return this.ownerService.getPropertyMasterDetail('createdBy', this.currentUserUserName)
+
+        }
+        else if (x['type'] === 'u') {
+          this.type = 'u';
+          return this.ownerService.getPropertyMasterDetail('updatedBy', this.currentUserUserName)
+        }
+        this.type = 'c';
+        return this.ownerService.getPropertyMasterDetail('createdBy', this.currentUserUserName)
+      }),
+      tap((resp) => {
+        if (resp.code === 200) {
+          this.properties = resp.data;
+          console.log(this.properties)
+        }
+      })
+    ).subscribe()
+
+    // this.ownerService.getPropertyMasterDetail('createdBy', this.currentUserUserName)
+    //   .pipe(takeUntil(this.$destroy),
+    //     tap((resp) => {
+    //       if (resp.code === 200) {
+    //         this.properties = resp.data;
+    //         console.log(this.properties)
+    //       }
+    //     }))
+    //   .subscribe()
   }
 
 

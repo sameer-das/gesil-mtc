@@ -197,3 +197,47 @@ export interface UpdatePermission {
     featureId: number;
     featureActive: boolean;
 }
+
+
+export interface IUserTransactionReport {
+  propertyId: number;
+  ownerId: number | null;
+  householdNo: string;
+  zone: number;
+  ward: number;
+  propertyType: string;
+  attribute0: string;
+  attribute1: string;
+  attribute2: string;
+  attribute3: string;
+  attribute4: string;
+  mohallaName: string;
+  ownerName: string;
+  category: number;
+  subCategory: number;
+  rate: number | null;
+  createdBy: string;
+  createdOn: string; // Or Date if you plan to parse it
+  updatedBy: string;
+  updatedOn: string; // Or Date
+  status: string;
+  salutation: string;
+  mobile: string;
+  surveyNo: string;
+  zoneName: string;
+  wardName: string;
+  mohallaNameDetail: string;
+  categoryName: string;
+  subCategoryName: string;
+  approverName: string;
+  approverMobile: string;
+  approverEmail: string;
+  transactionDate: string; // Or Date
+  billNo: string;
+  demandId: number;
+  amountPaid: number;
+  remarks: string;
+  customReason: string;
+  paymentTxnNumber: string;
+  nextVisitDate: string | null; 
+}

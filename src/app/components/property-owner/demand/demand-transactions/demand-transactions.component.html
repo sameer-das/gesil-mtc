@@ -10,7 +10,7 @@
     <div class="mt-8">
         @for(txn of filteredTransactions; track txn.txnId) {
         <div class="mt-2 border-b">
-            <div class="flex justify-between">
+            <div class="flex flex-col sm:flex-row justify-between">
                 <div>
                     @if(+txn.amountPaid === 0) {
                     <p><strong>Visit Comment</strong></p>
@@ -37,9 +37,16 @@
                     <p><strong>Transaction Date : </strong>{{txn.txnDate | date:'medium'}}</p>
 
                 </div>
-                <div class="flex flex-col items-end">
-                    <img width="100" height="50" [src]="getImage(txn)" alt="Company Logo">
-                    <p><strong>Location : </strong>{{txn.attribute2}}</p>
+                <div class="flex flex-col items-center sm:items-end">
+                    <!-- <img width="100" height="50" [src]="getImage(txn)" alt="Photo"> -->
+                    <div class="flex justify-center">
+                        <p-image [src]="getImage(txn)" alt="Image" width="150" [preview]="true">
+                            <ng-template #indicator>
+                                <i class="pi pi-search"></i>
+                            </ng-template>
+                        </p-image>
+                    </div>
+                    <p class="self-start"><strong>Location : </strong>{{txn.attribute2}}</p>
                 </div>
 
                 <!-- <p><strong>Transaction Date : </strong>{{txn.billDate | date:'dd-MM-yyyy'}}</p> -->

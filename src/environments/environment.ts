@@ -91,6 +91,8 @@ export const environment = {
     propertyDocumentUpload:'/Master/propertyDocumentUpload',
     propertyDocumentList: '/Master/propertyDocumentList',
 
+    userHierarchy: '/Master/userHierarchy',
+
 
 
     // ********************** OWNER DETAILS Related API URLs *****************
@@ -112,4 +114,6 @@ export const environment = {
     quickCreateProperty:'/Master/QuickCreateProperty',
     demandGenerate:'/Pdf/demandGenerate',
     addDemand:'/Master/AddDemand',
+
+    searchProperty: '/Master/searchProperty'
 };

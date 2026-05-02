@@ -9,10 +9,11 @@ import { TRANSACTION_REMARKS } from '../../../../models/constants';
 import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-demand-transactions',
-  imports: [PageHeaderComponent, DatePipe, InputSwitchModule, FormsModule],
+  imports: [PageHeaderComponent, DatePipe, InputSwitchModule, FormsModule, ImageModule],
   templateUrl: './demand-transactions.component.html',
   styleUrl: './demand-transactions.component.scss'
 })

@@ -106,9 +106,13 @@ export class PropertySearchComponent {
         tap((resp: APIResponse<PropertySearchResultType[]>) => {
           console.log(resp)
           if (resp.code === 200 && resp.status === 'Success') {
-            this.properties = resp.data;
+            if (resp.data.length > 0) {
+              this.properties = resp.data;
+            } else {
+              this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found with provided details.`, life: MessageDuaraion.STANDARD })
+            }
           } else {
-            this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found with provided details.`, life: MessageDuaraion.STANDARD })
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Search failed', detail: `Property search failed.`, life: MessageDuaraion.STANDARD })
           }
         }))
       .subscribe()

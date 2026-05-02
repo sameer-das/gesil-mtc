@@ -69,7 +69,7 @@
                     (ngModelChange)="searchForm.searchValue = $event.toUpperCase()" />
                 <p-inputgroup-addon>
                     <p-button type="submit" [disabled]="!searchForm.searchValue.trim()" icon="pi pi-search"
-                        severity="primary" variant="text" (click)="searchProperty(f.value)" />
+                        severity="primary" variant="text" />
                 </p-inputgroup-addon>
             </p-inputgroup>
             <div class="flex flex-wrap justify-center gap-4">

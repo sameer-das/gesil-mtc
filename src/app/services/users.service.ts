@@ -35,8 +35,8 @@ export class UsersService {
     return this.http.get<APIResponse<District[]>>(`${this.API_URL}${environment.districtMaster}${stateId}`);
   }
 
-  getUserList(userType: number, pageNumber: number, pageSize: number): Observable<APIResponse<{ userLists: UserList[], totalCount: number }>> {
-    return this.http.get<APIResponse<{ userLists: UserList[], totalCount: number }>>(`${this.API_URL}${environment.getUserList}?userType=${userType}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  getUserList(userType: number, userId: number, pageNumber: number, pageSize: number): Observable<APIResponse<{ userLists: UserList[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ userLists: UserList[], totalCount: number }>>(`${this.API_URL}${environment.getUserList}`, {params: {userId, userType, pageSize, pageNumber}});
   }
 
   getUserDetails(userId: number): Observable<APIResponse<UserDetail>> {
@@ -84,15 +84,22 @@ export class UsersService {
   }
 
   getFeatureMapping(userId: number, groupId: number): Observable<APIResponse<UserPermissions[]>> {
-    return this.http.get<APIResponse<UserPermissions[]>>(`${this.API_URL}${environment.getFeatureMapping}?userId=${userId}&groupId=${groupId}`, {context: new HttpContext().set(SHOW_LOADER, false)});
+    return this.http.get<APIResponse<UserPermissions[]>>(`${this.API_URL}${environment.getFeatureMapping}?userId=${userId}&groupId=${groupId}`, { context: new HttpContext().set(SHOW_LOADER, false) });
   }
 
-  updateFeatureMapping(payload: UpdatePermission):  Observable<APIResponse<string>> {
-    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateFeatureMapping}`, payload, {context: new HttpContext().set(SHOW_LOADER, false)})
+  updateFeatureMapping(payload: UpdatePermission): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateFeatureMapping}`, payload, { context: new HttpContext().set(SHOW_LOADER, false) })
   }
 
   searchUser(searchValue: string, userId: number, pageNo: number, pageSize: number) {
-        return this.http.get<APIResponse<{ userLists: UserList[], totalCount: number }>>(`${this.API_URL}${environment.searchUser}`, {context: new HttpContext().set(SHOW_LOADER, true), params: {searchValue,userId,pageNo,pageSize}});
+    return this.http.get<APIResponse<{ userLists: UserList[], totalCount: number }>>(`${this.API_URL}${environment.searchUser}`, { context: new HttpContext().set(SHOW_LOADER, true), params: { searchValue, userId, pageNo, pageSize } });
+  }
+
+
+  getUserHierarchy(userId: number) {
+    return this.http.get(`${this.API_URL}${environment.userHierarchy}`,
+      { params: { userId } }
+    )
   }
 
 }

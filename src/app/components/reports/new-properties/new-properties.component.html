@@ -62,39 +62,36 @@
                         Mohalla
                     </div>
                 </th>
-                <th style="min-width: 12rem">
+                <!-- <th style="min-width: 12rem">
                     <div class="flex justify-between items-center">
                         Details
                     </div>
-                </th>
+                </th> -->
             </tr>
         </ng-template>
 
-        <ng-template #body let-user>
+        <ng-template #body let-data>
             <tr>
                 <td>
-                    {{ user.firstName }}
+                   <a [routerLink]="['/property','detail', data.propertyId]">{{ data.surveyNo }}</a> 
                 </td>
                 <td>
-                    {{ user.mobile }}
+                    {{ data.ownerName }}
                 </td>
                 <td>
-                    {{ user.emailId }}
+                    {{ data.zoneName }}
                 </td>
                 <td>
-                    {{ user.userTypeName }}
+                    {{ data.ward }}
+                </td>
+                <td>
+                    {{ data.mohallaNameDetail }}
                 </td>
 
                 
-                <td>
-                    {{ user.loginId }}
-                </td>
-                <td class="flex justify-between items-center">
-                    {{ user.showPassword ? user.password : '-*-*-*-*-' }}
-                    <p-button [icon]="user.showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" [rounded]="true"
-                        [text]="true" severity="secondary" (click)="user.showPassword = !user.showPassword" />
-                </td>
-                
+                <!-- <td>
+                   asdasdasd
+                </td>                 -->
 
                 <td>
 

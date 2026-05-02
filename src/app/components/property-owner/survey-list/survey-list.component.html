@@ -1,4 +1,4 @@
-<app-page-header title="Survey List" [backButton]="true"></app-page-header>
+<app-page-header [title]="type === 'c' ? 'Survey Property List' : 'Updated Property List'" [backButton]="true"></app-page-header>
 
 <div class="gesil-card mt-4">
     @for(property of properties; track property.propertyId) {
@@ -6,6 +6,7 @@
             <div class="flex-1">
                 <p><strong>Survey No : </strong><p-button [link]="true" [routerLink]="['/property','detail', property.propertyId]" [label]="property.surveyNo || ''" /></p>
                 @if(property.householdNo){<p><strong>Household No : </strong><p-button [link]="true" [routerLink]="['/property','detail', property.propertyId]" [label]="property.householdNo || ''" /></p>}
+                <p class="text-sm">Created On: {{property.createdOn}}</p>
             </div>
             <div class="flex-1">
                 <p [style]="{color: 'var(--primary-color)'}"><strong>Owner Name : </strong>{{property.ownerName}}</p>

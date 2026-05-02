@@ -4,10 +4,13 @@
   @if(!userDetail) {
   <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
   } @else {
-  <div class="flex justify-end w-full">
-    <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-2" severity="help"
-      [routerLink]="['/user','edit', `${userDetail.userId}`]" [queryParams]="{tab: 'basic-details'}" tooltipPosition="top" pTooltip="Edit details"></a>
-  </div>
+    @if(permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DETAILS)) {
+      <div class="flex justify-end w-full">
+        <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-2" severity="help"
+          [routerLink]="['/user','edit', `${userDetail.userId}`]" [queryParams]="{tab: 'basic-details'}" tooltipPosition="top" pTooltip="Edit details"></a>
+      </div>
+    }
+
   <div class="flex flex-col sm:flex-row sm:items-start">
     <!-- Image -->
     <div class="w-full sm:w-[150px] flex justify-center sm:justify-start mb-4 sm:mb-0">
@@ -143,3 +146,8 @@
     }
   }
 </div>
+
+<!-- Only show details for non admin user -->
+@if(currentLoggedUserType !== 1) {
+  <app-org-chart [userId]="userId"/>
+}

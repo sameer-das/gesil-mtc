@@ -41,6 +41,7 @@ export class UserListComponent implements OnInit {
   totalRecords!: number;
   private $destroy: Subject<null> = new Subject();
   private currentLoggedUserType: number = +(localStorage.getItem('loginUserType') || 0);
+  private currentLoggedUserId: number = +(localStorage.getItem('loginUserId') || 0);
 
   router: Router = inject(Router);
   private usersService: UsersService = inject(UsersService);
@@ -61,7 +62,7 @@ export class UserListComponent implements OnInit {
         if (searchValue.trim().length > 0)
           return this.usersService.searchUser(searchValue, this.currentLoggedUserType, this.pageNumber, this.pageSize);
         else
-          return this.usersService.getUserList(this.currentLoggedUserType, this.pageNumber, this.pageSize)
+          return this.usersService.getUserList(this.currentLoggedUserType, this.currentLoggedUserId, this.pageNumber, this.pageSize)
       }),
       tap(resp => {
         if (resp.code === 200) {
@@ -123,7 +124,7 @@ export class UserListComponent implements OnInit {
 
 
   getUserListUnderCurrentUserType(pageNumber: number, pageSize: number) {
-    this.usersService.getUserList(this.currentLoggedUserType, pageNumber, pageSize)
+    this.usersService.getUserList(this.currentLoggedUserType, this.currentLoggedUserId, pageNumber, pageSize)
       .pipe(takeUntil(this.$destroy))
       .subscribe({
         next: (resp: APIResponse<{ userLists: UserList[], totalCount: number }>) => {

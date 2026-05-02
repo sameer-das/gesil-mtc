@@ -214,14 +214,54 @@ export class SideBarComponent {
 
         ],
 
-      }, 
+      },
       {
-        label: 'Property and Owner',
+        label: 'User Charge',
         icon: 'pi pi-users',
         visible: this.showPropertyTopMenu(),
         items: [
           {
             label: 'Search Property',
+            icon: 'pi pi-search',
+            routerLink: '/property/property-search',
+            routerLinkActiveOptions: { exact: true },
+            command: (e: MenuItemCommandEvent) => {
+              // console.log(e)
+              // this.router.navigate([''])
+            }
+          },
+
+          {
+            label: 'Updated Property List',
+            icon: 'pi pi-list',
+            routerLink: '/property/survey-list/u',
+            routerLinkActiveOptions: { exact: true },
+            command: (e: MenuItemCommandEvent) => {
+              // console.log(e)
+              // this.router.navigate([''])
+            }
+          },
+          {
+            label: 'Visiting Report',
+            icon: 'pi pi-file',
+            routerLink: '/reports/updated-properties',
+            routerLinkActiveOptions: { exact: true },
+            // visible: this.permissionService.hasPermission(PERMISSIONS.VIEW_USER),
+            command: (e: MenuItemCommandEvent) => {
+              // console.log(e)
+              // this.router.navigate(['/user/list'])
+            }
+          }
+
+        ]
+      },
+      {
+        label: 'Property Survey',
+        icon: 'pi pi-users',
+        visible: this.showPropertyTopMenu(),
+        items: [
+          {
+            label: 'Search Survey/Property',
             icon: 'pi pi-search',
             routerLink: '/property/property-search',
             routerLinkActiveOptions: { exact: true },
@@ -242,17 +282,65 @@ export class SideBarComponent {
             }
           },
           {
-            label: 'Survery List',
+            label: 'Survery Property List',
             icon: 'pi pi-list',
-            routerLink: '/property/survey-list',
+            routerLink: '/property/survey-list/c',
             routerLinkActiveOptions: { exact: true },
             command: (e: MenuItemCommandEvent) => {
               // console.log(e)
               // this.router.navigate([''])
             }
           },
+          // {
+          //   label: 'Visiting Report',
+          //   icon: 'pi pi-file',
+          //   routerLink: '/reports/new-properties',
+          //   routerLinkActiveOptions: { exact: true },
+          //   // visible: this.permissionService.hasPermission(PERMISSIONS.VIEW_USER),
+          //   command: (e: MenuItemCommandEvent) => {
+          //     // console.log(e)
+          //     // this.router.navigate(['/user/list'])
+          //   }
+          // },
+        ]
+      },
+      // {
+      //   label: 'Reports',
+      //   icon: 'pi pi-file-pdf',
+      //   visible: this.showReportsTopMenu(),
+
+      //   items: [
+      //     {
+      //       label: 'New Properties',
+      //       icon: 'pi pi-file',
+      //       routerLink: '/reports/new-properties',
+      //       routerLinkActiveOptions: { exact: true },
+      //       // visible: this.permissionService.hasPermission(PERMISSIONS.VIEW_USER),
+      //       command: (e: MenuItemCommandEvent) => {
+      //         // console.log(e)
+      //         // this.router.navigate(['/user/list'])
+      //       }
+      //     },
+      //     {
+      //       label: 'Updated Properties',
+      //       icon: 'pi pi-file',
+      //       routerLink: '/reports/updated-properties',
+      //       routerLinkActiveOptions: { exact: true },
+      //       // visible: this.permissionService.hasPermission(PERMISSIONS.VIEW_USER),
+      //       command: (e: MenuItemCommandEvent) => {
+      //         // console.log(e)
+      //         // this.router.navigate(['/user/list'])
+      //       }
+      //     }
+      //   ]
+      // },
+      {
+        label: 'Approval/Reject',
+        icon: 'pi pi-users',
+        visible: this.showPropertyTopMenu(),
+        items: [
           {
-            label: 'Approve Property',
+            label: 'Approval Pending',
             icon: 'pi pi-check',
             routerLink: '/property/approval-list',
             routerLinkActiveOptions: { exact: true },
@@ -261,41 +349,21 @@ export class SideBarComponent {
               // this.router.navigate([''])
             }
           },
-
-        ]
-      }, 
-      {
-        label: 'Reports',
-        icon: 'pi pi-file-pdf',
-        visible: this.showReportsTopMenu(),
-
-        items: [
           {
-            label: 'New Properties',
+            label: 'Approve/Reject Report',
             icon: 'pi pi-file',
-            routerLink: '/reports/new-properties',
+            routerLink: '/property/approval-list',
             routerLinkActiveOptions: { exact: true },
-            // visible: this.permissionService.hasPermission(PERMISSIONS.VIEW_USER),
             command: (e: MenuItemCommandEvent) => {
               // console.log(e)
-              // this.router.navigate(['/user/list'])
-            }
-          },
-          {
-            label: 'Updated Properties',
-            icon: 'pi pi-file',
-            routerLink: '/reports/updated-properties',
-            routerLinkActiveOptions: { exact: true },
-            // visible: this.permissionService.hasPermission(PERMISSIONS.VIEW_USER),
-            command: (e: MenuItemCommandEvent) => {
-              // console.log(e)
-              // this.router.navigate(['/user/list'])
+              // this.router.navigate([''])
             }
           }
         ]
+
       }
     ];
   }
 
-  
+
 }
