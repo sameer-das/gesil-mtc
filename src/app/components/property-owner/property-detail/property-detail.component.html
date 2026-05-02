@@ -1,7 +1,8 @@
 <app-page-header title="Property Details" [backButton]="true" />
 
 <div class="flex justify-end gap-4">
-    @if((+userId === +(property.attribute1 || 0) || property.attribute1 === null) && permissionService.hasPermission(PERMISSIONS.MODIFY_PROPERTY)) {
+    <!-- (+userId === +(property.attribute1 || 0) || property.attribute1 === null) && -->
+    @if( permissionService.hasPermission(PERMISSIONS.MODIFY_PROPERTY)) {
         <p-button label="Edit Details" (click)="onEditClick($event)" icon="pi pi-pencil" variant="outlined"
             severity="info" />
     }
