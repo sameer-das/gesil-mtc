@@ -265,9 +265,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         if (wardResp.code === 200) {
           this.wards = wardResp.data.wards;
           if (this.propertyId()) {
-            this.propertyForm.patchValue({
-              ward: this.wards.find(ward => ward.wardId === +(this.property.ward || 0))
-            })
+            const found = this.wards.find(ward => ward.wardId === +(this.property.ward || 0))
+            if(found) {
+              this.propertyForm.patchValue({
+                ward: found
+              })
+            }
           }
         }
       })).subscribe();
@@ -277,15 +280,15 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       tap(w => console.log(w)),
       switchMap((ward: Ward) => this.masterDataService.mohallaList(this.propertyForm.value.zone.zoneId, ward.wardId, 0, 0)),
       tap((mohallaResp) => {
-        console.log(mohallaResp)
         if (mohallaResp.code === 200) {
           this.mohallas = mohallaResp.data.mohallas;
           if (this.propertyId()) {
             const found = this.mohallas.find(mohalla => mohalla.mohallaId === +(this.property.mohallaName || 0))
-            console.log(found)
-            this.propertyForm.patchValue({
-              mohallaName: found
-            })
+            if(found) {
+              this.propertyForm.patchValue({
+                mohallaName: found
+              })
+            }
           }
         }
       }
