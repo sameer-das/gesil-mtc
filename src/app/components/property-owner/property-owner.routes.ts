@@ -25,7 +25,7 @@ export default [
     { path: 'property-documents/:propertyId', component: PropertyDocumentComponent },
     { path: 'property-transactions/:propertyId/:demandId', component: DemandTransactionsComponent },
     { path: 'approval-history/:propertyId', component: ApprovalHistoryComponent },
-    { path: 'add-demand/:propertyId', component: AddUpdateDemandAmountComponent },
+    { path: 'add-demand/:propertyId/:subCategoryId', component: AddUpdateDemandAmountComponent },
     { path: 'survey-list/:type', component: SurveyListComponent },
 
 ] as Routes;

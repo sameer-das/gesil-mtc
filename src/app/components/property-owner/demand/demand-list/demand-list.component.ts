@@ -106,8 +106,18 @@ export class DemandListComponent implements OnInit, OnDestroy {
   }
 
 
-  showModal(fileName: string) {
-    this.displayPdfModal = true;
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.getDemandFileUrl(fileName));
+  // showModal(fileName: string) {
+  //   this.displayPdfModal = true;
+  //   this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.getDemandFileUrl(fileName));
+  // }
+
+  viewPdf(filename: string) {
+    this.ownerService.downloadPdfForView(filename)
+      .pipe(takeUntil(this.$destroy),
+        tap(blob => {
+          const fileURL = URL.createObjectURL(blob);
+          window.open(fileURL, '_blank');
+        }))
+      .subscribe()
   }
 }

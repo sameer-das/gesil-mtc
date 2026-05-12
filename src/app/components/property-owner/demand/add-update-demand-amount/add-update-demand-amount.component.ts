@@ -1,7 +1,7 @@
 import { Component, inject, input, OnDestroy, OnInit, Pipe } from '@angular/core';
 import { PageHeaderComponent } from "../../../utils/page-header/page-header.component";
 import { catchError, map, Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
-import { Fy } from '../../../../models/master-data.model';
+import { Fy, SubCategory } from '../../../../models/master-data.model';
 import { MasterDataService } from '../../../../services/master-data.service';
 import { APIResponse } from '../../../../models/user.model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -12,6 +12,7 @@ import { OwnerServiceService } from '../../../../services/owner-service.service'
 import { MessageService } from 'primeng/api';
 import { MessageDuaraion, MessageSeverity } from '../../../../models/config.enum';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-update-demand-amount',
@@ -21,12 +22,16 @@ import { Location } from '@angular/common';
 })
 export class AddUpdateDemandAmountComponent implements OnInit, OnDestroy {
   propertyId = input<number>();
+  subCategoryId = input<number>();
   $destroy: Subject<boolean> = new Subject();
   fys: Fy[] = [];
   existngFyIds = JSON.parse(sessionStorage.getItem('demandids') || '[]')
   private masterDataService: MasterDataService = inject(MasterDataService);
   private ownerService: OwnerServiceService = inject(OwnerServiceService);
   messageService: MessageService = inject(MessageService);
+  subCategory!: SubCategory;
+
+
   demandForm: FormGroup = new FormGroup({
     fy: new FormControl('', {
       validators: [Validators.required],
@@ -54,6 +59,25 @@ export class AddUpdateDemandAmountComponent implements OnInit, OnDestroy {
           }
         }
       })
+
+    if (this.subCategoryId()) {
+      this.masterDataService.subCategoryDetail(this.subCategoryId()!)
+        .pipe(takeUntil(this.$destroy),
+          tap(resp => {
+            if (resp.code === 200 && resp.status === 'Success') {
+              this.subCategory = resp.data;
+              console.log('patching amount :: ' + resp.data.taxAmountPerMonth )
+              this.demandForm.patchValue({ currentFyAmount: resp.data.taxAmountPerMonth || 0 })
+            } else {
+              this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Failed', detail: 'Failed while fetching subcategory details', life: MessageDuaraion.STANDARD })
+              this.demandForm.patchValue({ currentFyAmount: 0 })
+            }
+          }))
+        .subscribe()
+    } else {
+      this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Invalid', detail: 'Invalid Subcategory.', life: MessageDuaraion.STANDARD })
+      inject(Location).back();
+    }
   }
 
 

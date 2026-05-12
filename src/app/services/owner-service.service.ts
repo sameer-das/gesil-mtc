@@ -43,7 +43,7 @@ export class OwnerServiceService {
     return this.http.get<APIResponse<PropertySearchResultType[]>>(`${this.API_URL}${environment.getPropertyMasterDetails}`, { params: { searchKey, searchValue } })
   }
 
-  approveRejectProperty(payload: ApproveRejectPayload) {
+  approveRejectProperty(payload: ApproveRejectPayload[]) {
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.approveRejectProperty}`, payload);
   }
 
@@ -206,6 +206,11 @@ export class OwnerServiceService {
 
   addDemand(paylaod: AddDemandType[]) {
     return this.http.post<APIResponse<any>>(`${this.API_URL}${environment.addDemand}`, paylaod)
+  }
+
+
+  downloadPdfForView(fileName: string):Observable<Blob> {
+    return this.http.get(`${this.API_URL}${environment.ownerDocumentDownload}`, {params: {fileName}, responseType: 'blob'})    
   }
 
 }

@@ -95,7 +95,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     category: new FormControl(),
     subCategory: new FormControl(),
 
-    typeOfOwnership: new FormControl('', [Validators.required]),
+    typeOfOwnership: new FormControl(''),
     widthOfRoad: new FormControl(),
     areaOfPlot: new FormControl(),
 
@@ -764,7 +764,13 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp: APIResponse<string>) => {
           if (resp.code === 200 && resp.status === 'Success') {
-            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'PIN/Household no. updated successfully', life: MessageDuaraion.STANDARD });
+            if(resp.data.includes('updated successfully')) {
+              this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data, life: MessageDuaraion.STANDARD });
+            } else {
+              this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: resp.data, life: MessageDuaraion.STANDARD });
+            }
+
+            
             this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId()))
               .pipe(takeUntil(this.$destroy),
                 tap(resp => {

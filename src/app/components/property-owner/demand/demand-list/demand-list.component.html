@@ -2,7 +2,7 @@
 
 <div class="flex flex-col gap-4">
     <div class="flex mt-4 justify-end">
-        <a [routerLink]="['/property', 'add-demand', this.property.propertyId]" pButton [outlined]="true">New Demand</a>
+        <a [routerLink]="['/property', 'add-demand', this.property.propertyId, this.property.subcategory]" pButton [outlined]="true">New Demand</a>
     </div>
     @for(demand of demands; track demand.demandId) {
     <div class="gesil-card mt-2">
@@ -52,7 +52,7 @@
                     [routerLink]="['/property', 'property-transactions', this.propertyId(), demand.demandId]"> All
                     Transactions</a>
 
-                <!-- <p-button severity="help" [outlined]="true" (click)="showModal(demand.demandFile)"> View Demand
+                <!-- <p-button severity="help" [outlined]="true" (click)="viewPdf(demand.demandFile)"> View Demand
                 </p-button> -->
 
                 <a pButton severity="help" [outlined]="true" [href]="getDemandFileUrl(demand.demandFile)"

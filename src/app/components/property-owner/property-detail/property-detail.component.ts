@@ -115,14 +115,13 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
 
 
   approveProperty() {
-    const payload: ApproveRejectPayload = {
+    const payload: ApproveRejectPayload[] = [{
       logId: Number(this.property.attribute2),
       comments: '',
       status: 'Approved',
       approverUserId: this.userId,
       propertyId: this.propertyId() || 0
-
-    }
+    }]
 
     this.loaderService.show();
     this.ownerService.approveRejectProperty(payload)
@@ -191,13 +190,13 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
 
   onRejectConfirm() {
     console.log(this.rejectComment);
-    const payload: ApproveRejectPayload = {
+    const payload: ApproveRejectPayload[] = [{
       logId: Number(this.property.attribute2),
       comments: this.rejectComment,
       status: 'Rejected',
       approverUserId: this.userId,
       propertyId: this.propertyId() || 0
-    }
+    }]
 
     this.loaderService.show();
     this.ownerService.approveRejectProperty(payload)
