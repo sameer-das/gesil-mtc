@@ -162,6 +162,14 @@ export interface PropertySearchResultType {
   approverMobile?: string | null;
   approverEmail?: string | null;
   approverUserTypeName?: string | null;
+
+  openAreaOfPlot?: string | null;
+  totalConstructedArea?: string | null;
+  totalOwnedArea?: string | null;
+  totalRentedArea?: string | null;
+  houseTax?: string | null;
+  waterTax?: string | null;
+  sewerTax?: string | null;
 }
 
 export interface PropertyMaster {
@@ -262,6 +270,14 @@ export interface PropertyMaster {
   approverMobile?: string | null;
   approverEmail?: string | null;
   approverUserTypeName?: string | null;
+
+  openAreaOfPlot?: string | null;
+  totalConstructedArea?: string | null;
+  totalOwnedArea?: string | null;
+  totalRentedArea?: string | null;
+  houseTax?: string | null;
+  waterTax?: string | null;
+  SewerTax?: string | null;
 }
 
 
@@ -375,7 +391,14 @@ export interface FloorData {
   attribute1: string,
   attribute2: string,
   attribute3: string,
-  attribute4: string
+  attribute4: string,
+
+  openArea: string,
+  areaType: string,
+  usageType: string,
+  subUsageType: string,
+  constructionYear: string,
+  constructionAge: string,
 }
 
 

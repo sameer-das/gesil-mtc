@@ -26,6 +26,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogModule } from 'primeng/dialog';
 import { PermissionService } from '../../../services/permission.service';
+import { constructionAges, constructionType, floorNos, subUsageType, usageType } from './property-entry-constants';
 
 @Component({
   selector: 'app-property-entry',
@@ -44,7 +45,7 @@ import { PermissionService } from '../../../services/permission.service';
     FileUploadModule,
     ToggleSwitchModule,
     ToggleButtonModule,
-    DialogModule
+    DialogModule,
   ],
   templateUrl: './property-entry.component.html',
   styleUrl: './property-entry.component.scss'
@@ -76,6 +77,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   gettingCurrentLocation = false;
 
+  floorNos = floorNos;
+  usageType = usageType;
+  subUsageType = subUsageType;
+  constructionType = constructionType;
+  constructionAges = constructionAges;
+
   propertyForm: FormGroup = new FormGroup({
     householdNo: new FormControl(''),
     salutation: new FormControl(''),
@@ -98,7 +105,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     typeOfOwnership: new FormControl(''),
     widthOfRoad: new FormControl(),
     areaOfPlot: new FormControl(),
-
+    openAreaOfPlot: new FormControl(),
     // For Independent Building
     noOfFloors: new FormControl(0),
     // floorWiseData: new FormArray([]),
@@ -176,6 +183,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     // // Water Harvesting provision
     // hasWaterHarvestingProvision: new FormControl()
 
+
+    houseTax: new FormControl(null),
+    waterTax: new FormControl(null),
+    SewerTax: new FormControl(null),
+
   })
 
 
@@ -236,6 +248,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           this.enableFlatType = true;
           this.enableIndividualBuildingType = false;
           this.propertyForm.patchValue({ 'noOfFloors': 0 }, { emitEvent: true });
+          // this.propertyForm.patchValue({ 'openAreaOfPlot': 'NA' });
+          // this.propertyForm.get('openAreaOfPlot')?.disable();
           this.floorWiseDataFormArray.clear();
         } else {
           this.enableFlatType = false;
@@ -266,7 +280,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           this.wards = wardResp.data.wards;
           if (this.propertyId()) {
             const found = this.wards.find(ward => ward.wardId === +(this.property.ward || 0))
-            if(found) {
+            if (found) {
               this.propertyForm.patchValue({
                 ward: found
               })
@@ -284,7 +298,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           this.mohallas = mohallaResp.data.mohallas;
           if (this.propertyId()) {
             const found = this.mohallas.find(mohalla => mohalla.mohallaId === +(this.property.mohallaName || 0))
-            if(found) {
+            if (found) {
               this.propertyForm.patchValue({
                 mohallaName: found
               })
@@ -413,6 +427,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
       widthOfRoad: this.property.widthOfRoad,
       areaOfPlot: this.property.areaOfPlot,
+
       typeOfOwnership: OWNERSHIP_TYPE.find(opt => opt.value === this.property.typeOfOwnership),
 
       propertyAddress: this.property.propertyAddress,
@@ -435,7 +450,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       buildingNo: this.property.buildingNo,
       flatNo: this.property.flatNo,
       latitude: this.property.latitude,
-      longitude: this.property.longitude
+      longitude: this.property.longitude,
+
+      openAreaOfPlot: this.property.openAreaOfPlot,
+      houseTax: this.property.houseTax === '1',
+      waterTax: this.property.waterTax === '1',
+      SewerTax: this.property.sewerTax === '1',
     });
 
   }
@@ -449,16 +469,31 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         console.log(resp);
         if (resp.code === 200) {
           resp.data.forEach((curr: FloorData) => {
+
+            const floorNo = this.floorNos.find(f => f.value === curr.floorNo);
+            const usageType = this.usageType.find(u => u.value === curr.usageType);
+            const subUsageType = this.subUsageType.find(s => s.value === curr.subUsageType);
+            const constructionType = this.constructionType.find(c => c.value === curr.constructionType);
+            const constructionAge = this.constructionAges.find(c => c.value === curr.constructionAge);
+            const constructionYear = curr.constructionYear ? new Date(+curr.constructionYear, 0, 1) : '';
+
             this.floorWiseDataFormArray.push(new FormGroup({
-              floorNo: new FormControl(curr.floorNo),
+              floorNo: new FormControl(floorNo || ''),
               builtUpArea: new FormControl(curr.builtUpArea),
-              constructionType: new FormControl(curr.constructionType),
+              constructionType: new FormControl(constructionType || ''),
               circleRate: new FormControl(curr.circleRate),
               attribute0: new FormControl(curr.attribute0),
               attribute1: new FormControl(curr.attribute1),
               attribute2: new FormControl(curr.attribute2),
               attribute3: new FormControl(curr.attribute3),
-              attribute4: new FormControl(curr.attribute4)
+              attribute4: new FormControl(curr.attribute4),
+
+              openArea: new FormControl(curr.openArea),
+              areaType: new FormControl(curr.areaType),
+              usageType: new FormControl(usageType || ''),
+              subUsageType: new FormControl(subUsageType || ''),
+              constructionYear: new FormControl(constructionYear),
+              constructionAge: new FormControl(constructionAge || ''),
             }))
           })
         }
@@ -489,7 +524,13 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       attribute1: new FormControl(),
       attribute2: new FormControl(),
       attribute3: new FormControl(),
-      attribute4: new FormControl()
+      attribute4: new FormControl(),
+      openArea: new FormControl(),
+      areaType: new FormControl(),
+      usageType: new FormControl(),
+      subUsageType: new FormControl(),
+      constructionYear: new FormControl(),
+      constructionAge: new FormControl(),
     })
   }
 
@@ -506,10 +547,47 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   saveFloorData() {
     console.log(this.floorDataForm.value)
     const payload = this.floorDataForm.value.floorWiseData.map((c: any) => {
-      return { propertyId: +(this.propertyId() || '0'), ...c }
+      return {
+        propertyId: +(this.propertyId() || '0'),
+        ...c,
+        floorNo: c.floorNo.value,
+        constructionType: c.constructionType.value,
+        usageType: c.usageType?.value,
+        subUsageType: c.subUsageType?.value,
+        constructionYear: c.constructionYear ? String(new Date(c.constructionYear).getFullYear()) : '',
+        constructionAge: c.constructionAge?.value,
+      }
     })
     console.log(payload);
+
+    // this.ownerService.saveFloorData(payload).pipe(
+    //   tap((resp) => {
+    //     console.log(resp);
+    //     if (resp.code === 200 && resp.status === 'Success') {
+    //       this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Floor details saved successfully.', life: MessageDuaraion.STANDARD });
+    //       this.floorDataPopupVisible = false;
+    //     } else {
+    //       this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Floor details saved failed.', life: MessageDuaraion.STANDARD })
+    //     }
+    //   })
+    // ).subscribe()
+
     this.ownerService.saveFloorData(payload).pipe(
+      switchMap((resp) => {
+        console.log(resp);
+        if (resp.code === 200 && resp.status === 'Success') {
+          const floorDetailUpdatePayload: PropertyMaster = {
+            propertyId: this.property?.propertyId || 0,
+            attribute9: 'floordata', // dont change this value - to make sure the approval does not trigger
+            totalConstructedArea: '1000B',
+            totalOwnedArea: '2000B',
+            totalRentedArea: '3000B'
+          }
+          return this.ownerService.updatePropertyMaster(floorDetailUpdatePayload)
+        } else {
+          return of(resp)
+        }
+      }),
       tap((resp) => {
         console.log(resp);
         if (resp.code === 200 && resp.status === 'Success') {
@@ -696,6 +774,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       widthOfRoad: String(this.propertyForm.value.widthOfRoad),
       areaOfPlot: String(this.propertyForm.value.areaOfPlot),
 
+
       typeOfOwnership: this.propertyForm.value.typeOfOwnership?.value,
       buildingNo: this.propertyForm.value.buildingNo,
       flatNo: this.propertyForm.value.flatNo,
@@ -721,6 +800,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       longitude: this.propertyForm.value.longitude ? String(this.propertyForm.value.longitude) : '',
 
       updatedBy: this.currentLoggedUserName,
+
+      openAreaOfPlot: String(this.propertyForm.value.openAreaOfPlot),
+      houseTax: String(Number(this.propertyForm.value.houseTax)),
+      waterTax: String(Number(this.propertyForm.value.waterTax)),
+      SewerTax: String(Number(this.propertyForm.value.SewerTax)),
     };
 
     console.log(updateDetailsPayload);
@@ -764,13 +848,13 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp: APIResponse<string>) => {
           if (resp.code === 200 && resp.status === 'Success') {
-            if(resp.data.includes('updated successfully')) {
+            if (resp.data.includes('updated successfully')) {
               this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data, life: MessageDuaraion.STANDARD });
             } else {
               this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: resp.data, life: MessageDuaraion.STANDARD });
             }
 
-            
+
             this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId()))
               .pipe(takeUntil(this.$destroy),
                 tap(resp => {

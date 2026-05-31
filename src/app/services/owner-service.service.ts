@@ -143,6 +143,14 @@ export class OwnerServiceService {
       "propertyAddressHouseNo": payload.propertyAddressHouseNo || null,
       "propertyAddressLandmark": payload.propertyAddressLandmark || null,
       "surveyNo": payload.surveyNo || null,
+
+      "openAreaOfPlot": payload.openAreaOfPlot || null,
+      "totalConstructedArea": payload.totalConstructedArea || null,
+      "totalOwnedArea": payload.totalOwnedArea || null,
+      "totalRentedArea": payload.totalRentedArea || null,
+      "houseTax": payload.houseTax,
+      "waterTax": payload.waterTax,
+      "SewerTax": payload.SewerTax,
     }
     console.log(payloadToApi)
     return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.updateProperty}`, payloadToApi);
@@ -209,8 +217,8 @@ export class OwnerServiceService {
   }
 
 
-  downloadPdfForView(fileName: string):Observable<Blob> {
-    return this.http.get(`${this.API_URL}${environment.ownerDocumentDownload}`, {params: {fileName}, responseType: 'blob'})    
+  downloadPdfForView(fileName: string): Observable<Blob> {
+    return this.http.get(`${this.API_URL}${environment.ownerDocumentDownload}`, { params: { fileName }, responseType: 'blob' })
   }
 
 }

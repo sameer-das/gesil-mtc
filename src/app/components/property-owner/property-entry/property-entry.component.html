@@ -9,7 +9,8 @@
                     <div class="flex flex-wrap gap-2 w-full items-center">
                         @if(!editPin) {
                         <p [style.color]=" property.householdNo ? 'var(--primary-color)' : 'orangered' ">
-                            <strong>Household No./PIN : </strong>{{property.householdNo || 'Not Updated'}}</p>
+                            <strong>Household No./PIN : </strong>{{property.householdNo || 'Not Updated'}}
+                        </p>
                         @if(permissionService.hasPermission(PERMISSIONS.MODIFY_PIN)) {
                         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
                             (click)="editPin = true" />
@@ -182,9 +183,15 @@
                         <div class="invisible">error placeholder</div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="areaOfPlot">Area of Plot (Sq. Ft)</label>
-                        <input pInputText id="areaOfPlot" placeholder="Enter Area of Plot" type="text"
+                        <label for="areaOfPlot">Total Area of Plot (Sq. Ft)</label>
+                        <input pInputText id="areaOfPlot" placeholder="Enter Total Area of Plot" type="text"
                             formControlName="areaOfPlot" />
+                        <div class="invisible">error placeholder</div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="openAreaOfPlot">Open Area of Plot (Sq. Ft)</label>
+                        <input pInputText id="openAreaOfPlot" placeholder="Enter Open Area of Plot" type="text"
+                            formControlName="openAreaOfPlot" />
                         <div class="invisible">error placeholder</div>
                     </div>
                 </div>
@@ -241,24 +248,41 @@
                     </div>
                     }
 
-                </div>                
+                </div>
             </div>
             <div class="gesil-card">
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
-                        <p-button class="w-full" (click)="getThisLocation()" [disabled]="gettingCurrentLocation" >{{gettingCurrentLocation ? 'Getting ...' : 'Get Current Location'}}</p-button>
+                        <p-button class="w-full" (click)="getThisLocation()"
+                            [disabled]="gettingCurrentLocation">{{gettingCurrentLocation ? 'Getting ...' : 'Get Current                            Location'}}</p-button>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3 items-center">
                         @if(propertyForm.value.latitude) {
-                            <p [style.color]="'var(--primary-color)'">Lat: {{propertyForm.value.latitude}}</p>
+                        <p [style.color]="'var(--primary-color)'">Lat: {{propertyForm.value.latitude}}</p>
                         }
                         @if(propertyForm.value.longitude) {
-                            <p [style.color]="'var(--primary-color)'">Long: {{propertyForm.value.longitude}}</p>
+                        <p [style.color]="'var(--primary-color)'">Long: {{propertyForm.value.longitude}}</p>
                         }
                     </div>
                     <div class="flex flex-wrap gap-2 w-full md:w-1/3">
 
                     </div>
+                </div>
+            </div>
+
+            <!-- House/Water/Sewer Tax -->
+            <div class="gesil-card flex flex-col sm:flex-row gap-4">
+                <div class="flex items-center gap-2">
+                    <p-toggleswitch [inputId]="'houseTax'" formControlName="houseTax" />
+                    <label for="houseTax">House Tax</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <p-toggleswitch [inputId]="'waterTax'" formControlName="waterTax" />
+                    <label for="waterTax">Water Tax</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <p-toggleswitch [inputId]="'SewerTax'" formControlName="SewerTax" />
+                    <label for="SewerTax">Sewer Tax</label>
                 </div>
             </div>
 
@@ -613,49 +637,95 @@
 </p-fluid>
 
 
-<p-dialog header="Add Floor Data" [modal]="true" [(visible)]="floorDataPopupVisible" [style]="{ width: '75%' }">
-    <div class="flex justify-end">
+<p-dialog header="Add Floor Data" [maximizable]="true" [modal]="true" [(visible)]="floorDataPopupVisible"
+    [style]="{ width: '96%' }" [contentStyle]="{'overflow':'visible'}">
+    <div class="flex justify-end items-center gap-4">
+        <!-- <div class="flex gap-4">
+            <strong class="text-blue-500">Total Constructed Area : </strong> 2000
+            <strong class="text-blue-500">Total Owned Area : </strong> 1500
+            <strong class="text-blue-500">Total Rented Area : </strong> 500
+        </div> -->
+
         <button [disabled]="+propertyForm.get('noOfFloors')?.value === floorWiseDataFormArray.length" pButton
             (click)="addFlooWiseDataRow()">Add Floor</button>
     </div>
 
     <form [formGroup]="floorDataForm" class="mt-4">
-        <div formArrayName="floorWiseData">
-            @for (data of floorWiseDataFormArray.controls; track data; let i = $index) {
-            <div [formGroupName]="i" class="flex flex-col md:flex-row md:gap-6">
-                <div class="flex flex-col gap-2 w-full md:w-1/3">
-                    <label [for]="'floorNo' + i">Floor No</label>
-                    <input pInputText [id]="'floorNo' + i" placeholder="Floor No." type="text"
-                        formControlName="floorNo" />
-                    <div [class.invisible]="true">error</div>
-                </div>
-                <div class="flex flex-col gap-2 w-full md:w-1/3">
-                    <label [for]="'builtUpArea' + i">Built-up Area (Sq. Ft.)</label>
-                    <input pInputText [id]="'builtUpArea' + i" placeholder="Built-up Area (Sq. Ft.)" type="text"
-                        formControlName="builtUpArea" />
-                    <div [class.invisible]="true">error</div>
-                </div>
-                <div class="flex flex-col gap-2 w-full md:w-1/3">
-                    <label [for]="'constructionType' + i">Construction Type</label>
-                    <input pInputText [id]="'constructionType' + i" placeholder="Construction Type" type="text"
-                        formControlName="constructionType" />
-                    <div [class.invisible]="true">error</div>
-                </div>
-                <div class="flex flex-col justify-center items-end">
-                    <p-button class="hidden sm:block" icon="pi pi-trash" [rounded]="true" [text]="true"
-                        severity="danger" (click)="removeFlooWiseDataRow(i)"
-                        [disabled]="floorWiseDataFormArray.length === 1" />
-                    <p-button class="block sm:hidden" severity="danger" [outlined]="true"
-                        (click)="removeFlooWiseDataRow(i)"
-                        [disabled]="floorWiseDataFormArray.length === 1">Remove</p-button>
-                </div>
-            </div>
-            }
-        </div>
+
+        <table formArrayName="floorWiseData">
+            <thead class="">
+                <tr>
+                    <th>Floor No</th>
+                    <th>Const. Area </th>
+                    <th>Open Area </th>
+                    <th>Usage Type</th>
+                    <th>Sub-Usage Type</th>
+                    <th>Const. Type</th>
+                    <th>Const. Year</th>
+                    <th>Const. Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (data of floorWiseDataFormArray.controls; track data; let i = $index) {
+                <tr [formGroupName]="i" class="modal-td">
+                    <td class="">
+                        <p-select id="floorNo" [options]="floorNos" optionLabel="label" placeholder="Floor No"
+                            class="w-full" formControlName="floorNo"></p-select>
+                    </td>
+                    <td class="">
+                        <input pInputText [id]="'builtUpArea' + i" placeholder="Const. Area" type="text"
+                            formControlName="builtUpArea" [style]="{'max-width': '100px', 'width': '100%'}" />
+                    </td>
+                    <td class="">
+                        <input pInputText [id]="'openArea' + i" placeholder="Open Area" type="text"
+                            formControlName="openArea" [style]="{'max-width': '100px', 'width': '100%'}" />
+                    </td>
+                    <td class="">
+                        <p-select id="usageType" [options]="usageType" optionLabel="label" placeholder="Usage Type"
+                            [style]="{'width': '200px'}" formControlName="usageType"></p-select>
+                    </td>
+                    <td class="">
+                        <p-select id="subUsageType" [options]="subUsageType" optionLabel="label"
+                            placeholder="Sub-usage Type" class="w-full" formControlName="subUsageType"></p-select>
+                    </td>
+                    <td class="">
+                        <p-select id="constructionType" [options]="constructionType" optionLabel="label"
+                            placeholder="Const. Type" class="w-full" formControlName="constructionType"></p-select>
+
+                    </td>
+                    <td class="">
+                        <!-- <p-select id="constructionYear" [options]="constructionType" optionLabel="label"
+                            placeholder="Const. Year" class="w-full"
+                            formControlName="constructionType"></p-select> -->
+
+                        <p-datepicker formControlName="constructionYear" view="year" dateFormat="yy"
+                            [style]="{'max-width': '150px', 'width': '100%'}" />
+
+                    </td>
+                    <td class="">
+                        <p-select id="constructionAge" [options]="constructionAges" optionLabel="label"
+                            placeholder="Const. Age" class="w-full" formControlName="constructionAge"></p-select>
+
+                    </td>
+                    <td class="">
+                        <p-button class="hidden sm:block" icon="pi pi-trash" [rounded]="true" [text]="true"
+                            severity="danger" (click)="removeFlooWiseDataRow(i)"
+                            [disabled]="floorWiseDataFormArray.length === 1" />
+                        <p-button class="block sm:hidden" severity="danger" [outlined]="true"
+                            (click)="removeFlooWiseDataRow(i)"
+                            [disabled]="floorWiseDataFormArray.length === 1">Remove</p-button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+
+        </table>
     </form>
 
-    <div class="flex justify-end gap-2 sm:mt-0 mt-4">
-        <p-button label="Cancel" severity="secondary" (click)="floorDataPopupVisible = false" />
-        <p-button label="Save Floor Data" (click)="saveFloorData()" />
+    <div class="flex justify-end sm:mt-0">
+        <div class="flex gap-2  mt-4">
+            <p-button label="Cancel" severity="secondary" (click)="floorDataPopupVisible = false" />
+            <p-button label="Save Floor Data" (click)="saveFloorData()" />
+        </div>
     </div>
 </p-dialog>
