@@ -26,7 +26,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogModule } from 'primeng/dialog';
 import { PermissionService } from '../../../services/permission.service';
-import { constructionAges, constructionType, floorNos, subUsageType, usageType } from './property-entry-constants';
+import { constructionAges, constructionType, floorNos, subUsageType, usageType, widthOfRoadOptions } from './property-entry-constants';
 
 @Component({
   selector: 'app-property-entry',
@@ -82,6 +82,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   subUsageType = subUsageType;
   constructionType = constructionType;
   constructionAges = constructionAges;
+  widthOfRoadOptions = widthOfRoadOptions;
 
   propertyForm: FormGroup = new FormGroup({
     householdNo: new FormControl(''),
@@ -224,6 +225,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     floorWiseData: new FormArray([])
   });
 
+  totalOfFloorData = {
+    totalConstructedArea: 0,
+    totalOwnedArea: 0,
+    totalRentedArea: 0
+  }
+
 
   ngOnDestroy(): void {
     this.$destroy.next(null);
@@ -354,6 +361,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         }
       })).subscribe();
 
+    this.floorWiseDataFormArray.valueChanges
+      .pipe(tap(value => {
+        this.calculateTotalDataOfFloorData(value)
+      }))
+      .subscribe()
   }
 
 
@@ -425,7 +437,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       category: this.categories.find(c => c.categoryId === +(this.property.category || 0)),
 
 
-      widthOfRoad: this.property.widthOfRoad,
+      widthOfRoad: this.widthOfRoadOptions.find(w => w.value === this.property.widthOfRoad) ,
       areaOfPlot: this.property.areaOfPlot,
 
       typeOfOwnership: OWNERSHIP_TYPE.find(opt => opt.value === this.property.typeOfOwnership),
@@ -507,6 +519,21 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     ).subscribe()
   }
 
+  calculateTotalDataOfFloorData(value: any[]) {
+    console.log(value);
+    this.totalOfFloorData = value.reduce((acc, curr) => {
+      return {
+        totalConstructedArea: acc.totalConstructedArea += Number(curr.builtUpArea),
+        totalOwnedArea: curr.subUsageType?.value === 'Self Occupied' ? acc.totalOwnedArea += Number(curr.builtUpArea) : +acc.totalOwnedArea,
+        totalRentedArea: curr.subUsageType?.value === 'Rented' ? acc.totalRentedArea += Number(curr.builtUpArea) : +acc.totalRentedArea,
+      }
+    }, {
+      totalConstructedArea: 0,
+      totalOwnedArea: 0,
+      totalRentedArea: 0
+    })
+    console.log(this.totalOfFloorData);
+  }
 
   get floorWiseDataFormArray(): FormArray {
     return this.floorDataForm.get('floorWiseData') as FormArray;
@@ -544,8 +571,15 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.floorWiseDataFormArray.removeAt(i);
   }
 
+
   saveFloorData() {
     console.log(this.floorDataForm.value)
+
+    if(isNaN(this.totalOfFloorData.totalConstructedArea) || isNaN(this.totalOfFloorData.totalOwnedArea) || isNaN(this.totalOfFloorData.totalRentedArea)) {
+      this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Invalid Data', detail: 'Invalid data in construction area.', life: MessageDuaraion.STANDARD });
+      return;
+    }
+
     const payload = this.floorDataForm.value.floorWiseData.map((c: any) => {
       return {
         propertyId: +(this.propertyId() || '0'),
@@ -579,9 +613,9 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           const floorDetailUpdatePayload: PropertyMaster = {
             propertyId: this.property?.propertyId || 0,
             attribute9: 'floordata', // dont change this value - to make sure the approval does not trigger
-            totalConstructedArea: '1000B',
-            totalOwnedArea: '2000B',
-            totalRentedArea: '3000B'
+            totalConstructedArea: String(this.totalOfFloorData.totalConstructedArea),
+            totalOwnedArea: String(this.totalOfFloorData.totalOwnedArea),
+            totalRentedArea: String(this.totalOfFloorData.totalRentedArea)
           }
           return this.ownerService.updatePropertyMaster(floorDetailUpdatePayload)
         } else {
@@ -771,7 +805,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       mohallaName: String(this.propertyForm.value.mohallaName.mohallaId),
 
       propertyType: this.propertyForm.value.propertyType.propertyTypeName,
-      widthOfRoad: String(this.propertyForm.value.widthOfRoad),
+      widthOfRoad: String(this.propertyForm.value.widthOfRoad.value) || '',
       areaOfPlot: String(this.propertyForm.value.areaOfPlot),
 
 

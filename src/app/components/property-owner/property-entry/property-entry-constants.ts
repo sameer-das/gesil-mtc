@@ -131,3 +131,9 @@ export const constructionAges = [
     { label: 'More than 20 Years', value: 'More than 20 Years' },
     { label: 'Open Plot', value: 'Open Plot' },
 ]
+
+export const widthOfRoadOptions = [
+    { label: 'Less than 12 meter', value: 'Less than 12 meter' },
+    { label: '12 to 24 meter', value: '12 to 24 meter' },   
+    { label: ' Greater than 24 meter', value: ' Greater than 24 meter' },
+]

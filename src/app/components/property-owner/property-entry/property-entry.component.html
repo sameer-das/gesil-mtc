@@ -177,9 +177,12 @@
 
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="widthOfRoad">Width of Road sorrunding (Ft.)</label>
-                        <input pInputText id="widthOfRoad" placeholder="Enter Width of Road" type="text"
-                            formControlName="widthOfRoad" />
+                        <label for="widthOfRoad">Width of Road sorrunding</label>
+                        <!-- <input pInputText id="widthOfRoad" placeholder="Enter Width of Road" type="text"
+                            formControlName="widthOfRoad" /> -->
+
+                        <p-select id="widthOfRoad" [options]="widthOfRoadOptions" optionLabel="label"
+                            placeholder="Select Road Width" class="w-full" formControlName="widthOfRoad"></p-select>
                         <div class="invisible">error placeholder</div>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
@@ -640,11 +643,11 @@
 <p-dialog header="Add Floor Data" [maximizable]="true" [modal]="true" [(visible)]="floorDataPopupVisible"
     [style]="{ width: '96%' }" [contentStyle]="{'overflow':'visible'}">
     <div class="flex justify-end items-center gap-4">
-        <!-- <div class="flex gap-4">
-            <strong class="text-blue-500">Total Constructed Area : </strong> 2000
-            <strong class="text-blue-500">Total Owned Area : </strong> 1500
-            <strong class="text-blue-500">Total Rented Area : </strong> 500
-        </div> -->
+        <div class="flex gap-4">
+            <strong>Total Constructed Area : <span class="text-green-500">{{totalOfFloorData.totalConstructedArea}}</span></strong>
+            <strong>Total Owned Area : <span class="text-green-500">{{totalOfFloorData.totalOwnedArea}}</span></strong> 
+            <strong>Total Rented Area : <span class="text-green-500">{{totalOfFloorData.totalRentedArea}}</span></strong> 
+        </div>
 
         <button [disabled]="+propertyForm.get('noOfFloors')?.value === floorWiseDataFormArray.length" pButton
             (click)="addFlooWiseDataRow()">Add Floor</button>
