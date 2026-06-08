@@ -36,6 +36,7 @@ export const OWNERSHIP_TYPE: SelectType[] = [
     { label: 'Others', value: '3' },
 ]
 
+export const USER_IDS_WITH_LOCKED_PERMISSIONS = [3]  // Admin user id 
 
 export enum PERMISSIONS {
     CREATE_USER_TYPE = 1,

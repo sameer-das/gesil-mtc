@@ -147,6 +147,16 @@
                                                 [formControl]="search" />
                                         </p-iconfield>
                                     </div>
+
+                                    @if(USER_IDS_WITH_LOCKED_PERMISSIONS.includes(+this.userDetail.userId)) {
+                                        <div>
+                                            <p class="text-sm text-blue-500 flex items-center gap-2">
+                                                <i class="pi pi-lock"></i>
+                                                Permissions are locked for this user!
+                                            </p>
+                                        </div>
+                                    }
+
                                 </div>
                             </ng-template>
                             <ng-template #header>
@@ -179,7 +189,7 @@
                                         {{ permission.featureName }}
                                     </td>
                                     <td>
-                                        <p-togglebutton [(ngModel)]="permission.isAllowed"
+                                        <p-togglebutton [disabled]="USER_IDS_WITH_LOCKED_PERMISSIONS.includes(+this.userDetail.userId)" [(ngModel)]="permission.isAllowed"
                                             (onChange)="onPermissionChange($event, permission)" onLabel="On"
                                             offLabel="Off" styleClass="w-24" />
                                     </td>

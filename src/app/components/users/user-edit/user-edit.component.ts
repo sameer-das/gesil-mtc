@@ -1,4 +1,4 @@
-import { PERMISSIONS } from './../../../models/constants';
+import { PERMISSIONS, USER_IDS_WITH_LOCKED_PERMISSIONS } from './../../../models/constants';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, RouterModule } from '@angular/router';
@@ -60,6 +60,7 @@ export class UserEditComponent implements OnInit {
   private messageService: MessageService = inject(MessageService);
   permissionService: PermissionService = inject(PermissionService);
   PERMISSIONS = PERMISSIONS;
+  USER_IDS_WITH_LOCKED_PERMISSIONS = USER_IDS_WITH_LOCKED_PERMISSIONS;
 
   private currentUserId!: number;
   private currentUserType!: number;
