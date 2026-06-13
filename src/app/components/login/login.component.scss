@@ -7,14 +7,79 @@
 
 .login-box {
     // height: 400px;
-    width: 300px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
+    width: 80%;
+    // position: absolute;
+    // left: 50%;
+    // top: 30%;
+    // transform: translate(-50%, -50%);
 }
 
 .login-header {
     color: var(--primary-color);
 
+}
+
+.about-us {
+    width: 95%;
+}
+
+.brand-name {
+    font-size: 2rem;
+}
+
+.logo_img {
+    width: 70px;
+    aspect-ratio: 1/1;
+}
+
+
+// carousel related
+
+.full-width-carousel {
+    width: 100%;
+}
+
+/* Ensure image fills container */
+.carousel-item {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    color: white;
+    /* Semi-transparent dark background for better text contrast */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.carousel-caption h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 3rem;
+}
+
+.carousel-caption p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.carousel-caption button {
+    // background-color: orangered;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
 }

@@ -15,10 +15,12 @@ import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
 import { UsersService } from '../../services/users.service';
 import { PermissionService } from '../../services/permission.service';
 import { AuthService } from '../../services/auth.service';
+import { CarouselModule } from 'primeng/carousel';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [InputTextModule, ButtonModule, PasswordModule, FormsModule, FloatLabelModule],
+  imports: [InputTextModule, ButtonModule, PasswordModule, FormsModule, FloatLabelModule, CarouselModule, CommonModule ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   providers: []
@@ -75,4 +77,14 @@ export class LoginComponent implements OnDestroy {
       }
     })
   }
+
+
+  images = [
+    { src: 'assets/login-carousel/car-01.png', alt: 'Image 1', title:'Property Tax' },
+    { src: 'assets/login-carousel/car-02.png', alt: 'Image 2', title:'Property Survey' },
+    { src: 'assets/login-carousel/car-03.png', alt: 'Image 3', title:'User Charge' },
+    { src: 'assets/login-carousel/car-04.png', alt: 'Image 4', title:'Water Charge' },
+    { src: 'assets/login-carousel/car-05.png', alt: 'Image 5', title:'Trade License' },
+    { src: 'assets/login-carousel/car-06.png', alt: 'Image 6', title:'Adverteisment ' }
+  ];
 }
