@@ -67,13 +67,27 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   property: Partial<PropertySearchResultType> = {};
   userId: number = +(localStorage.getItem('loginUserId') || 0);
   private _location = inject(Location);
+  type: string = 'c';
 
   ngOnInit(): void {
+
+    const segments = this.route.snapshot.url;
+    if (segments[0].path === 'survey-detail') {
+      this.type = 'c';
+    } else if (segments[0].path === 'detail') {
+      this.type = 'u';
+    } else {
+      this.type = 'c';
+    }
+
+
     if (this.propertyId()) {
       this.getPropertyDetail()
     } else {
-      this.router.navigate(['property', 'detail'])
+      // this.router.navigate(['property', 'detail'])
     }
+
+
   }
 
 
@@ -133,12 +147,12 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
               detail: `Propety approved successfully.`, life: MessageDuaraion.STANDARD
             });
             this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0)
-            .pipe(takeUntil(this.$destroy), tap(resp => {
-              if(resp.code === 200) {
-                this.property = resp.data[0]
-              }
-            }))
-            .subscribe()
+              .pipe(takeUntil(this.$destroy), tap(resp => {
+                if (resp.code === 200) {
+                  this.property = resp.data[0]
+                }
+              }))
+              .subscribe()
 
           }
         })).subscribe()
@@ -152,7 +166,13 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     //   detail: `Edit feature is only available in mobile app.`, life: MessageDuaraion.LONG, closable: true
     // })
 
-    this.router.navigate(['/property', 'property-entry', this.property?.propertyId])
+    if (this.type === 'c') {
+      this.router.navigate(['/property', 'survey-property-edit', this.property?.propertyId])
+    } else {
+      this.router.navigate(['/property', 'property-entry', this.property?.propertyId])
+    }
+
+
   }
 
   onApproveClick(e: Event) {
@@ -209,12 +229,12 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
             });
             this.rejectPopupVisible = false;
             this.ownerService.getPropertyMasterDetail('propertyId', this.propertyId() || 0)
-            .pipe(takeUntil(this.$destroy), tap(resp => {
-              if(resp.code === 200) {
-                this.property = resp.data[0]
-              }
-            }))
-            .subscribe()
+              .pipe(takeUntil(this.$destroy), tap(resp => {
+                if (resp.code === 200) {
+                  this.property = resp.data[0]
+                }
+              }))
+              .subscribe()
           }
         })).subscribe()
   }

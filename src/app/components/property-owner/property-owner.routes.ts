@@ -26,6 +26,11 @@ export default [
     { path: 'property-transactions/:propertyId/:demandId', component: DemandTransactionsComponent },
     { path: 'approval-history/:propertyId', component: ApprovalHistoryComponent },
     { path: 'add-demand/:propertyId/:subCategoryId', component: AddUpdateDemandAmountComponent },
-    { path: 'survey-list/:type', component: SurveyListComponent },
+    { path: 'updated-property-list', component: SurveyListComponent },
+    
+    { path: 'survey-property-search', component: PropertySearchComponent },
+    { path: 'survey-property-list', component: SurveyListComponent },
+    { path: 'survey-detail/:propertyId', component: PropertyDetailComponent },
+    { path: 'survey-property-edit/:propertyId', component: PropertyEntryComponent },
 
 ] as Routes;

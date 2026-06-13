@@ -234,7 +234,7 @@ export class SideBarComponent {
           {
             label: 'Updated Property List',
             icon: 'pi pi-list',
-            routerLink: '/property/survey-list/u',
+            routerLink: '/property/updated-property-list',
             routerLinkActiveOptions: { exact: true },
             command: (e: MenuItemCommandEvent) => {
               // console.log(e)
@@ -263,7 +263,7 @@ export class SideBarComponent {
           {
             label: 'Search Survey/Property',
             icon: 'pi pi-search',
-            routerLink: '/property/property-search',
+            routerLink: '/property/survey-property-search',
             routerLinkActiveOptions: { exact: true },
             command: (e: MenuItemCommandEvent) => {
               // console.log(e)
@@ -284,7 +284,7 @@ export class SideBarComponent {
           {
             label: 'Survery Property List',
             icon: 'pi pi-list',
-            routerLink: '/property/survey-list/c',
+            routerLink: '/property/survey-property-list',
             routerLinkActiveOptions: { exact: true },
             command: (e: MenuItemCommandEvent) => {
               // console.log(e)

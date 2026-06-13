@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { FluidModule } from 'primeng/fluid';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { AutoFocusModule } from 'primeng/autofocus';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { OwnerServiceService } from '../../../services/owner-service.service';
 import { APIResponse } from '../../../models/user.model';
@@ -36,7 +36,7 @@ type PropertySearchType = {
   templateUrl: './property-search.component.html',
   styleUrl: './property-search.component.scss'
 })
-export class PropertySearchComponent {
+export class PropertySearchComponent  implements OnInit {
 
   env = environment;
 
@@ -57,8 +57,8 @@ export class PropertySearchComponent {
   }
 
   properties: PropertySearchResultType[] = [];
-
-
+  route: ActivatedRoute = inject(ActivatedRoute);
+  type: string = 'c';
 
   constructor() {
     // this.searchTerms.pipe(
@@ -73,6 +73,16 @@ export class PropertySearchComponent {
     //     this.items = []
     //   }
     // });
+  }
+  ngOnInit(): void {
+    const segments = this.route.snapshot.url;
+    if (segments[0].path === 'survey-property-search') {
+      this.type = 'c';
+    } else if (segments[0].path === 'property-search') {
+      this.type = 'u';
+    } else {
+      this.type = 'c';
+    }
   }
 
 
@@ -96,7 +106,12 @@ export class PropertySearchComponent {
     if (!propertyId) {
       return
     }
-    this.router.navigate(['/property', 'detail', propertyId])
+    if(this.type === 'c') {
+      this.router.navigate(['/property', 'survey-detail', propertyId])
+    } else {
+      this.router.navigate(['/property', 'detail', propertyId])
+    }
+
   }
 
   searchProperty(formValue: PropertySearchType) {

@@ -1,4 +1,4 @@
-<app-page-header [title]="'Property Details'" [backButton]="true" />
+<app-page-header [title]="type === 'c' ? 'Edit Property Details (Survey)': 'Edit Property Details (User Charge)'" [backButton]="true" />
 
 <p-fluid>
     <form [formGroup]="propertyForm" class="mt-4">

@@ -20,7 +20,7 @@ import { MessageDuaraion, MessageSeverity } from '../../../models/config.enum';
 import { MasterDataService } from '../../../services/master-data.service';
 import { FloorData, OwnerDocumentUpload, PropertyMaster, PropertySearchResultType } from '../../../models/property-owner.model';
 import { OwnerServiceService } from '../../../services/owner-service.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CAREOF_OPTIONS, GENDER_OPTIONS, OWNERSHIP_TYPE, PERMISSIONS, SALUTATION_OPTIONS } from '../../../models/constants';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
@@ -230,7 +230,8 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     totalOwnedArea: 0,
     totalRentedArea: 0
   }
-
+  route: ActivatedRoute = inject(ActivatedRoute);
+  type: string = 'c';
 
   ngOnDestroy(): void {
     this.$destroy.next(null);
@@ -239,6 +240,15 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    const segments = this.route.snapshot.url;
+    if (segments[0].path === 'survey-property-edit') {
+      this.type = 'c';
+    } else if (segments[0].path === 'property-entry') {
+      this.type = 'u';
+    } else {
+      this.type = 'c';
+    }
+
     this.fetchAllMasterData();
 
     console.log(this.propertyId());
@@ -839,6 +849,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       houseTax: String(Number(this.propertyForm.value.houseTax)),
       waterTax: String(Number(this.propertyForm.value.waterTax)),
       SewerTax: String(Number(this.propertyForm.value.SewerTax)),
+      attribute8: this.type || 'c'
     };
 
     console.log(updateDetailsPayload);

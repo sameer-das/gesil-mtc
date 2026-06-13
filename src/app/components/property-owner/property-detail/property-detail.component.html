@@ -1,4 +1,4 @@
-<app-page-header title="Property Details" [backButton]="true" />
+<app-page-header [title]="type === 'c' ? 'Property Details (Survery)' : 'Property Details (User Charge)'" [backButton]="true" />
 
 <div class="flex justify-end gap-4">
     <!-- (+userId === +(property.attribute1 || 0) || property.attribute1 === null) && -->
