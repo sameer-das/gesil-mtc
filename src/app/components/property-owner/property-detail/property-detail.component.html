@@ -1,5 +1,7 @@
 <app-page-header [title]="type === 'c' ? 'Property Details (Survery)' : 'Property Details (User Charge)'" [backButton]="true" />
 
+
+
 <div class="flex justify-end gap-4">
     <!-- (+userId === +(property.attribute1 || 0) || property.attribute1 === null) && -->
     @if( permissionService.hasPermission(PERMISSIONS.MODIFY_PROPERTY)) {
@@ -25,212 +27,151 @@
     </a>
 
 </div>
-<div class="gesil-card mb-2 mt-4">
-    <div class="flex flex-col sm:flex-row justify-between mb-4">
-        <div>
-            @if(property.householdNo) {
-                <p [style]="{color: 'var(--primary-color)'}"><strong>Household No/PIN : </strong> {{property.householdNo}} </p>
-            }
 
-            @if(property.surveyNo) {
-                <p [style]="{color: 'var(--primary-color)'}"><strong>Survey No : </strong> {{property.surveyNo}}</p>
-            }
-            <hr/>
-            <p class="mt-2" [style]="{color: 'var(--primary-color)'}"><strong>Zone : </strong>{{property.zoneName}}</p>
-            <p [style]="{color: 'var(--primary-color)'}"><strong>Ward : </strong>{{property.ward}}</p>
-            <p [style]="{color: 'var(--primary-color)'}"><strong>Mohalla :</strong>{{property.mohallaNameDetail}}</p>
 
+<div class="flex flex-col-reverse sm:flex-row sm:justify-between  bg-card rounded-lg p-8 mt-4 gap-4">
+    <div class="flex flex-col sm:flex-row sm:gap-8 gap-4">
+        @if(property.surveyNo) {        
+        <div class="flex flex-col">
+            <label class="text-basic">Survey No</label>
+            <strong class="mt-2 primary-color">{{property.surveyNo}}</strong>
         </div>
-
-        <div class="flex items-start sm:items-end flex-col">
-            <p><strong>Approval Status : </strong>
-                <span class="inline-block py-1 px-4 text-white rounded-full" [ngClass]="{
-                'bg-red-500': property.attribute0 === 'Rejected', 
-                'bg-green-500': property.attribute0 === 'Fully Approved',
-                'bg-purple-500': property.attribute0 === 'Pending',
-                'bg-yellow-500': property.attribute0 === 'New'}">{{property.attribute0}}
-                </span>
-            </p>
-            @if(property.attribute1) {
-            <p class="text-sm"><strong>Pending with : </strong>{{property.approverName}}</p>
-            <p class="text-xs">({{property.approverUserTypeName}})</p>
-            }
-        </div>
-    </div>
-
-    <div class="flex flex-col sm:flex-row sm:items-start gap-2">
-        <!-- Image -->
-        <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0">
-            @if(property.photo) {
-            <img [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${property.photo}`" alt="User Pic"
-                lazy="true" alt="User Avatar" class="h-auto object-cover" />
-            } @else {
-            <img src="assets/avatar.png" alt="User Avatar" class="h-auto object-cover" />
-            }
-
-        </div> -->
-        <div class="flex-1">
-
-            <h3 class="font-bold underline mb-2">Owner Details</h3>
-            <!-- <p-button icon="pi pi-pencil" [routerLink]="['/owner', 'owner-edit',  property?.propertyId ]"
-                    severity="info" [link]="true" [rounded]="true" [text]="true" /> -->
-
-
-            <table class="w-[100%]">
-                <tbody>
-                    <tr>
-                        <th class="table-head">Name</th>
-                        <td> {{property.salutation}} {{property.ownerName}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">{{property.careOf}}</th>
-                        <td>{{property.guardianName}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Mobile</th>
-                        <td>{{property.mobile}}</td>
-                    </tr>
-                    <!-- <tr><th class="table-head">Email ID</th> <td>{{property.email}}</td></tr>
-                <tr><th class="table-head">Aadhar</th> <td>{{property.aadhar | aadharMask}}</td></tr>
-                <tr><th class="table-head">PAN</th> <td>{{property.pan}}</td></tr> -->
-                    <tr>
-                        <th class="table-head">Gender</th>
-                        <td>{{property.gender}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Date of Birth</th>
-                        <td>{{property.dob | date:'dd-MMM-yyy'}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="flex-1">
-            <h3 class="font-bold underline mb-2">Property Details</h3>
-            <table class="w-[100%]">
-                <tbody>
-                    <tr>
-                        <th class="table-head">Property Type</th>
-                        <td>{{property.propertyType}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Catergory</th>
-                        <td>{{property.categoryName}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Sub Category</th>
-                        <td>{{property.subCategoryName}}</td>
-                    </tr>
-
-                    <tr>
-                        <th class="table-head">Area of Plot (Sq. Ft.)</th>
-                        <td>{{property.areaOfPlot}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Width of Road Sorr. (Ft.)</th>
-                        <td>{{property.widthOfRoad}}</td>
-                    </tr>
-
-                    <!-- <tr>
-                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Zone</th>
-                        <td [style]="{color: 'var(--primary-color)'}"> {{property.zoneName}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Ward</th>
-                        <td [style]="{color: 'var(--primary-color)'}">{{property.ward}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head" [style]="{color: 'var(--primary-color)'}">Mohalla Name</th>
-                        <td [style]="{color: 'var(--primary-color)'}">{{property.mohallaNameDetail}}</td>
-                    </tr> -->
-                </tbody>
-            </table>
-        </div>
-
-
-
-        <!-- <div class="flex-1 mt-4 sm:mt-0 gap-2 flex flex-col">
-        <div>
-            <h3 class="font-bold text-center sm:text-left">Related Documents</h3>
-        </div>
-        <div> 
-            @if(property.identityProof) {
-                <a class="w-full" pButton [outlined]="true" severity="success"
-                    [href]="`${env.API_URL}${env.ownerDocumentDownload}?fileName=${property.identityProof}`"
-                    target="_blank" pTooltip="View">Identity Proof <i class="pi pi-eye"></i></a>
-            } @else {
-                <a class="w-full" pButton icon="pi pi-exclamation-circle" [outlined]="true" severity="warn" [routerLink]="['/owner','owner-edit', property.householdNo]">Please upload owner's identity proof.</a>
-            }
-
-        </div>
-        <div> 
-        @if(property.isSpecialOwner) {
-            @if(property.specialCertificate) {
-                
-                    <a class="w-full" pButton [outlined]="true" severity="success"
-                        [href]="`${env.API_URL}${env.ownerDocumentDownload}?fileName=${property.identityProof}`"
-                        target="_blank" pTooltip="View">Certificate <i class="pi pi-eye"></i></a>
-                
-            } @else{
-                <a class="w-full" pButton icon="pi pi-exclamation-circle" [outlined]="true" severity="warn" [routerLink]="['/owner','owner-edit', property?.householdNo]">Please upload certificate.</a>
-            }
         }
+        @if(property.householdNo) {
+        <div class="flex flex-col">
+            <label class="text-basic">Household No/PIN</label>
+            <strong class="mt-2 primary-color">CC00220022</strong>
         </div>
-    </div>   -->
+        }
+        
+        <div class="flex flex-col">
+            <label class="text-basic">Owner Name</label>
+            <strong class="mt-2 primary-color">{{property.salutation}} {{property.ownerName}}</strong>
+        </div>
+        <div class="flex flex-col">
+            <label class="text-basic">Property Type</label>
+            <strong class="mt-2 primary-color">{{property.propertyType}}</strong>
+        </div>
+    </div>
+    <div class="flex flex-col">
+            <label class="text-basic">Approval Status</label>
+            <p-badge [value]="property.attribute0 || 'Unknown'" badgeSize="xlarge"
+            [severity]="property.attribute0 === 'Rejected' ? 'danger' : 
+            property.attribute0 === 'Fully Approved' ? 'success' : 
+            property.attribute0 === 'Pending' ? 'info' : 
+            property.attribute0 === 'New' ? 'contrast' : 
+            'contrast'" />
+    </div>
+</div>
+
+
+<div class="flex flex-col sm:flex-row gap-4 mt-4">
+    <div class="flex p-8 flex-1 rounded-lg bg-card">
+        <div class="w-[50px] h-[50px] bg-green-100 rounded-lg flex justify-center items-center">
+            <i class="pi pi-map-marker text-green-500" style="font-size: 2rem;"></i>
+        </div>
+        <div class="flex flex-col ml-4 justify-center">
+            <label class="text-base font-bold">Zone</label>
+            <span class="mt-2 text-base">{{property.zoneName}}</span>
+        </div>
+    </div>
+    <div class="flex p-8 flex-1 rounded-lg bg-card">
+        <div class="w-[50px] h-[50px] bg-blue-100 rounded-lg flex justify-center items-center">
+            <i class="pi pi-users text-blue-500" style="font-size: 2rem;"></i>
+        </div>
+        <div class="flex flex-col ml-4 justify-center">
+            <label class="text-base font-bold">Ward</label>
+            <span class="mt-2 text-base">{{property.ward}}</span>
+        </div>
+    </div>
+    <div class="flex p-8 flex-1 rounded-lg bg-card">
+        <div class="w-[50px] h-[50px] bg-orange-100 rounded-lg flex justify-center items-center">
+            <i class="pi pi-building text-orange-500" style="font-size: 2rem;"></i>
+        </div>
+        <div class="flex flex-col ml-4 justify-center">
+            <label class="text-base font-bold">Mohalla</label>
+            <span class="mt-2 text-base">{{property.mohallaNameDetail}}</span>
+        </div>
+    </div>
+    <div class="flex p-8 flex-1 rounded-lg bg-card">
+        <div class="w-[50px] h-[50px] bg-purple-100 rounded-lg flex justify-center items-center">
+            <i class="pi pi-window-maximize text-purple-500" style="font-size: 2rem;"></i>
+        </div>
+        <div class="flex flex-col ml-4 justify-center">
+            <label class="text-base font-bold">Area</label>
+            <span class="mt-2 text-base">{{property.areaOfPlot}}</span>
+        </div>
+    </div>
+    <div class="flex p-8 flex-1 rounded-lg bg-card">
+        <div class="w-[50px] h-[50px] bg-teal-100 rounded-lg flex justify-center items-center">
+            <i class="pi pi-directions text-teal-500" style="font-size: 2rem;"></i>
+        </div>
+        <div class="flex flex-col ml-4 justify-center">
+            <label class="text-base font-bold">Width Of Road</label>
+            <span class="mt-2 text-base">{{property.widthOfRoad}}</span>
+        </div>
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 mt-4">
+    <div class="bg-card p-8 rounded-lg flex-1">
+        <div class="flex items-center">
+            <i class="pi pi-user" style="font-size: 2rem;"></i>
+            <h3 class="ml-4 text-lg font-bold">Owner Information</h3>
+        </div>
+
+        <div class="mt-4">
+            <proeprty-detail-line [label]="'Name'" [value]="`${property.salutation} ${property.ownerName}`" />
+            <proeprty-detail-line [label]="'Mobile'" [value]="property.mobile" />
+            <proeprty-detail-line [label]="'Gender'" [value]="property.gender" />
+            <proeprty-detail-line [label]="'Date of Birth'" [value]="property.dob | date:'dd-MMM-yyy'" />
+        </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row sm:items-start mt-4 gap-2">
-        <!-- <div class="w-full sm:w-[120px] flex justify-center sm:justify-start mb-4 sm:mb-0"></div> -->
-        <div class="flex-1">
-            <div class="flex items-center justify-between ">
-                <h3 class="font-bold underline mb-2">Address of Property</h3>
-            </div>
-            <table class="w-[100%]">
-                <tbody>
-                    <tr>
-                        <th class="table-head">House No</th>
-                        <td>{{property.propertyAddressHouseNo}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Address</th>
-                        <td>{{property.propertyAddress}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head"></th>
-                        <td>{{property.propertyAddressDistrict}}, {{property.propertyAddressCity}},
-                            {{property.propertyAddressPin}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Land Mark</th>
-                        <td>{{property.propertyAddressLandmark}}</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="bg-card p-8 rounded-lg flex-1">
+        <div class="flex items-center">
+            <i class="pi pi-home" style="font-size: 2rem;"></i>
+            <h3 class="ml-4 text-lg font-bold">Property Information</h3>
         </div>
 
-        <div class="flex-1">
-            <h3 class="font-bold underline mb-2">Address of Owner</h3>
-            <table class="w-[100%]">
-                <tbody>
-                    <tr>
-                        <th class="table-head">House No</th>
-                        <td>{{property.ownerAddressHouseNo}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Address</th>
-                        <td>{{property.ownerAddress}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head"></th>
-                        <td>{{property.ownerAddressDistrict}}, {{property.ownerAddressCity}},
-                            {{property.ownerAddressPin}}</td>
-                    </tr>
-                    <tr>
-                        <th class="table-head">Land Mark</th>
-                        <td>{{property.ownerAddressLandmark}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="mt-4">
+            <proeprty-detail-line [label]="'Category'" [value]="property.categoryName" />
+            <proeprty-detail-line [label]="'Sub Category'" [value]="property.subCategoryName" />
+            <proeprty-detail-line [label]="'Type of Ownership'" [value]="property.typeOfOwnership" />
+            <proeprty-detail-line [label]="'Area of Plot'" [value]="property.areaOfPlot" />
+            <proeprty-detail-line [label]="'Open Area of Plot'" [value]="property.openAreaOfPlot" />
+        </div>
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 mt-4">
+    <div class="bg-card p-8 rounded-lg flex-1">
+        <div class="flex items-center">
+            <i class="pi pi-user" style="font-size: 2rem;"></i>
+            <h3 class="ml-4 text-lg font-bold">Owner Address</h3>
+        </div>
+        <div class="mt-4">
+            <proeprty-detail-line [label]="'House No'" [value]="property.ownerAddressHouseNo" />
+            <proeprty-detail-line [label]="'District'" [value]="property.ownerAddressDistrict" />
+            <proeprty-detail-line [label]="'City'" [value]="property.ownerAddressCity" />
+            <proeprty-detail-line [label]="'PIN'" [value]="property.ownerAddressPin" />
+            <proeprty-detail-line [label]="'Land Mark'" [value]="property.ownerAddressLandmark" />
+            <proeprty-detail-line [label]="'Address'" [value]="property.ownerAddress" />
+        </div>
+    </div>
+
+    <div class="bg-card p-8 rounded-lg flex-1">
+        <div class="flex items-center">
+            <i class="pi pi-home" style="font-size: 2rem;"></i>
+            <h3 class="ml-4 text-lg font-bold">Property Address</h3>
+        </div>
+        <div class="mt-4">
+            <proeprty-detail-line [label]="'House No'" [value]="property.propertyAddressHouseNo" />
+            <proeprty-detail-line [label]="'District'" [value]="property.propertyAddressDistrict" />
+            <proeprty-detail-line [label]="'City'" [value]="property.propertyAddressCity" />
+            <proeprty-detail-line [label]="'PIN'" [value]="property.propertyAddressPin" />
+            <proeprty-detail-line [label]="'Land Mark'" [value]="property.propertyAddressLandmark" />
+            <proeprty-detail-line [label]="'Address'" [value]="property.propertyAddress" />
         </div>
     </div>
 </div>

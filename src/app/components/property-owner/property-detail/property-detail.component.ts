@@ -22,7 +22,27 @@ import { FormsModule } from '@angular/forms';
 import { TextareaModule } from 'primeng/textarea';
 import { DialogModule } from 'primeng/dialog';
 import { PermissionService } from '../../../services/permission.service';
+import { BadgeModule } from 'primeng/badge';
 
+@Component({
+  selector: 'proeprty-detail-line',
+  template: `
+  <div class="grid grid-cols-2 border-b border-gray-100 py-2">
+                <div class="">
+                    {{label()}}
+                </div>
+                <div class="">
+                    {{value()}}
+                </div>
+            </div>`,
+  standalone: true,
+  styles: []
+
+})
+export class PropertyDetailLine {
+  label = input()
+  value = input()
+}
 
 @Component({
   selector: 'app-property-detail',
@@ -37,7 +57,8 @@ import { PermissionService } from '../../../services/permission.service';
     ConfirmDialogModule,
     FormsModule,
     TextareaModule,
-    MenuModule, DialogModule],
+    PropertyDetailLine,
+    MenuModule, DialogModule, BadgeModule],
   templateUrl: './property-detail.component.html',
   styleUrl: './property-detail.component.scss'
 })
