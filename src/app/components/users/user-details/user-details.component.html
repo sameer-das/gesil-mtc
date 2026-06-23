@@ -148,6 +148,6 @@
 </div>
 
 <!-- Only show details for non-admin user -->
-@if(+this.userDetail.userType !== 1) {
+@if(+(this.userDetail?.userType || 0) !== 1) {
   <app-org-chart [userId]="userId"/>
 }

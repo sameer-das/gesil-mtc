@@ -20,101 +20,193 @@
                 <app-user-create [editMode]="true" [editUser]="userBasicDetail"></app-user-create>
             </p-tabpanel>
             <p-tabpanel value="documents">
-                <div class="mt-4">
-
-                    <div class="font-semibold text-xl">Aadhar and PAN Details</div>
-
-                    <div class="flex flex-col md:flex-row gap-6 mt-4">
-                        <div class="flex flex-wrap gap-2 w-full">
-                            <label for="aadhar">Aadhar No</label>
-                            <input pInputText id="aadhar" type="text" placeholder="0000 0000 0000"
-                                [formControl]="aadharNo" fluid="true" />
-                            <div class="flex justify-end w-full">
-                                <p-button [disabled]="aadharNo.invalid" (click)="updateAadharPan('aadhar')">Update
-                                    Aadhar</p-button>
-                            </div>
-
-                        </div>
-                        <div class="flex flex-wrap gap-2 w-full">
-                            <label for="pan">PAN</label>
-                            <input pInputText id="pan" type="text" placeholder="ABCDE1234Z" [formControl]="pan"
-                                fluid="true" />
-                            <div class="flex justify-end w-full">
-                                <p-button [disabled]="pan.invalid" (click)="updateAadharPan('pan')">Update
-                                    PAN</p-button>
-                            </div>
-                        </div>
-                    </div>
-                    <p-divider />
-                    <div class="font-semibold text-xl">Documents</div>
-                    <div class="mt-4">
-                        <p class="document-name text-md">User Photo</p>
-
-                        <div class="flex justify-between mt-4">
-                            <p-fileupload #up mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'userPhoto', up)" />
-
-                            <p-button label="Upload" (onClick)="up.upload()" severity="secondary"
-                                [disabled]="up.files.length === 0" tooltipPosition="left"
-                                pTooltip="Upload User Photo" />
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <p class="document-name text-md">Aadhar Front</p>
-
-                        <div class="flex justify-between mt-4">
-                            <p-fileupload #af mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'aadharFront', af)" />
-
-                            <p-button label="Upload" (onClick)="af.upload()" severity="secondary"
-                                [disabled]="af.files.length === 0" tooltipPosition="left"
-                                pTooltip="Upload Aadhar Front-side" />
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <p class="document-name text-md">Aadhar Back</p>
-
-                        <div class="flex justify-between mt-4">
-                            <p-fileupload #ab mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'aadharBack', ab)" />
-
-                            <p-button label="Upload" (onClick)="ab.upload()" severity="secondary"
-                                [disabled]="ab.files.length === 0" tooltipPosition="left"
-                                pTooltip="Upload Aadhar Back-side" />
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <p class="document-name text-md">PAN</p>
-
-                        <div class="flex justify-between mt-4">
-                            <p-fileupload #pn mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'pan', pn)" />
-
-                            <p-button label="Upload" (onClick)="pn.upload()" severity="secondary"
-                                [disabled]="pn.files.length === 0" tooltipPosition="left" pTooltip="Upload PAN" />
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <p class="document-name text-md">Highest Education Certificate</p>
-
-                        <div class="flex justify-between mt-4">
-                            <p-fileupload #edu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload"
-                                maxFileSize="3000000" customUpload="true"
-                                (uploadHandler)="onUpload($event, 'highestQualificationDoc',edu)" />
-
-                            <p-button label="Upload" (onClick)="edu.upload()" severity="secondary"
-                                [disabled]="edu.files.length === 0" tooltipPosition="left"
-                                pTooltip="Upload Education Certificate" />
-                        </div>
+                <div class="flex justify-end mt-4">
+                    <div class="w-[100%] sm:w-[25%]">
+                        <h3 class="text-xl font-semibold mb-2">
+                            Profile Completion
+                            <i class="pi pi-info-circle" tooltipPosition="top" pTooltip="Upload documents to complete"></i>
+                        </h3>
+                        <p-progressbar [value]="profileCompletion" />
                     </div>
                 </div>
 
+                <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                        
+                        <h3 class="flex items-center text-xl font-semibold">
+                            <i class="pi pi-shield mr-4 rounded p-2 bg-emerald-400" style="font-size: 1.5rem;"></i>
+                            Identity Details
+                        </h3>
+
+                        <div class="flex flex-col gap-4 mt-4">
+                            <div class="flex flex-row justify-between">
+                                <div class="flex items-center gap-4">                                   
+                                    <img src="assets/aadhaar_logo.png" width="40" height="" alt="Aadhaar Logo" />
+                                    <label class="w-[100px]" for="aadhar">Aadhaar No</label>
+                                    <input class="w-[120px]" pInputText id="aadhar" type="text" placeholder="0000 0000 0000" [formControl]="aadharNo" />
+                                </div>                            
+                                <p-button [disabled]="aadharNo.invalid" (click)="updateAadharPan('aadhar')">Update</p-button>   
+                            </div>
+
+                            <div class="flex flex-row justify-between">
+                                <div class="flex items-center gap-4">
+                                    <img src="assets/pan-card-logo.png" width="40" height="" alt="PAN Logo" />
+                                    <label class="w-[100px]" for="pan">PAN Number</label>
+                                    <input class="w-[120px]" pInputText id="pan" type="text" placeholder="ABCDE1234Z" [formControl]="pan" />
+                                </div>
+                                <p-button [disabled]="pan.invalid" (click)="updateAadharPan('pan')">Update</p-button>
+                            </div>
+                        
+                        </div>
+
+                    </div>
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 1px;">
+
+                        <h3 class="flex items-center text-xl font-semibold">
+                            <i class="pi pi-info-circle mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
+                            Update Guidelines
+                        </h3>
+
+                        <ul class="mt-4 list-inside list-disc">
+                            <li class="mb-2">Only PNG, JPG, PDF formats are allowed</li>
+                            <li class="mb-2">Ensure Max file size : 3 MB</li>
+                            <li class="mb-2">Ensure Documents are clear and readable</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Document Upload 1 -->
+                <div class="mt-4 flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                        <div class="flex justify-between items-center ">
+                            <h3 class="flex items-center text-xl font-semibold">
+                                <i class="pi pi-user mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
+                                User Photo
+                            </h3>
+                            <p-badge [value]="userDetail?.photo ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.photo ? 'success': 'warn'" />
+                        </div>
+                        <div class="flex flex-col mt-4">
+                            @if(userDetail?.photo) {
+                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.photo}`"></p-image>
+                            }
+
+                            <p-fileupload #up mode="basic" class="mt-4" [chooseLabel]="userDetail?.photo ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="000000"
+                                customUpload="true" (uploadHandler)="onUpload($event, 'userPhoto', up)" />
+
+                            <div class="flex justify-center gap-4 mt-4">
+                                <p-button label="Upload" (onClick)="up.upload()" severity="secondary" [disabled]="up.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Upload User Photo" />
+                                <p-button label="Cancel" (onClick)="up.clear()" severity="danger" [disabled]="up.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Cancel Upload" />
+                            </div>
+                            
+                        
+                        </div>
+                    </div>
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                        <div class="flex justify-between items-center ">
+                            <h3 class="flex items-center text-xl font-semibold">
+                                <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
+                                Aadhaar Front
+                            </h3>
+                             <p-badge [value]="userDetail?.aadharFrontPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.aadharFrontPhoto ? 'success': 'warn'" />
+                        </div>
+                        
+                        <div class="flex flex-col mt-4">                            
+                            @if(userDetail?.aadharFrontPhoto) {
+                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.aadharFrontPhoto}`"></p-image>
+                            }
+                            <p-fileupload #af mode="basic" class="mt-4" [chooseLabel]="userDetail?.aadharFrontPhoto ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload"
+                                maxFileSize="3000000" customUpload="true"
+                                (uploadHandler)="onUpload($event, 'aadharFront', af)" />
+
+                            <div class="flex justify-center gap-4 mt-4">
+                                <p-button label="Upload" (onClick)="af.upload()" severity="secondary" [disabled]="af.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Upload Aadhar Front-side" />
+                                <p-button label="Cancel" (onClick)="af.clear()" severity="danger" [disabled]="af.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Cancel Upload" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                        <div class="flex justify-between items-center ">
+                            <h3 class="flex items-center text-xl font-semibold">
+                                <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
+                                Aadhaar Back
+                            </h3>
+                             <p-badge [value]="userDetail?.aadharBackPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.aadharBackPhoto ? 'success': 'warn'" />
+                        </div>
+                        
+                        <div class="flex flex-col mt-4">                        
+                            @if(userDetail?.aadharBackPhoto) {
+                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.aadharBackPhoto}`"></p-image>
+                            }
+                            <p-fileupload #ab class="mt-4" mode="basic" [chooseLabel]="userDetail?.aadharBackPhoto ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="3000000"
+                                customUpload="true" (uploadHandler)="onUpload($event, 'aadharBack', ab)" />
+                        
+                            <div class="flex justify-center gap-4 mt-4">
+                                <p-button label="Upload" (onClick)="ab.upload()" severity="secondary" [disabled]="ab.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Upload Aadhar Back-side" />
+                                <p-button label="Cancel" (onClick)="ab.clear()" severity="danger" [disabled]="ab.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Cancel Upload" />
+                            </div>
+                        </div>
 
 
+                            
+                    </div>
+                    
+                </div>
+                <!-- Document Upload 2 -->
+                <div class="mt-4 flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                        <div class="flex justify-between items-center ">
+                            <h3 class="flex items-center text-xl font-semibold">
+                                <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
+                                PAN Photo
+                            </h3>
+                             <p-badge [value]="userDetail?.panPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.panPhoto ? 'success': 'warn'" />
+                        </div>
+
+                        
+                        <div class="flex flex-col mt-4">
+                            @if(userDetail?.panPhoto) {
+                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.panPhoto}`"></p-image>
+                            }
+                            <p-fileupload #pn mode="basic" [chooseLabel]="userDetail?.panPhoto ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="3000000"
+                                customUpload="true" (uploadHandler)="onUpload($event, 'pan', pn)" />
+                            <div class="flex justify-center gap-4 mt-4">
+                                <p-button label="Upload" (onClick)="pn.upload()" severity="secondary" [disabled]="pn.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Upload PAN" />
+                                <p-button label="Cancel" (onClick)="pn.clear()" severity="danger" [disabled]="pn.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Cancel Upload" />
+                            </div>
+                        </div>                            
+                    </div>
+
+                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                        <div class="flex justify-between items-center ">
+                            <h3 class="flex items-center text-xl font-semibold">
+                                <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
+                                Highest Education Certificate
+                            </h3>
+                             <p-badge [value]="userDetail?.highestQualificationDoc ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.highestQualificationDoc ? 'success': 'warn'" />
+                        </div>
+                        
+                        <div class="flex flex-col mt-4">
+                            @if(userDetail?.highestQualificationDoc) {
+                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.highestQualificationDoc}`"></p-image>
+                            }
+                            <p-fileupload class="mt-4" #edu mode="basic" [chooseLabel]="userDetail?.highestQualificationDoc ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="3000000"
+                                customUpload="true" (uploadHandler)="onUpload($event, 'highestQualificationDoc',edu)" />
+                            <div class="flex justify-center gap-4 mt-4">
+                                <p-button label="Upload" (onClick)="edu.upload()" severity="secondary" [disabled]="edu.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Upload Education Certificate" />
+                                <p-button label="Cancel" (onClick)="edu.clear()" severity="danger" [disabled]="edu.files.length === 0"
+                                    tooltipPosition="left" pTooltip="Cancel Upload" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </p-tabpanel>
             <p-tabpanel value="reporting">
                 <div class="flex flex-col mt-4 gap-6">
@@ -148,7 +240,7 @@
                                         </p-iconfield>
                                     </div>
 
-                                    @if(USER_IDS_WITH_LOCKED_PERMISSIONS.includes(+this.userDetail.userId)) {
+                                    @if(USER_IDS_WITH_LOCKED_PERMISSIONS.includes(+(this.userDetail?.userId || 0))) {
                                         <div>
                                             <p class="text-sm text-blue-500 flex items-center gap-2">
                                                 <i class="pi pi-lock"></i>
@@ -189,7 +281,7 @@
                                         {{ permission.featureName }}
                                     </td>
                                     <td>
-                                        <p-togglebutton [disabled]="USER_IDS_WITH_LOCKED_PERMISSIONS.includes(+this.userDetail.userId)" [(ngModel)]="permission.isAllowed"
+                                        <p-togglebutton [disabled]="USER_IDS_WITH_LOCKED_PERMISSIONS.includes(+(this.userDetail?.userId || 0))" [(ngModel)]="permission.isAllowed"
                                             (onChange)="onPermissionChange($event, permission)" onLabel="On"
                                             offLabel="Off" styleClass="w-24" />
                                     </td>

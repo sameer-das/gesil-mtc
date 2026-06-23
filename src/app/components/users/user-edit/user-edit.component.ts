@@ -21,6 +21,10 @@ import { ToggleButtonChangeEvent, ToggleButtonModule } from 'primeng/togglebutto
 import { PermissionService } from '../../../services/permission.service';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
+import { ImageModule } from 'primeng/image';
+import { environment } from '../../../../environments/environment';
+import { BadgeModule } from 'primeng/badge';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 export enum TABTYPE {
   BASIC_DETAIL = 'basic-details',
@@ -48,11 +52,13 @@ interface UserPermissionTable {
     ReactiveFormsModule,
     TooltipModule,
     RouterModule,
-    TableModule, ToggleButtonModule, IconFieldModule, InputIconModule],
+    TableModule, ToggleButtonModule, IconFieldModule, InputIconModule,
+    ImageModule, BadgeModule, ProgressBarModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.scss'
 })
 export class UserEditComponent implements OnInit {
+  env = environment;
 
   private $destroy: Subject<null> = new Subject();
   private usersService: UsersService = inject(UsersService)
@@ -80,7 +86,9 @@ export class UserEditComponent implements OnInit {
   showingUserPermission: UserPermissionTable[] = [];
   permissions: Permissions[] = [];
 
-  search: FormControl = new FormControl('')
+  search: FormControl = new FormControl('');
+
+  profileCompletion = 0;
 
   ngOnInit(): void {
     this.fetchUserDetails();
@@ -136,7 +144,7 @@ export class UserEditComponent implements OnInit {
   onPermissionChange(e: ToggleButtonChangeEvent, permission: UserPermissionTable) {
     const payload: UpdatePermission = {
       mappingId: permission.mappingId,
-      userId: this.userDetail.userId,
+      userId: this.userDetail.userId || 0,
       groupId: -1,
       featureId: permission.featureId,
       featureActive: permission.isAllowed
@@ -221,6 +229,17 @@ export class UserEditComponent implements OnInit {
             this.fetchWholeUserList();
             this.fetchUserPermissions();
 
+            const documents =  {
+              aadharFront: this.userDetail.aadharFrontPhoto,
+              aadharBack: this.userDetail.aadharBackPhoto,
+              photo: this.userDetail.photo,
+              panPhoto: this.userDetail.panPhoto,
+              edu: this.userDetail.highestQualificationDoc
+            }
+            const hasValue = Object.values(documents)
+              .filter(value => value !== null &&  value !== undefined &&  value !== '')
+              .length;
+            this.profileCompletion = Math.round(100 * (hasValue/5));
           }
         }))
       .subscribe()
@@ -295,6 +314,7 @@ export class UserEditComponent implements OnInit {
             if (resp.code === 200) {
               this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: `Document uploaded successfully.`, life: MessageDuaraion.STANDARD });
               element?.clear();
+              this.fetchUserDetails();
             }
           }
         })
