@@ -1,10 +1,17 @@
-<div class="flex gap-2 items-center">
-    <img src="assets/logo.png" alt="logo" class="logo_img" />
-    <h1 class="brand-name text-center my-4">Ghaziabad Municipal Tax Collection</h1>
+<div class="flex items-center justify-between px-4">
+    <div class="flex items-center gap-2">
+        <img src="assets/logo.png" alt="logo" class="logo_img" />
+        <h1 class="brand-name text-center my-4">Ghaziabad Municipal Tax Collection</h1>
+    </div>
+
+    <div class="flex gap-2 items-center">
+        <!-- Add any other content for right side -->
+    </div>
+
 </div>
 
 
-<div>
+<div class="px-4">
     <p-carousel [value]="images" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
         styleClass="full-width-carousel">
         <ng-template pTemplate="item" let-image>
@@ -13,56 +20,107 @@
                 <div class="carousel-caption">
                     <h3>{{ image.title }}</h3>
                     <!-- <p>{{ image.description }}</p> -->
-                     <button class="bg-green-500" >Explore</button>
+                    <button class="bg-green-500">Explore</button>
                 </div>
             </div>
         </ng-template>
     </p-carousel>
 </div>
 
-<div class="flex">
+<div class="flex flex-col sm:flex-row mt-8 gap-4 px-4">
 
-</div>
-<div class="flex flex-col sm:flex-row mt-8 gap-4">
-
-    <section class="flex-1 flex justify-center items-center">
-        <div class="gesil-card about-us">
-            <h1 class="text-xl font-semibold mb-4" style=" color: var(--primary-color)">We deal with</h1>
-            <p class="mb-4 ml-4 bg-green-200 font-medium py-2 px-4 rounded">Property Tax</p>
-            <p class="mb-4 ml-4 bg-green-200 font-medium py-2 px-4 rounded">Property Survey</p>
-            <p class="mb-4 ml-4 bg-green-200 font-medium py-2 px-4 rounded">User Charge</p>
-            <p class="mb-4 ml-4 bg-green-200 font-medium py-2 px-4 rounded">Water Charge</p>
-            <p class="mb-4 ml-4 bg-green-200 font-medium py-2 px-4 rounded">Trade License</p>
-            <p class="mb-4 ml-4 bg-green-200 font-medium py-2 px-4 rounded">Adverteisment</p>
-
-        </div>
+    <section class="p-8 rounded-lg bg-card flex-1 flex flex-col h-[300px]">
+        <h1 class="text-xl font-semibold mb-4" style="color: var(--primary-color)">We deal with</h1>
+        <p class="mb-4 ml-4 bg-green-200 font-medium py-1 px-4 rounded">Property Tax</p>
+        <p class="mb-4 ml-4 bg-green-200 font-medium py-1 px-4 rounded">Property Survey</p>
+        <p class="mb-4 ml-4 bg-green-200 font-medium py-1 px-4 rounded">User Charge</p>
+        <p class="mb-4 ml-4 bg-green-200 font-medium py-1 px-4 rounded">Water Charge</p>
+        <p class="mb-4 ml-4 bg-green-200 font-medium py-1 px-4 rounded">Trade License</p>
+        <p class="mb-4 ml-4 bg-green-200 font-medium py-1 px-4 rounded">Adverteisment</p>
     </section>
-    <section class="flex-1 flex justify-center items-center">
-        <div class="gesil-card flex flex-col login-box">
 
-            <h1 class="text-xl font-semibold login-header text-center">Agent Login</h1>
+    <section class="p-8 rounded-lg bg-card flex flex-1 h-[300px]">
 
-            <form class="flex flex-col mt-8 gap-8" #f="ngForm" (ngSubmit)="login(f)">
-                <div class="w-full">
-                    <p-floatlabel variant="on">
-                        <input required="true" pInputText id="username" [(ngModel)]="username" name="username"
-                            autocomplete="off" fluid="true" />
-                        <label for="username">Username</label>
-                    </p-floatlabel>
-                </div>
-
-                <div class="w-full">
-                    <p-floatlabel variant="on">
-                        <p-password required="true" id="password" [(ngModel)]="password" name="password"
-                            [feedback]="false" fluid="true" [toggleMask]="true" />
-                        <label for="password">Password</label>
-                    </p-floatlabel>
-                </div>
-
-                <p-button fluid="true" [disabled]="f.invalid" type="submit">Login</p-button>
-                <a class="text-center" href="/login">Forgot Credential</a>
-            </form>
-
-        </div>
     </section>
+    <section class="p-8 rounded-lg bg-card flex flex-1 h-[300px]">
+        <!-- <h1 class="text-xl font-semibold login-header text-center">Agent Login</h1> -->
+        <p-tabs value="0" class="w-full">
+            <p-tablist>
+                <p-tab value="0">Citizen Login</p-tab>
+                <p-tab value="1">Agent Login</p-tab>
+            </p-tablist>
+
+            <p-tabpanels>
+                <!-- Citizen Login -->
+                <p-tabpanel value="0">
+                    @if(!showOtpInput) {
+                    <form class="flex flex-col mt-8 gap-8" #cf="ngForm" (ngSubmit)="validateMobile(cf)">
+                        <div class="w-full">
+                            <p-floatlabel variant="on">
+                                <input required="true" pInputText pattern="^[0-9]{10}$" id="mobileno"
+                                    [(ngModel)]="mobileno" name="mobileno" autocomplete="off" fluid="true" />
+                                <label for="username">Mobile No</label>
+                            </p-floatlabel>
+                        </div>
+                        <p-button fluid="true" [disabled]="cf.invalid" type="submit">Login via OTP</p-button>
+                    </form>
+                    }
+                    @else {
+                    <section class="flex flex-col gap-4">
+                        <label class="mt-4" for="otp">Enter OTP received at your mobile number.</label>
+                        <div class="flex justify-center">
+                            <p-inputotp id="otp" fluid="true" name="otp" [(ngModel)]="otpValue" [mask]="false" [length]="6" />
+                        </div>
+                        
+                        <div class="flex gap-2 mt-4">
+                            <div class="flex-1">
+                                <p-button fluid="true" [disabled]="otpValue.length !== 6" type="button" (click)="submitOtp()" >Submit OTP</p-button>
+                            </div>
+                            <div class="flex-1">
+                                <p-button fluid="true" severity="warn" type="button" (click)="showOtpInput = false; otpValue = ''; $cancelCountDown.next(true)">Cancel</p-button>
+                            </div>
+                        </div>
+
+                        @let time = (leftTime | async)!;
+                        <p-button fluid="true" severity="secondary" type="button" [disabled]="time > 0" >Generate New OTP ({{time}} s)</p-button>
+                        
+                    </section>
+                    }
+
+                </p-tabpanel>
+
+
+                <!-- Agent Login -->
+                <p-tabpanel value="1">
+                    <form class="flex flex-col mt-8 gap-8" #f="ngForm" (ngSubmit)="login(f)">
+                        <div class="w-full">
+                            <p-floatlabel variant="on">
+                                <input required="true" pInputText id="username" [(ngModel)]="username" name="username"
+                                    autocomplete="off" fluid="true" />
+                                <label for="username">Username</label>
+                            </p-floatlabel>
+                        </div>
+
+                        <div class="w-full">
+                            <p-floatlabel variant="on">
+                                <p-password required="true" id="password" [(ngModel)]="password" name="password"
+                                    [feedback]="false" fluid="true" [toggleMask]="true" />
+                                <label for="password">Password</label>
+                            </p-floatlabel>
+                        </div>
+
+                        <p-button fluid="true" [disabled]="f.invalid" type="submit">Login</p-button>
+                        <a class="text-center" href="/login">Forgot Credential</a>
+                    </form>
+                </p-tabpanel>
+
+
+
+
+            </p-tabpanels>
+        </p-tabs>
+
+
+    </section>
+
 </div>

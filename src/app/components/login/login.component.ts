@@ -1,26 +1,38 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { Subject, takeUntil } from 'rxjs';
+import { EMPTY, map, Observable, race, Subject, takeUntil, takeWhile, timer } from 'rxjs';
 import { LoginService } from '../../services/login.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
-import { AuthUser } from '../../models/user.model';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
-import { UsersService } from '../../services/users.service';
-import { PermissionService } from '../../services/permission.service';
-import { AuthService } from '../../services/auth.service';
 import { CarouselModule } from 'primeng/carousel';
-import { CommonModule } from '@angular/common';
-
+import { DialogModule } from 'primeng/dialog';
+import { InputOtpModule } from 'primeng/inputotp';
+import { TabsModule } from 'primeng/tabs';
+import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
+import { AuthUser } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 @Component({
   selector: 'app-login',
-  imports: [InputTextModule, ButtonModule, PasswordModule, FormsModule, FloatLabelModule, CarouselModule, CommonModule ],
+  imports: [InputTextModule,
+    ButtonModule,
+    PasswordModule,
+    FormsModule,
+    FloatLabelModule,
+    CarouselModule,
+    CommonModule,
+    DialogModule,
+    TabsModule,
+    InputOtpModule,
+    AsyncPipe
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   providers: []
@@ -29,9 +41,10 @@ export class LoginComponent implements OnDestroy {
 
   password: string = ''
   username: string = '';
+  mobileno: string = '';
 
   private loginService = inject(LoginService);
-  private $destroy = new Subject<null>();
+  $destroy = new Subject<null>();
   private messageService = inject(MessageService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -39,6 +52,13 @@ export class LoginComponent implements OnDestroy {
   private authService: AuthService = inject(AuthService);
 
   private returnUrl: string = '/';
+
+  showOtpInput = false;
+  otpValue: string = '';
+  leftTime: Observable<number> = EMPTY;
+
+  $cancelCountDown: Subject<boolean> = new Subject<boolean>()
+
 
   constructor() {
     this.route.queryParams.subscribe(params => {
@@ -80,11 +100,25 @@ export class LoginComponent implements OnDestroy {
 
 
   images = [
-    { src: 'assets/login-carousel/car-01.png', alt: 'Image 1', title:'Property Tax' },
-    { src: 'assets/login-carousel/car-02.png', alt: 'Image 2', title:'Property Survey' },
-    { src: 'assets/login-carousel/car-03.png', alt: 'Image 3', title:'User Charge' },
-    { src: 'assets/login-carousel/car-04.png', alt: 'Image 4', title:'Water Charge' },
-    { src: 'assets/login-carousel/car-05.png', alt: 'Image 5', title:'Trade License' },
-    { src: 'assets/login-carousel/car-06.png', alt: 'Image 6', title:'Adverteisment ' }
+    { src: 'assets/login-carousel/car-01.png', alt: 'Image 1', title: 'Property Tax' },
+    { src: 'assets/login-carousel/car-02.png', alt: 'Image 2', title: 'Property Survey' },
+    { src: 'assets/login-carousel/car-03.png', alt: 'Image 3', title: 'User Charge' },
+    { src: 'assets/login-carousel/car-04.png', alt: 'Image 4', title: 'Water Charge' },
+    { src: 'assets/login-carousel/car-05.png', alt: 'Image 5', title: 'Trade License' },
+    { src: 'assets/login-carousel/car-06.png', alt: 'Image 6', title: 'Adverteisment ' }
   ];
+
+
+  submitOtp() {
+    console.log(this.otpValue)
+  }
+
+  validateMobile(f: NgForm) {
+    console.log(f.value)
+    this.showOtpInput = true
+    this.leftTime = timer(0, 1000).pipe(
+      takeUntil(race(this.$destroy, this.$cancelCountDown)),
+      map(x => 15 - x),
+      takeWhile(time => time >= 0))
+  }
 }

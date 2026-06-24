@@ -34,7 +34,7 @@
                     <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
                         
                         <h3 class="flex items-center text-xl font-semibold">
-                            <i class="pi pi-shield mr-4 rounded p-2 bg-emerald-400" style="font-size: 1.5rem;"></i>
+                            <i class="pi pi-shield mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
                             Identity Details
                         </h3>
 
@@ -68,7 +68,7 @@
                         </h3>
 
                         <ul class="mt-4 list-inside list-disc">
-                            <li class="mb-2">Only PNG, JPG, PDF formats are allowed</li>
+                            <li class="mb-2">Only PNG, JPG, JPEG formats are allowed</li>
                             <li class="mb-2">Ensure Max file size : 3 MB</li>
                             <li class="mb-2">Ensure Documents are clear and readable</li>
                         </ul>
@@ -82,7 +82,8 @@
                                 <i class="pi pi-user mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
                                 User Photo
                             </h3>
-                            <p-badge [value]="userDetail?.photo ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.photo ? 'success': 'warn'" />
+                            <span class="p-2 border rounded" [ngClass]="userDetail?.photo ? 'text-green-600' : 'text-orange-600'">{{userDetail?.photo ? 'Uploaded' : 'Missing'}}</span>
+                            <!-- <p-badge [value]="userDetail?.photo ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.photo ? 'success': 'warn'" /> -->
                         </div>
                         <div class="flex flex-col mt-4">
                             @if(userDetail?.photo) {
@@ -108,7 +109,8 @@
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
                                 Aadhaar Front
                             </h3>
-                             <p-badge [value]="userDetail?.aadharFrontPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.aadharFrontPhoto ? 'success': 'warn'" />
+                            <span class="p-2 border rounded" [ngClass]="userDetail?.aadharFrontPhoto ? 'text-green-600' : 'text-orange-600'">{{userDetail?.aadharFrontPhoto ? 'Uploaded' : 'Missing'}}</span>
+                            <!-- <p-badge [value]="userDetail?.aadharFrontPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.aadharFrontPhoto ? 'success': 'warn'" /> -->
                         </div>
                         
                         <div class="flex flex-col mt-4">                            
@@ -133,7 +135,8 @@
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
                                 Aadhaar Back
                             </h3>
-                             <p-badge [value]="userDetail?.aadharBackPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.aadharBackPhoto ? 'success': 'warn'" />
+                            <span class="p-2 border rounded" [ngClass]="userDetail?.aadharBackPhoto ? 'text-green-600' : 'text-orange-600'">{{userDetail?.aadharBackPhoto ? 'Uploaded' : 'Missing'}}</span>
+                            <!-- <p-badge [value]="userDetail?.aadharBackPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.aadharBackPhoto ? 'success': 'warn'" /> -->
                         </div>
                         
                         <div class="flex flex-col mt-4">                        
@@ -164,7 +167,8 @@
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
                                 PAN Photo
                             </h3>
-                             <p-badge [value]="userDetail?.panPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.panPhoto ? 'success': 'warn'" />
+                            <span class="p-2 border rounded" [ngClass]="userDetail?.panPhoto ? 'text-green-600' : 'text-orange-600'">{{userDetail?.panPhoto ? 'Uploaded' : 'Missing'}}</span>
+                            <!-- <p-badge [value]="userDetail?.panPhoto ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.panPhoto ? 'success': 'warn'" /> -->
                         </div>
 
                         
@@ -189,7 +193,8 @@
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
                                 Highest Education Certificate
                             </h3>
-                             <p-badge [value]="userDetail?.highestQualificationDoc ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.highestQualificationDoc ? 'success': 'warn'" />
+                            <span class="p-2 border rounded" [ngClass]="userDetail?.highestQualificationDoc ? 'text-green-600' : 'text-orange-600'">{{userDetail?.highestQualificationDoc ? 'Uploaded' : 'Missing'}}</span>
+                             <!-- <p-badge [value]="userDetail?.highestQualificationDoc ? 'Uploaded' : 'Missing'" badgeSize="large" [severity]="userDetail?.highestQualificationDoc ? 'success': 'warn'" /> -->
                         </div>
                         
                         <div class="flex flex-col mt-4">

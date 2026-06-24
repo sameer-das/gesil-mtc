@@ -25,6 +25,7 @@ import { ImageModule } from 'primeng/image';
 import { environment } from '../../../../environments/environment';
 import { BadgeModule } from 'primeng/badge';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { NgClass } from '@angular/common';
 
 export enum TABTYPE {
   BASIC_DETAIL = 'basic-details',
@@ -53,7 +54,7 @@ interface UserPermissionTable {
     TooltipModule,
     RouterModule,
     TableModule, ToggleButtonModule, IconFieldModule, InputIconModule,
-    ImageModule, BadgeModule, ProgressBarModule],
+    ImageModule, BadgeModule, ProgressBarModule, NgClass],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.scss'
 })
@@ -71,7 +72,7 @@ export class UserEditComponent implements OnInit {
   private currentUserId!: number;
   private currentUserType!: number;
 
-  userDetail!: UserDetail;
+  userDetail: UserDetail| null = null;
   userBasicDetail!: UpdateUserBasicDetails;
 
   parentOptions: UserListWithUserType[] = [];
@@ -122,7 +123,7 @@ export class UserEditComponent implements OnInit {
       .pipe(
         takeUntil(this.$destroy),
         tap((resp: APIResponse<Permissions[]>) => { this.permissions = resp.data }),
-        switchMap(_ => this.usersService.getFeatureMapping(this.userDetail.userId, 0)),
+        switchMap(_ => this.usersService.getFeatureMapping(this.userDetail?.userId || 0, 0)),
         tap((userPersmissionResp: APIResponse<UserPermissions[]>) => {
           this.userPermission = this.permissions.map((permission: Permissions) => {
             const existingPermission = userPersmissionResp.data.find((userPermission: UserPermissions) => userPermission.featureId === permission.featureId);
@@ -144,7 +145,7 @@ export class UserEditComponent implements OnInit {
   onPermissionChange(e: ToggleButtonChangeEvent, permission: UserPermissionTable) {
     const payload: UpdatePermission = {
       mappingId: permission.mappingId,
-      userId: this.userDetail.userId || 0,
+      userId: this.userDetail?.userId || 0,
       groupId: -1,
       featureId: permission.featureId,
       featureActive: permission.isAllowed
@@ -277,15 +278,15 @@ export class UserEditComponent implements OnInit {
           console.log(resp)
           if (resp.code === 200) {
             this.parentOptions = resp.data
-              .filter(curr => curr.userId !== this.userDetail.userId)
+              .filter(curr => curr.userId !== this.userDetail?.userId)
               .map((curr) => ({ ...curr, optionLabel: `${curr.userName} (${curr.userTypeName})` }))
 
 
-            if (this.userDetail.parentUserId > 0) {
+            if ((this.userDetail?.parentUserId || 0) > 0) {
               // set selectedParent as the user is already mapped to parent
 
               this.selectedParent = this.parentOptions.find((curr: UserListWithUserType) => {
-                return curr.userId === this.userDetail.parentUserId
+                return curr.userId === this.userDetail?.parentUserId
               })
             }
           }

@@ -30,7 +30,7 @@ export class UserDetailsComponent implements OnInit {
   env = environment;
 
   private $destroy: Subject<null> = new Subject();
-  userDetail!: UserDetail;
+  userDetail: UserDetail | null = null;
 
   stateName: string = '';
   districtName: string = '';
@@ -81,7 +81,7 @@ export class UserDetailsComponent implements OnInit {
           // this.states = resp.data;
           if (resp.code === 200) {
             const foundState = (resp.data).find((curr: State) => {
-              return curr.id === this.userDetail.state;
+              return curr.id === this.userDetail?.state;
             });
             if (foundState) {
               this.stateName = foundState.name;
@@ -102,7 +102,7 @@ export class UserDetailsComponent implements OnInit {
           // this.states = resp.data;
           if (resp.code === 200) {
             const foundDistrict = (resp.data).find((curr: District) => {
-              return curr.id === this.userDetail.district;
+              return curr.id === this.userDetail?.district;
             });
             if (foundDistrict) {
               this.districtName = foundDistrict.name;
