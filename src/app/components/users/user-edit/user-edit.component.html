@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-4">
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
                         
                         <h3 class="flex items-center text-xl font-semibold">
                             <i class="pi pi-shield mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -60,7 +60,7 @@
                         </div>
 
                     </div>
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 1px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
 
                         <h3 class="flex items-center text-xl font-semibold">
                             <i class="pi pi-info-circle mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -76,7 +76,7 @@
                 </div>
                 <!-- Document Upload 1 -->
                 <div class="mt-4 flex flex-col sm:flex-row gap-4">
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
                         <div class="flex justify-between items-center ">
                             <h3 class="flex items-center text-xl font-semibold">
                                 <i class="pi pi-user mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -87,7 +87,9 @@
                         </div>
                         <div class="flex flex-col mt-4">
                             @if(userDetail?.photo) {
-                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.photo}`"></p-image>
+                                <div class="flex items-center justify-center">
+                                    <p-image [preview]="true" imageClass="gallery-image" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.photo}`"></p-image>
+                                </div>
                             }
 
                             <p-fileupload #up mode="basic" class="mt-4" [chooseLabel]="userDetail?.photo ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="000000"
@@ -103,7 +105,7 @@
                         
                         </div>
                     </div>
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
                         <div class="flex justify-between items-center ">
                             <h3 class="flex items-center text-xl font-semibold">
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -115,8 +117,11 @@
                         
                         <div class="flex flex-col mt-4">                            
                             @if(userDetail?.aadharFrontPhoto) {
-                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.aadharFrontPhoto}`"></p-image>
+                                <div class="flex items-center justify-center">
+                                    <p-image [preview]="true" imageClass="gallery-image" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.aadharFrontPhoto}`"></p-image>
+                                </div>
                             }
+
                             <p-fileupload #af mode="basic" class="mt-4" [chooseLabel]="userDetail?.aadharFrontPhoto ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload"
                                 maxFileSize="3000000" customUpload="true"
                                 (uploadHandler)="onUpload($event, 'aadharFront', af)" />
@@ -129,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
                         <div class="flex justify-between items-center ">
                             <h3 class="flex items-center text-xl font-semibold">
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -141,7 +146,9 @@
                         
                         <div class="flex flex-col mt-4">                        
                             @if(userDetail?.aadharBackPhoto) {
-                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.aadharBackPhoto}`"></p-image>
+                                <div class="flex items-center justify-center">
+                                    <p-image [preview]="true" imageClass="gallery-image" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.aadharBackPhoto}`"></p-image>
+                                </div>
                             }
                             <p-fileupload #ab class="mt-4" mode="basic" [chooseLabel]="userDetail?.aadharBackPhoto ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="3000000"
                                 customUpload="true" (uploadHandler)="onUpload($event, 'aadharBack', ab)" />
@@ -161,7 +168,7 @@
                 </div>
                 <!-- Document Upload 2 -->
                 <div class="mt-4 flex flex-col sm:flex-row gap-4">
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
                         <div class="flex justify-between items-center ">
                             <h3 class="flex items-center text-xl font-semibold">
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -174,7 +181,9 @@
                         
                         <div class="flex flex-col mt-4">
                             @if(userDetail?.panPhoto) {
-                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.panPhoto}`"></p-image>
+                                <div class="flex items-center justify-center">
+                                    <p-image [preview]="true" imageClass="gallery-image" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.panPhoto}`"></p-image>
+                                </div>
                             }
                             <p-fileupload #pn mode="basic" [chooseLabel]="userDetail?.panPhoto ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="3000000"
                                 customUpload="true" (uploadHandler)="onUpload($event, 'pan', pn)" />
@@ -187,7 +196,7 @@
                         </div>                            
                     </div>
 
-                    <div class="flex-1 p-4 rounded-lg" style="border-color: var(--surface-border); border-width: 2px;">
+                    <div class="flex-1 p-4 rounded-lg border-2" style="border-color: var(--surface-border);">
                         <div class="flex justify-between items-center ">
                             <h3 class="flex items-center text-xl font-semibold">
                                 <i class="pi pi-image mr-4 rounded p-2 bg-blue-400" style="font-size: 1.5rem;"></i>
@@ -199,7 +208,9 @@
                         
                         <div class="flex flex-col mt-4">
                             @if(userDetail?.highestQualificationDoc) {
-                                <p-image [preview]="true" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.highestQualificationDoc}`"></p-image>
+                                <div class="flex items-center justify-center">
+                                    <p-image [preview]="true" imageClass="gallery-image" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail?.highestQualificationDoc}`"></p-image>
+                                </div>
                             }
                             <p-fileupload class="mt-4" #edu mode="basic" [chooseLabel]="userDetail?.highestQualificationDoc ? 'Replace' : 'Choose'" chooseIcon="pi pi-upload" maxFileSize="3000000"
                                 customUpload="true" (uploadHandler)="onUpload($event, 'highestQualificationDoc',edu)" />

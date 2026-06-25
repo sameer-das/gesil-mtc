@@ -1,0 +1,15 @@
+<div class="p-4 rounded-lg border h-[230px]" style="border-color: var(--surface-border)">
+    <h4 class="text-center font-bold">{{filelabel()}}</h4>
+    <div class="flex justify-center mt-4 ">
+        @if(filename()) {
+            <p-image [preview]="true" imageClass="gallery-image" [src]="`${env.API_URL}${env.userDownloadDocument}?fileName=${filename()}`"></p-image>
+        } 
+        @else {
+            <div class="flex flex-col items-center">
+                <p-image [preview]="false" imageClass="gallery-image" src="assets/photo-notfound.png"></p-image>
+                <p class="text-orange-600 flex items-center mt-4"><i class="pi pi-info-circle mr-2"></i> Not Uploaded</p>
+            </div>
+        }
+
+    </div>
+</div>

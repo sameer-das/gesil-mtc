@@ -13,6 +13,7 @@ import { PageHeaderComponent } from "../../utils/page-header/page-header.compone
 import { OrgChartComponent } from "../org-chart/org-chart.component";
 import { PermissionService } from '../../../services/permission.service';
 import { PERMISSIONS } from '../../../models/constants';
+import { UserDocumentComponent } from '../user-document/user-document.component';
 
 
 @Component({
@@ -22,7 +23,8 @@ import { PERMISSIONS } from '../../../models/constants';
     DatePipe,
     ButtonModule,
     RouterModule,
-    ProgressBarModule, TooltipModule, OrgChartComponent],
+    ProgressBarModule, TooltipModule, OrgChartComponent,
+    UserDocumentComponent],
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.scss'
 })

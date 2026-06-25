@@ -4,14 +4,15 @@
   @if(!userDetail) {
   <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
   } @else {
-    @if(permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DETAILS)) {
-      <div class="flex justify-end w-full">
-        <a pButton icon="pi pi-pencil" [rounded]="true" class="mr-2" severity="help"
-          [routerLink]="['/user','edit', `${userDetail.userId}`]" [queryParams]="{tab: 'basic-details'}" tooltipPosition="top" pTooltip="Edit details"></a>
-      </div>
-    }
+  @if(permissionService.hasPermission(PERMISSIONS.MODIFY_USER_DETAILS)) {
+  <div class="flex justify-end w-full">
+    <a pButton icon="pi pi-pencil" class="mr-2" severity="help"
+      [routerLink]="['/user','edit', `${userDetail.userId}`]" [queryParams]="{tab: 'basic-details'}"
+      tooltipPosition="top" pTooltip="Edit details">Edit</a>
+  </div>
+  }
 
-  <div class="flex flex-col sm:flex-row sm:items-start">
+  <div class="flex flex-col sm:flex-row sm:items-start mt-4">
     <!-- Image -->
     <div class="w-full sm:w-[150px] flex justify-center sm:justify-start mb-4 sm:mb-0">
       @if(userDetail.photo) {
@@ -25,63 +26,139 @@
 
     <!-- Paragraph -->
     <div class="flex-1 ml-8">
-      <div class="pb-4 flex flex-col my-2 name-designation md:flex-row">
+      <div class="pb-4 flex flex-col name-designation md:flex-row">
         <div class="flex-1">
-          <p class="text-xl">{{userDetail.firstName}} {{userDetail.middleName}} {{userDetail.lastName}}</p>
-          <p class="text-sm italic">{{userDetail.userTypeName}}</p>
+          <p class="text-xl font-bold">{{userDetail.firstName}} {{userDetail.middleName}} {{userDetail.lastName}}</p>
+          <p class="">{{userDetail.userTypeName}}</p>
         </div>
+        <p-divider layout="vertical" />
         <div class="flex-1">
-          <p class="text-sm italic">Reports to :</p>
+          <label class="font-bold">Reports to</label>
           @if(userDetail.parentName !== '') {
-          <p class="text-sm">{{userDetail.parentName}}</p>
+          <p class="">{{userDetail.parentName}}</p>
           } @else {
-          <p class="text-xs text-red-500">The user is not mapped to anyone.</p>
+          <p class="text-red-500">The user is not mapped to anyone.</p>
           }
         </div>
       </div>
 
       <div class="flex flex-col md:flex-row justify-between mt-4">
-        <div class="flex-1">
-          <p class="text-sm">Email : {{userDetail.emailId}}</p>
-          <p class="text-sm">Phone : {{userDetail.mobile}}</p>
-          <p class="text-sm">Gender : {{userDetail.gender}}</p>
-          <p class="text-sm">Date of Birth : {{userDetail.dob | date : 'mediumDate'}}</p>
-          @if(userDetail.aadharNo) {
-          <!-- <p-divider /> -->
-          <p class="text-sm mt-4">Aadhar : {{userDetail.aadharNo }}</p>
-          } @else {
-            <p class="text-sm mt-4 text-red-500" >Aadhar No. not updated</p>
-          }
-
-          @if(userDetail.pan) {
-          <p class="text-sm">PAN : {{userDetail.pan }}</p>
-          } @else {
-            <p class="text-sm text-red-500" >PAN not updated</p>
-          }
-
-
+        <div class="flex-1 flex flex-col">
+          <h3 class="text-lg font-bold flex items-center" style="color: var(--primary-color)">
+            <i class="pi pi-address-book mr-2" style="font-size: 1.5rem;"></i>
+            Contact Information
+          </h3>
+          <div class="flex flex-col">
+            <div class="flex flex-1 gap-4 items-center mt-4">
+              <i class="pi pi-envelope" style="font-size: 1.95rem;"></i>
+              <div class="">
+                <label class="font-bold mb-2">Email</label>
+                <p>{{userDetail.emailId}}</p>
+              </div>
+            </div>
+            <p-divider />
+            <div class="flex flex-1 gap-2 items-center">
+              <i class="pi pi-phone" style="font-size: 1.95rem;"></i>
+              <div>
+                <label class="font-bold mb-2">Phone</label>
+                <p>{{userDetail.mobile}}</p>
+              </div>
+            </div>
+          </div>
         </div>
+
         <p-divider type="dotted" layout="vertical" />
-        <div class="flex-1">
-          <p class="text-base italic underline">Address :</p>
-          <p class="text-sm">{{userDetail.address}}</p>
-          <p class="text-sm">State :
-            @if(stateName === '') {
-            <i class="pi pi-spin pi-spinner"></i>
-            } @else {
-            {{stateName}}
-            }
-          </p>
+        <!-- Personal Info -->
+        <div class="flex-1 flex flex-col">
+          <h3 class="text-lg font-bold flex items-center" style="color: var(--primary-color)">
+            <i class="pi pi-user mr-2" style="font-size: 1.5rem;"></i>
+            Personal Information
+          </h3>
+          <div class="flex flex-1 justify-between">
+            <div class="flex gap-4 items-center mt-4">
+              <i class="pi pi-user" style="font-size: 1.95rem;"></i>
+              <div class="">
+                <label class="font-bold mb-2">Gender</label>
+                <p>{{userDetail.gender}}</p>
+              </div>
+            </div>
+            <div class="flex gap-4 items-center mt-4">
+              <i class="pi pi-calendar" style="font-size: 1.95rem;"></i>
+              <div>
+                <label class="font-bold mb-2">Date of Birth</label>
+                <p>{{userDetail.dob | date : 'mediumDate'}}</p>
+              </div>
+            </div>
+          </div>
+          <p-divider />
+          <div class="flex-1">
+            <div class="flex flex-1 justify-between">
+              <div class="flex gap-4 items-center">
+                <i class="pi pi-id-card" style="font-size: 1.95rem;"></i>
+                <div class="">
+                  <label class="font-bold mb-2">Aadhar No</label>
+                  <p>{{userDetail.aadharNo}}</p>
+                </div>
+              </div>
+              <div class="flex gap-4 items-center">
+                <i class="pi pi-id-card" style="font-size: 1.95rem;"></i>
+                <div>
+                  <label class="font-bold mb-2">PAN No</label>
+                  <p>{{userDetail.pan}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <p class="text-sm">District:
-            @if(districtName === '') {
-            <i class="pi pi-spin pi-spinner"></i>
-            } @else {
-            {{districtName}}
-            }
-          </p>
+        <p-divider type="dotted" layout="vertical" />
+        <!-- Address -->
+        <div class="flex-1 flex flex-col">
+          <h3 class="text-lg font-bold flex items-center" style="color: var(--primary-color)">
+            <i class="pi pi-map-marker mr-2" style="font-size: 1.5rem;"></i>
+            Address
+          </h3>
+          <div class="flex flex-col">
+            <div class="flex-1">
+              <div class="flex gap-4 items-center mt-4">
+                <i class="pi pi-map" style="font-size: 1.95rem;"></i>
+                <div class="">
+                  <label class="font-bold mb-2">Address</label>
+                  <p>{{userDetail.address}}</p>
+                </div>
+              </div>
+            </div>
+            <p-divider />
+            <div class="flex-1 flex justify-between">
+              <div>
+                <label class="font-bold mb-2 mt-2">State</label>
+                <p>
+                  @if(stateName === '') {
+                  <i class="pi pi-spin pi-spinner"></i>
+                  } @else {
+                  {{stateName}}
+                  }
+                </p>
+              </div>
 
-          <p class="text-sm">Pin: {{userDetail.pin}}</p>
+              <div>
+                <label class="font-bold mb-2 mt-2">District</label>
+                <p>
+                  @if(districtName === '') {
+                  <i class="pi pi-spin pi-spinner"></i>
+                  } @else {
+                  {{districtName}}
+                  }
+                </p>
+              </div>
+
+              <div>
+                <label class="font-bold mb-2 mt-2">PIN</label>
+                <p>{{userDetail.pin}}</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -94,60 +171,35 @@
 
 
 <div class="flex flex-col mt-4 gap-2 gesil-card">
-  <h3 class="text-xl">Documents List</h3>
+
+  <h3 class="text-lg font-bold flex items-center" style="color: var(--primary-color)">
+    <i class="pi pi-file mr-2" style="font-size: 1.5rem;"></i>
+    Documents List
+  </h3>
+
+  <section class="flex flex-col sm:flex-row gap-4 mt-4">
+    <app-user-document [filename]="userDetail?.photo" [filelabel]="'User Photo'" />
+    <app-user-document [filename]="userDetail?.aadharFrontPhoto" [filelabel]="'Aadhar Front Photo'" />
+    <app-user-document [filename]="userDetail?.aadharBackPhoto" [filelabel]="'Aadhar Back Photo'" />
+    <app-user-document [filename]="userDetail?.panPhoto" [filelabel]="'PAN Photo'" />
+    <app-user-document [filename]="userDetail?.highestQualificationDoc"
+      [filelabel]="'Heighest Education Certificate'" />
+  </section>
+
   @if(!userDetail) {
-    <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
-  } @else if (!userDetail.aadharFrontPhoto && !userDetail.aadharBackPhoto && !userDetail.panPhoto && !userDetail.highestQualificationDoc) {
-    <p class="text-xs text-red-500">No documents found for the user. Please upload documents.</p>
-    <p class="text-xs text-blue-500">Path to upload: User List > Edit User > Document Upload Tab</p>
+  <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
   }
-  @else {
-    @if(userDetail.aadharFrontPhoto) {
-    <div class="flex justify-center">
-      <div class="flex justify-between items-center w-full md:w-1/2">
-        <p>Aadhar Front-side Pic</p>
-        <a pButton icon="pi pi-eye" [rounded]="true"
-          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.aadharFrontPhoto}`" target="_blank"
-          pTooltip="View Document"></a>
-      </div>
-    </div>
-    }
-    @if(userDetail.aadharBackPhoto) {
-    <div class="flex justify-center">
-      <div class="flex justify-between items-center w-full md:w-1/2">
-        <p>Aadhar Back-side Pic</p>
-        <a pButton icon="pi pi-eye" [rounded]="true"
-          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.aadharBackPhoto}`" target="_blank"
-          pTooltip="View Document"></a>
-      </div>
-    </div>
 
-    }
-    @if(userDetail.panPhoto) {
-    <div class="flex justify-center">
-      <div class="flex justify-between items-center w-full md:w-1/2">
-        <p>PAN</p>
-        <a pButton icon="pi pi-eye" [rounded]="true"
-          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.panPhoto}`" target="_blank"
-          pTooltip="View Document"></a>
-      </div>
-    </div>
-
-    }
-    @if(userDetail.highestQualificationDoc) {
-    <div class="flex justify-center">
-      <div class="flex justify-between items-center w-full md:w-1/2">
-        <p>Heighest Education Certificate</p>
-        <a pButton icon="pi pi-eye" [rounded]="true"
-          [href]="`${env.API_URL}${env.userDownloadDocument}?fileName=${userDetail.highestQualificationDoc}`"
-          target="_blank" pTooltip="View Document"></a>
-      </div>
-    </div>
-    }
-  }
 </div>
 
 <!-- Only show details for non-admin user -->
 @if(+(this.userDetail?.userType || 0) !== 1) {
-  <app-org-chart [userId]="userId"/>
+<div class="bg-card rounded-lg p-8">
+
+  <h3 class="text-lg font-bold flex items-center" style="color: var(--primary-color)">
+    <i class="pi pi-sitemap mr-2" style="font-size: 1.5rem;"></i>
+    Organization Heirarchy
+  </h3>
+  <app-org-chart [userId]="userId" />
+</div>
 }
