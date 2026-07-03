@@ -304,6 +304,22 @@ export class SideBarComponent {
           // },
         ]
       },
+      {
+        label: 'Requests',
+        icon: 'pi pi-list-check',
+        items: [
+          {
+            label: 'My Requests',
+            icon: 'pi pi-arrow-circle-right',
+            routerLink: '/requests/my-requests'
+          },
+          {
+            label: 'Pending with Me',
+            icon: 'pi pi-arrow-circle-right',
+            routerLink: '/requests/pending-with-me'
+          },
+        ]
+      },
       // {
       //   label: 'Reports',
       //   icon: 'pi pi-file-pdf',

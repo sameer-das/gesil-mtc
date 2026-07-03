@@ -1,0 +1,75 @@
+<app-page-header title="My Requests" />
+
+<section class="flex flex-row gap-4 mt-4">
+    <div class="bg-card rounded-lg p-4 flex-1">
+        <div class="flex">
+            <div class="bg-cyan-100 p-4 rounded-lg">
+                <i class="pi pi-list text-cyan-500" style="font-size: 1.8rem;"></i>
+            </div>
+            <div class="flex flex-col justify-center ml-4">
+                <label class="">Total</label>
+                <span class="text-xl font-bold">30</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-card rounded-lg p-4 flex-1">
+        <div class="flex">
+            <div class="bg-blue-100 p-4 rounded-lg">
+                <i class="pi pi-clock text-blue-500" style="font-size: 1.8rem;"></i>
+            </div>
+            <div class="flex flex-col justify-center ml-4">
+                <label class="">Pending</label>
+                <span class="text-xl font-bold">5</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-card rounded-lg p-4 flex-1">
+        <div class="flex">
+            <div class="bg-green-100 p-4 rounded-lg">
+                <i class="pi pi-thumbs-up text-green-500" style="font-size: 1.8rem;"></i>
+            </div>
+            <div class="flex flex-col justify-center ml-4">
+                <label class="">Approved</label>
+                <span class="text-xl font-bold">5</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bg-card rounded-lg p-4 flex-1">
+        <div class="flex">
+            <div class="bg-red-100 p-4 rounded-lg">
+                <i class="pi pi-times-circle text-red-500" style="font-size: 1.8rem;"></i>
+            </div>
+            <div class="flex flex-col justify-center ml-4">
+                <label class="">Rejected</label>
+                <span class="text-xl font-bold">5</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-card rounded-lg p-4 flex-1">
+        <div class="flex">
+            <div class="bg-purple-100 p-4 rounded-lg">
+                <i class="pi pi-arrow-down-left text-purple-500" style="font-size: 1.8rem;"></i>
+            </div>
+            <div class="flex flex-col justify-center ml-4">
+                <label class="">Sent Back</label>
+                <span class="text-xl font-bold">15</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-card rounded-lg p-4 flex mt-4">
+    <!-- <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" /> -->
+</section>
+
+<section class="flex flex-col gap-4 mt-4">
+    <request-card status="Pending"/>
+    <request-card status="Approved"/>
+    <request-card status="Sentback"/>
+    <request-card status="Rejected"/>
+</section>
