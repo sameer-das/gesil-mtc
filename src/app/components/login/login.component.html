@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between px-4">
     <div class="flex items-center gap-2">
         <img src="assets/logo.png" alt="logo" class="logo_img" />
-        <h1 class="brand-name text-center my-4">Ghaziabad Municipal Tax Collection</h1>
+        <h1 class="brand-name text-center my-4" style="color: var(--primary-color)">Ghaziabad Municipal Tax Collection</h1>
     </div>
 
     <div class="flex gap-2 items-center">
@@ -10,8 +10,104 @@
 
 </div>
 
+<div class="mt-4 mx-4">
+    <div class="flex gap-4">
 
-<div class="px-4">
+        <div class="hidden sm:flex p-4 rounded-lg bg-card flex-1 items-center justify-center">
+            <img src="assets/login-illustration.png" alt="Login Illustration" width="400" />
+        </div>
+
+
+        <div class="p-4 rounded-lg bg-card flex-1 flex flex-col items-center justify-center">
+            <div>
+                <h3 class="text-center text-2xl mb-4" style="color: var(--primary-color);">Login</h3>
+                <div class="flex gap-4">
+                    <p-button (click)="tabValue = 0"  [outlined]="tabValue !== 0" label="Citizen Login" />
+                    <p-button (click)="tabValue = 1"  [outlined]="tabValue !== 1" label="Agent Login" />
+                </div>
+            </div>
+
+            <p-tabs [value]="tabValue" class="w-full sm:w-[300px] h-[250px]" >
+                <!-- <p-tablist>
+                    <p-tab value="0">Citizen Login</p-tab>
+                    <p-tab value="1">Agent Login</p-tab>
+                </p-tablist> -->
+
+                <p-tabpanels>
+                    <!-- Citizen Login -->
+                    <p-tabpanel [value]="0">
+                        @if(!showOtpInput) {
+                        <form class="flex flex-col mt-8 gap-8" #cf="ngForm" (ngSubmit)="validateMobile(cf)">
+                            <div class="w-full">
+                                <p-floatlabel variant="on">
+                                    <input required="true" pInputText pattern="^[0-9]{10}$" id="mobileno"
+                                        [(ngModel)]="mobileno" name="mobileno" autocomplete="off" fluid="true" />
+                                    <label for="username">Mobile No</label>
+                                </p-floatlabel>
+                            </div>
+                            <p-button fluid="true" [disabled]="cf.invalid" type="submit">Login via OTP</p-button>
+                        </form>
+                        }
+                        @else {
+                        <section class="flex flex-col gap-4">
+                            <label class="mt-4" for="otp">Enter OTP received at your mobile number.</label>
+                            <div class="flex justify-center">
+                                <p-inputotp id="otp" fluid="true" name="otp" [(ngModel)]="otpValue" [mask]="false"
+                                    [length]="6" />
+                            </div>
+
+                            <div class="flex gap-2 mt-4">
+                                <div class="flex-1">
+                                    <p-button fluid="true" [disabled]="otpValue.length !== 6" type="button"
+                                        (click)="submitOtp()">Submit OTP</p-button>
+                                </div>
+                                <div class="flex-1">
+                                    <p-button fluid="true" severity="warn" type="button"
+                                        (click)="showOtpInput = false; otpValue = ''; $cancelCountDown.next(true)">Cancel</p-button>
+                                </div>
+                            </div>
+
+                            @let time = (leftTime | async)!;
+                            <p-button fluid="true" severity="secondary" type="button" [disabled]="time > 0">Generate New
+                                OTP ({{time}} s)</p-button>
+
+                        </section>
+                        }
+
+                    </p-tabpanel>
+
+
+                    <!-- Agent Login -->
+                    <p-tabpanel [value]="1">
+                        <form class="flex flex-col mt-8 gap-8" #f="ngForm" (ngSubmit)="login(f)">
+                            <div class="w-full">
+                                <p-floatlabel variant="on">
+                                    <input required="true" pInputText id="username" [(ngModel)]="username"
+                                        name="username" autocomplete="off" fluid="true" />
+                                    <label for="username">Username</label>
+                                </p-floatlabel>
+                            </div>
+
+                            <div class="w-full">
+                                <p-floatlabel variant="on">
+                                    <p-password required="true" id="password" [(ngModel)]="password" name="password"
+                                        [feedback]="false" fluid="true" [toggleMask]="true" />
+                                    <label for="password">Password</label>
+                                </p-floatlabel>
+                            </div>
+
+                            <p-button fluid="true" [disabled]="f.invalid" type="submit">Login</p-button>
+                            <a class="text-center" href="/login">Forgot Credential</a>
+                        </form>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>   
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="px-4">
     <p-carousel [value]="images" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
         styleClass="full-width-carousel">
         <ng-template pTemplate="item" let-image>
@@ -19,15 +115,14 @@
                 <img [src]="image.src" [alt]="image.alt" class="carousel-img" />
                 <div class="carousel-caption">
                     <h3>{{ image.title }}</h3>
-                    <!-- <p>{{ image.description }}</p> -->
                     <button class="bg-green-500">Explore</button>
                 </div>
             </div>
         </ng-template>
     </p-carousel>
-</div>
+</div> -->
 
-<div class="flex flex-col sm:flex-row mt-8 gap-4 px-4">
+<!-- <div class="flex flex-col sm:flex-row mt-8 gap-4 px-4">
 
     <section class="p-8 rounded-lg bg-card flex-1 flex flex-col h-[300px]">
         <h1 class="text-xl font-semibold mb-4" style="color: var(--primary-color)">We deal with</h1>
@@ -43,84 +138,6 @@
 
     </section>
     <section class="p-8 rounded-lg bg-card flex flex-1 h-[300px]">
-        <!-- <h1 class="text-xl font-semibold login-header text-center">Agent Login</h1> -->
-        <p-tabs value="0" class="w-full">
-            <p-tablist>
-                <p-tab value="0">Citizen Login</p-tab>
-                <p-tab value="1">Agent Login</p-tab>
-            </p-tablist>
-
-            <p-tabpanels>
-                <!-- Citizen Login -->
-                <p-tabpanel value="0">
-                    @if(!showOtpInput) {
-                    <form class="flex flex-col mt-8 gap-8" #cf="ngForm" (ngSubmit)="validateMobile(cf)">
-                        <div class="w-full">
-                            <p-floatlabel variant="on">
-                                <input required="true" pInputText pattern="^[0-9]{10}$" id="mobileno"
-                                    [(ngModel)]="mobileno" name="mobileno" autocomplete="off" fluid="true" />
-                                <label for="username">Mobile No</label>
-                            </p-floatlabel>
-                        </div>
-                        <p-button fluid="true" [disabled]="cf.invalid" type="submit">Login via OTP</p-button>
-                    </form>
-                    }
-                    @else {
-                    <section class="flex flex-col gap-4">
-                        <label class="mt-4" for="otp">Enter OTP received at your mobile number.</label>
-                        <div class="flex justify-center">
-                            <p-inputotp id="otp" fluid="true" name="otp" [(ngModel)]="otpValue" [mask]="false" [length]="6" />
-                        </div>
-                        
-                        <div class="flex gap-2 mt-4">
-                            <div class="flex-1">
-                                <p-button fluid="true" [disabled]="otpValue.length !== 6" type="button" (click)="submitOtp()" >Submit OTP</p-button>
-                            </div>
-                            <div class="flex-1">
-                                <p-button fluid="true" severity="warn" type="button" (click)="showOtpInput = false; otpValue = ''; $cancelCountDown.next(true)">Cancel</p-button>
-                            </div>
-                        </div>
-
-                        @let time = (leftTime | async)!;
-                        <p-button fluid="true" severity="secondary" type="button" [disabled]="time > 0" >Generate New OTP ({{time}} s)</p-button>
-                        
-                    </section>
-                    }
-
-                </p-tabpanel>
-
-
-                <!-- Agent Login -->
-                <p-tabpanel value="1">
-                    <form class="flex flex-col mt-8 gap-8" #f="ngForm" (ngSubmit)="login(f)">
-                        <div class="w-full">
-                            <p-floatlabel variant="on">
-                                <input required="true" pInputText id="username" [(ngModel)]="username" name="username"
-                                    autocomplete="off" fluid="true" />
-                                <label for="username">Username</label>
-                            </p-floatlabel>
-                        </div>
-
-                        <div class="w-full">
-                            <p-floatlabel variant="on">
-                                <p-password required="true" id="password" [(ngModel)]="password" name="password"
-                                    [feedback]="false" fluid="true" [toggleMask]="true" />
-                                <label for="password">Password</label>
-                            </p-floatlabel>
-                        </div>
-
-                        <p-button fluid="true" [disabled]="f.invalid" type="submit">Login</p-button>
-                        <a class="text-center" href="/login">Forgot Credential</a>
-                    </form>
-                </p-tabpanel>
-
-
-
-
-            </p-tabpanels>
-        </p-tabs>
-
-
     </section>
 
-</div>
+</div> -->

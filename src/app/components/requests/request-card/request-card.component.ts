@@ -1,9 +1,13 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, effect, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'request-card',
-  imports: [NgClass],
+  imports: [NgClass, RouterLink, MenuModule, ButtonModule],
   templateUrl: './request-card.component.html',
   styleUrl: './request-card.component.scss'
 })
@@ -12,6 +16,8 @@ export class RequestCardComponent {
   borderClass = {}
   iconClass = {}
   badgeClass = {}
+
+  items: MenuItem[] | undefined;
 
   constructor() {
     effect(() => {
@@ -42,6 +48,27 @@ export class RequestCardComponent {
         this.badgeClass = { 'text-grey-400 rounded-full': true }
       }
     })
+
+
+
+    this.items = [
+      {
+        label: 'Options',
+        items: [
+          {
+            label: 'View Details',
+            icon: 'pi pi-info-circle',
+            routerLink: '/requests/request-details/123456'
+          },
+          // {
+          //   label: 'Export',
+          //   icon: 'pi pi-upload'
+          // }
+        ]
+      }
+    ];
   }
+
+
 
 }

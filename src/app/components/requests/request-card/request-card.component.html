@@ -1,25 +1,30 @@
 <div class="bg-card rounded-lg p-4 flex justify-between border-l-3" [ngClass]="borderClass">
-        <div class="flex flex-col flex-1">
-            <label class="text-sm">Status</label>
-            <div class="flex items-center">
-                <i [ngClass]="iconClass"></i>
-                <span class="font-bold text-sm ml-2" [ngClass]="badgeClass">{{status()}}</span>            
-            </div>
-
-            <label class="mt-2 text-sm">Request No</label>
-            <span class="font-bold text-sm">RUPD-20260625-12345</span>
+    <div class="flex flex-col flex-1">
+        <label class="text-sm">Status</label>
+        <div class="flex items-center">
+            <i [ngClass]="iconClass"></i>
+            <span class="font-bold text-sm ml-2" [ngClass]="badgeClass">{{status()}}</span>
         </div>
 
-        <div class="flex flex-col flex-1">
-            <label class="text-sm">Requested By</label>
-            <span class="font-bold text-sm">RUPD-20260625-12345</span>
-            <label class="mt-2 text-sm">Requested On</label>
-            <span class="font-bold text-sm">12-Jun-2026</span>
-        </div>
-        <div class="flex flex-col flex-1">
-            <label class="text-sm">Property Ref. No</label>
-            <span class="font-bold text-sm">CD009090</span>
-            <label class="mt-2 text-sm">Request Type</label>
-            <span class="font-bold text-sm">Update Property</span>
-        </div>
+        <label class="mt-2 text-sm">Request No</label>
+        <span class="font-bold text-sm">RUPD-20260625-12345</span>
     </div>
+
+    <div class="flex flex-col flex-1">
+        <label class="text-sm">Requested By</label>
+        <span class="font-bold text-sm">RUPD-20260625-12345</span>
+        <label class="mt-2 text-sm">Requested On</label>
+        <span class="font-bold text-sm">12-Jun-2026</span>
+    </div>
+    <div class="flex flex-col flex-1">
+        <label class="text-sm">Property Ref. No</label>
+        <span class="font-bold text-sm">CD009090</span>
+        <label class="mt-2 text-sm">Request Type</label>
+        <span class="font-bold text-sm">Update Property</span>
+    </div>
+    <div class="">
+        <p-menu #menu [model]="items" [popup]="true" />
+        <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" variant="text" severity="primary" />
+        <!-- <a class="p-button" [routerLink]="['/requests', 'request-details', '12456']">Details</a> -->
+    </div>
+</div>

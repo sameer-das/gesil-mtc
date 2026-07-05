@@ -63,8 +63,16 @@
     </div>
 </section>
 
-<section class="bg-card rounded-lg p-4 flex mt-4">
-    <!-- <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" /> -->
+<section class="bg-card rounded-lg p-4 flex mt-4 gap-4">
+    <input type="text" pInputText name="searchValue"
+                    [placeholder]="`Search requests`"
+                    [formControl]="searchValue" />
+    <div>
+        <p-datepicker [formControl]="rangeDates" placeholder="Date Range" selectionMode="range" [readonlyInput]="true" />
+    </div>
+    <div>
+        <p-select [options]="statusTypes" [formControl]="statusType" optionLabel="label" placeholder="Select Status" class="w-full md:w-56" />
+    </div>
 </section>
 
 <section class="flex flex-col gap-4 mt-4">

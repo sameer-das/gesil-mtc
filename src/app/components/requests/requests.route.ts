@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { MyRequestsComponent } from "./my-requests/my-requests.component";
 import { NeedMyAttentionComponent } from "./need-my-attention/need-my-attention.component";
+import { RequestDetailsComponent } from "./request-details/request-details.component";
 
 export default [
     {
@@ -13,5 +14,9 @@ export default [
     },
     {
         path:'', redirectTo: 'my-requests', pathMatch: 'full'
+    },
+    {
+        path: 'request-details/:requestId', 
+        component: RequestDetailsComponent
     }
 ] as Routes;

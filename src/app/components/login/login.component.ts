@@ -19,6 +19,7 @@ import { MessageDuaraion, MessageSeverity } from '../../models/config.enum';
 import { AuthUser } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { PermissionService } from '../../services/permission.service';
+import { TableModule } from "primeng/table";
 @Component({
   selector: 'app-login',
   imports: [InputTextModule,
@@ -31,8 +32,7 @@ import { PermissionService } from '../../services/permission.service';
     DialogModule,
     TabsModule,
     InputOtpModule,
-    AsyncPipe
-  ],
+    AsyncPipe, TableModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   providers: []
@@ -56,6 +56,8 @@ export class LoginComponent implements OnDestroy {
   showOtpInput = false;
   otpValue: string = '';
   leftTime: Observable<number> = EMPTY;
+
+  tabValue = 0;
 
   $cancelCountDown: Subject<boolean> = new Subject<boolean>()
 
