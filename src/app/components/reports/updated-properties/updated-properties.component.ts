@@ -86,7 +86,7 @@ export class UpdatedPropertiesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.$destroy),
         tap(resp => {
           // console.log(resp)
-          this.reportData = resp.data.searchProperties.map(c => ({ ...c, remarkLabel: this.getRemarksLabel(c.remarks) }));
+          this.reportData = resp.data.searchProperties?.map(c => ({ ...c, remarkLabel: this.getRemarksLabel(c.remarks) }));
           this.totalRecords = resp.data.totalCount;
         }))
       .subscribe()

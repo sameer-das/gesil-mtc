@@ -1,8 +1,11 @@
 <nav class="topbar">
     <div class="topbar-logo-container">
-        <button class="topbar-menu" #toggleBtn (click)="layoutService.onMenuToggle()">
-            <i class="pi pi-bars"></i>
-        </button>
+        @if(!permissionService.isEmployeeLogin()){
+            <button class="topbar-menu" #toggleBtn (click)="layoutService.onMenuToggle()">
+                <i class="pi pi-bars"></i>
+            </button>
+        }
+
         <a class="topbar-logo" routerLink="/">
             <span>GESIL</span>
         </a>

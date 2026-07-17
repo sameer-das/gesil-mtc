@@ -1,9 +1,12 @@
 <app-page-header title="Demand List" [backButton]="true" />
 
 <div class="flex flex-col gap-4">
-    <div class="flex mt-4 justify-end">
-        <a [routerLink]="['/property', 'add-demand', this.property.propertyId, this.property.subcategory]" pButton [outlined]="true">New Demand</a>
-    </div>
+    @if(!permissionService.isEmployeeLogin()) {
+
+        <div class="flex mt-4 justify-end">
+            <a [routerLink]="['/property', 'add-demand', this.property.propertyId, this.property.subcategory]" pButton [outlined]="true">New Demand</a>
+        </div>
+    }
     @for(demand of demands; track demand.demandId) {
     <div class="gesil-card mt-2">
         <div class="flex justify-between">
@@ -59,8 +62,10 @@
                     target="_blank">
                     Download Demand </a>
                 } @else {
-                <p-button type="button" severity="info" variant="outlined" [disabled]="!permissionService.hasPermission(PERMISSIONS.GENERATE_DEMAND)"
-                    (click)="onDemandGenerationClick(demand.demandId)" label="Generate Demand" />
+                    @if(!permissionService.isEmployeeLogin()) {
+                        <p-button type="button" severity="info" variant="outlined" [disabled]="!permissionService.hasPermission(PERMISSIONS.GENERATE_DEMAND)"
+                        (click)="onDemandGenerationClick(demand.demandId)" label="Generate Demand" />
+                    }
                 }
             </div>
         </div>

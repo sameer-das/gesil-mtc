@@ -1,0 +1,49 @@
+<app-page-header title="All properties" />
+<div class="mt-4">
+    @for(property of properties; track property.propertyId) {
+    <div class="bg-card rounded-lg p-4">
+        <div class="flex flex-col gap-4 sm:flex-row ">
+            <div class="flex flex-col flex-1">
+                <label class="text-basic font-bold text-center sm:text-left">General Details</label>
+                <p class="text-base">PIN: {{property.householdNo}} | {{property.surveyNo}}</p>
+                <p class="text-base">Owner Name: {{property.ownerName}}</p>
+                <p class="text-base">Mobile: {{property.mobile}}</p>
+                <p class="text-base">Property Type: {{property.mobile}}</p>
+            </div>
+
+            <div class="flex flex-col flex-1">
+                <label class="text-basic font-bold text-center sm:text-left">Owner Address</label>
+                <p class="text-base">House No: {{property.ownerAddressHouseNo}}</p>
+                <p class="text-base">City: {{property.ownerAddressCity}}</p>
+                <p class="text-base">Dist: {{property.ownerAddressDistrict}}</p>
+                <p class="text-base">PIN: {{property.ownerAddressPin}}</p>
+                <p class="text-base">Address: {{property.ownerAddress}}</p>
+                <p class="text-base">Landmark: {{property.ownerAddressLandmark}}</p>
+            </div>
+
+            <div class="flex flex-col flex-1">
+                <label class="text-basic font-bold text-center sm:text-left">Property Address</label>
+                <p class="text-base">House No: {{property.propertyAddressHouseNo}}</p>
+                <p class="text-base">City: {{property.propertyAddressCity}}</p>
+                <p class="text-base">Dist: {{property.propertyAddressDistrict}}</p>
+                <p class="text-base">PIN: {{property.propertyAddressPin}}</p>
+                <p class="text-base">Address: {{property.propertyAddress}}</p>
+                <p class="text-base">Landmark: {{property.propertyAddressLandmark}}</p>
+            </div>
+        </div>
+
+        <div class="flex sm:justify-end justify-center mt-4">
+            <div>
+                <a [routerLink]="['/property', 'detail', property.propertyId]"  class="p-button">
+                    View Details
+                </a>
+                <!-- <p-button  severity="success"
+                    (click)="goToPropertyDetail(property.propertyId || 0)">Details</p-button> -->
+            </div>
+        </div>
+    </div>
+
+
+
+    }
+</div>

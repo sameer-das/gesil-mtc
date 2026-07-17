@@ -23,8 +23,9 @@ export class SideBarComponent {
       this.permissionService.hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
   })
   showPropertyTopMenu = computed(() => {
-    return true;
+    return !this.permissionService.isEmployeeLogin();
   })
+
   showReportsTopMenu = computed(() => {
     return this.permissionService.hasPermission(PERMISSIONS.VIEW_REPORTS);
   })
@@ -51,6 +52,7 @@ export class SideBarComponent {
         label: 'Dashboard',
         icon: 'pi pi-table',
         routerLink: ['/'],
+        visible: !this.permissionService.isEmployeeLogin(),
         routerLinkActiveOptions: { exact: true },
         command: (e: MenuItemCommandEvent) => {
           // console.log(e)
@@ -307,6 +309,7 @@ export class SideBarComponent {
       {
         label: 'Requests',
         icon: 'pi pi-list-check',
+        visible: false,
         items: [
           {
             label: 'My Requests',

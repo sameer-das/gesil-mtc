@@ -10,6 +10,8 @@ export const environment = {
     // ***************** Authentication URLs *****************
     login: '/Auth/login',
     refreshToken: '/Auth/refresh',
+    validateCitizenMobile: '/Auth/ValidateCitizenMobile',
+    validateCitizenOtp: '/Auth/ValidateCitizenOtp',
 
 
     // ***************** User Related API URLs *****************
@@ -114,5 +116,11 @@ export const environment = {
     demandGenerate: '/Pdf/demandGenerate',
     addDemand: '/Master/addDemand',
 
-    searchProperty: '/Master/searchProperty'
+    searchProperty: '/Master/searchProperty',
+
+    // **********************************  Request Related ***********************************
+    CreateRequestForPropUpdate: '/Master/createRequestForPropUpdate',
+    GetRequestsAll: '/Master/GetRequestsAll',
+    GetRequestMasterHistory: '/Master/GetRequestMasterHistory',
+    GetRequestApprovalHistory: '/Master/GetRequestApprovalHistory',
 };

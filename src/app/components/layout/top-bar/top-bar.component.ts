@@ -10,6 +10,7 @@ import { LayoutService } from '../../../services/layout.service';
 import { SelectButtonChangeEvent, SelectButtonModule } from 'primeng/selectbutton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth.service';
+import { PermissionService } from '../../../services/permission.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -42,6 +43,8 @@ export class TopBarComponent implements OnInit {
   selectedLanguage: string = 'en';
 
   @ViewChild('toggleBtn') toggleBtn!: ElementRef;
+
+  permissionService: PermissionService = inject(PermissionService);
 
   constructor() {
     this.translateService.addLangs(['hi', 'en']);

@@ -52,8 +52,8 @@ export class LayoutComponent implements OnDestroy {
   }
 
   isOutsideClicked(event: MouseEvent) {
-    const topbarEl = this.topBar.toggleBtn.nativeElement as Node;
-    const sidebarEl = this.sideBar.sideBar.nativeElement as Node;
+    const topbarEl = this.topBar.toggleBtn?.nativeElement as Node;
+    const sidebarEl = this.sideBar.sideBar?.nativeElement as Node;
     const eventTarget = event.target as Node;
     return !(sidebarEl?.isSameNode(eventTarget) || sidebarEl?.contains(eventTarget) || topbarEl?.isSameNode(eventTarget) || topbarEl?.contains(eventTarget));
   }

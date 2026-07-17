@@ -76,8 +76,7 @@
 </section>
 
 <section class="flex flex-col gap-4 mt-4">
-    <request-card status="Pending"/>
-    <request-card status="Approved"/>
-    <request-card status="Sentback"/>
-    <request-card status="Rejected"/>
+    @for(request of requests; track request.requestId) {
+        <request-card [request] ="request"/>
+    }
 </section>

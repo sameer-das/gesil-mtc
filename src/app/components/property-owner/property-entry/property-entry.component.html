@@ -629,8 +629,12 @@
             </div> -->
 
             <div class="gesil-card">
-                <div class="flex">
-                    <button pButton [disabled]="propertyForm.invalid" (click)="onSubmit()">Submit</button>
+                <div class="flex gap-2 justify-end">
+                    <div>
+                        <button pButton [disabled]="propertyForm.invalid" (click)="onSubmit()">Update Property Details</button>
+                         <!-- <button pButton [disabled]="propertyForm.invalid" (click)="onCreateUpdateRequest()">Create Update Request</button> -->
+                    </div>
+
 
                 </div>
             </div>

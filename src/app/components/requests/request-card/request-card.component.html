@@ -3,28 +3,57 @@
         <label class="text-sm">Status</label>
         <div class="flex items-center">
             <i [ngClass]="iconClass"></i>
-            <span class="font-bold text-sm ml-2" [ngClass]="badgeClass">{{status()}}</span>
+            <span class="font-bold text-sm ml-2" [ngClass]="badgeClass">{{request()?.status}}</span>
         </div>
 
         <label class="mt-2 text-sm">Request No</label>
-        <span class="font-bold text-sm">RUPD-20260625-12345</span>
+        <span class="font-bold text-sm">{{request()?.requestNo}} ({{request()?.requestType === 'UPDATE_PROPERTY' ? 'Update' : 'Create' }})</span>
     </div>
 
     <div class="flex flex-col flex-1">
         <label class="text-sm">Requested By</label>
-        <span class="font-bold text-sm">RUPD-20260625-12345</span>
+        <span class="font-bold text-sm">{{request()?.createdByName}}</span>
         <label class="mt-2 text-sm">Requested On</label>
-        <span class="font-bold text-sm">12-Jun-2026</span>
+        <span class="font-bold text-sm">{{request()?.createdDate}}</span>
     </div>
     <div class="flex flex-col flex-1">
         <label class="text-sm">Property Ref. No</label>
-        <span class="font-bold text-sm">CD009090</span>
-        <label class="mt-2 text-sm">Request Type</label>
-        <span class="font-bold text-sm">Update Property</span>
+        <span class="font-bold text-sm">{{request()?.householdNo}} | {{request()?.surveyNo}}</span>
+        <div class="flex items-center gap-2 mt-2">
+            <label class="text-sm">Owner Info </label>
+            <i (click)="ownerInfoPopover.toggle($event)" class="pi pi-info-circle"></i>
+        </div>
+        <span class="font-bold text-sm">{{owenerInfo().ownerName}}</span>
+
     </div>
     <div class="">
-        <p-menu #menu [model]="items" [popup]="true" />
+        <p-menu #menu [model]="menuItems()" [popup]="true" />
         <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" variant="text" severity="primary" />
         <!-- <a class="p-button" [routerLink]="['/requests', 'request-details', '12456']">Details</a> -->
     </div>
 </div>
+
+<p-popover #ownerInfoPopover >
+    <div class="flex gap-4">
+        <div class="flex flex-col">
+            <label class="font-bold text-sm">Owner Name</label>
+            <span class="text-sm">{{owenerInfo().ownerName}}</span>
+        </div>
+        <div class="flex flex-col">
+            <label class="font-bold text-sm">Owner Mobile</label>
+            <span class="text-sm">{{owenerInfo().ownerMobile}}</span>
+        </div>
+    </div>
+    <div class="flex flex-col mt-2">
+        <label class="font-bold text-sm">Owner Address</label>
+        <span class="text-sm">{{owenerInfo().ownerAddress}}</span>
+        <span class="text-sm">House No: {{owenerInfo().ownerAddressHouseNo}}</span>
+        <span class="text-sm">{{owenerInfo().ownerAddressCity}} {{owenerInfo().ownerAddressDistrict}}, {{owenerInfo().ownerAddressPin}}</span>
+    </div>
+    <div class="flex flex-col mt-2">
+        <label class="font-bold text-sm">Property Address</label>
+        <span class="text-sm">{{owenerInfo().propertyAddress}}</span>
+        <span class="text-sm">House No: {{owenerInfo().propertyAddressHouseNo}}</span>
+        <span class="text-sm">{{owenerInfo().propertyAddressCity}} {{owenerInfo().propertyAddressDistrict}}, {{owenerInfo().propertyAddressPin}}</span>
+    </div>
+</p-popover>

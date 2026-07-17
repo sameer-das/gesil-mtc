@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { EMPTY, map, Observable, race, Subject, takeUntil, takeWhile, timer } from 'rxjs';
+import { EMPTY, map, Observable, race, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
 import { LoginService } from '../../services/login.service';
 
 import { AsyncPipe, CommonModule } from '@angular/common';
@@ -32,7 +32,7 @@ import { TableModule } from "primeng/table";
     DialogModule,
     TabsModule,
     InputOtpModule,
-    AsyncPipe, TableModule],
+    TableModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   providers: []
@@ -56,6 +56,8 @@ export class LoginComponent implements OnDestroy {
   showOtpInput = false;
   otpValue: string = '';
   leftTime: Observable<number> = EMPTY;
+  id: number = 0;
+  mobile: string = '';
 
   tabValue = 0;
 
@@ -76,7 +78,7 @@ export class LoginComponent implements OnDestroy {
   login(form: NgForm) {
     // console.log(form)
     this.loginService.login(form.value.username, form.value.password).pipe(takeUntil(this.$destroy)).subscribe({
-      next: (resp: AuthUser) => {
+      next: async (resp: AuthUser) => {
         console.log(resp)
         if (resp) {
           localStorage.setItem('accessToken', resp.accessToken);
@@ -85,7 +87,7 @@ export class LoginComponent implements OnDestroy {
           localStorage.setItem('loginUserId', String(resp.id));
           localStorage.setItem('loginUserFirstName', String(resp.firstName));
           localStorage.setItem('username', String(resp.username));
-          this.permissionService.refreshPermissions(resp.id);
+          await this.permissionService.refreshPermissions(resp.id);
 
           this.router.navigateByUrl(this.returnUrl);
         } else {
@@ -113,14 +115,46 @@ export class LoginComponent implements OnDestroy {
 
   submitOtp() {
     console.log(this.otpValue)
+    this.loginService.validateCitizenOtp(this.id, this.otpValue, this.mobile)
+      .pipe(takeUntil(this.$destroy), tap(async otpresp => {
+        console.log(otpresp)
+        if (otpresp.mobile === this.mobile) {
+          localStorage.setItem('accessToken', otpresp.accesstoken);
+          localStorage.setItem('refreshToken', otpresp.refreshtoken);
+          localStorage.setItem('loginUserType', String('C'));
+          localStorage.setItem('loginUserId', String(this.id));
+          localStorage.setItem('loginUserFirstName', String(otpresp.ownerName));
+          // localStorage.setItem('username', String(resp.username));
+
+          this.permissionService.refreshPermissions(this.id);
+
+          this.router.navigateByUrl('/citizen');
+        }
+      })).subscribe()
+
   }
 
   validateMobile(f: NgForm) {
     console.log(f.value)
-    this.showOtpInput = true
-    this.leftTime = timer(0, 1000).pipe(
-      takeUntil(race(this.$destroy, this.$cancelCountDown)),
-      map(x => 15 - x),
-      takeWhile(time => time >= 0))
+    this.loginService.validateCitizenMobile(f.value.mobileno)
+      .pipe(takeUntil(this.$destroy), tap(resp => {
+        console.log(resp)
+
+        if (resp.id > 0) {
+          this.id = resp.id;
+          this.mobile = resp.mobile;
+
+          this.showOtpInput = true
+          this.leftTime = timer(0, 1000).pipe(
+            takeUntil(race(this.$destroy, this.$cancelCountDown)),
+            map(x => 15 - x),
+            takeWhile(time => time >= 0))
+        } else {
+          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Not Found', detail: 'Entered mobile number is not found.', life: MessageDuaraion.STANDARD })
+        }
+
+      })).subscribe()
+
+
   }
 }

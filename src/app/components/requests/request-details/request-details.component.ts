@@ -1,17 +1,25 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, inject, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from "../../utils/page-header/page-header.component";
-import { NgClass } from '@angular/common';
+import { JsonPipe, NgClass } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { TimelineModule } from 'primeng/timeline';
 import { ButtonModule } from 'primeng/button';
+import { forkJoin, Subject, takeUntil, tap } from 'rxjs';
+import { RequestService } from '../../../services/request.service';
+import { PropertyRequest, RequestMasterHistory } from '../../../models/request.model';
 @Component({
   selector: 'app-request-details',
-  imports: [PageHeaderComponent, NgClass, AccordionModule, TimelineModule, ButtonModule],
+  imports: [PageHeaderComponent, NgClass, AccordionModule, TimelineModule, ButtonModule, JsonPipe],
   templateUrl: './request-details.component.html',
   styleUrl: './request-details.component.scss'
 })
-export class RequestDetailsComponent {
+export class RequestDetailsComponent implements OnInit, OnDestroy {
+  requestId = input<number>(0);
   status = signal<string>('Pending');
+
+  currentLoggedUserId = Number(localStorage.getItem('loginUserId') || '0');
+
+
   borderClass = {}
   iconClass = {}
   badgeClass = {}
@@ -23,14 +31,22 @@ export class RequestDetailsComponent {
   ];
 
   events = [
-    { status: 'Pending', date: '15/10/2020 14:00', icon: 'pi pi-clock', color: 'bg-blue-400', updatedBy: 'A R Rahaman',updatedOn:'' },
-    { status: 'Approved', date: '15/10/2020 16:15', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Arijit Singh',updatedOn:'2026-06-06 23:05:49' },
-    { status: 'Approved', date: '15/10/2020 16:15', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Shankar M',updatedOn:'2026-06-03 20:05:49' },
-    { status: 'Approved', date: '16/10/2020 10:00', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Sachin Jiggar',updatedOn:'2026-06-01 08:05:49' },
-    { status: 'Approved', date: '16/10/2020 10:00', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Sachin Jiggar',updatedOn:'2026-06-01 08:05:49' },
-    { status: 'Approved', date: '16/10/2020 10:00', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Sachin Jiggar',updatedOn:'2026-06-01 08:05:49' }
+    { status: 'Pending', date: '15/10/2020 14:00', icon: 'pi pi-clock', color: 'bg-blue-400', updatedBy: 'A R Rahaman', updatedOn: '' },
+    { status: 'Approved', date: '15/10/2020 16:15', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Arijit Singh', updatedOn: '2026-06-06 23:05:49' },
+    { status: 'Approved', date: '15/10/2020 16:15', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Shankar M', updatedOn: '2026-06-03 20:05:49' },
+    { status: 'Approved', date: '16/10/2020 10:00', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Sachin Jiggar', updatedOn: '2026-06-01 08:05:49' },
+    { status: 'Approved', date: '16/10/2020 10:00', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Sachin Jiggar', updatedOn: '2026-06-01 08:05:49' },
+    { status: 'Approved', date: '16/10/2020 10:00', icon: 'pi pi-thumbs-up', color: 'bg-green-400', updatedBy: 'Sachin Jiggar', updatedOn: '2026-06-01 08:05:49' }
   ];
 
+  private destroy$: Subject<boolean> = new Subject()
+
+
+  private requestService = inject(RequestService);
+
+  requestDetails: PropertyRequest | undefined = undefined;
+  requestMasterHistory: RequestMasterHistory[] | undefined = [];
+  requestApprovalHistory = undefined;
 
 
   constructor() {
@@ -63,4 +79,32 @@ export class RequestDetailsComponent {
       }
     })
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+  }
+
+
+
+  ngOnInit(): void {
+    this.getRequestDetails();
+  }
+
+
+
+  getRequestDetails() {
+    forkJoin({
+      requestDetails: this.requestService.GetRequestsAll('', '', '', '', this.requestId()),
+      requestMasterHistory: this.requestService.GetRequestMasterHistory(this.requestId()),
+      requestApprovalHistory: this.requestService.GetRequestApprovalHistory(this.requestId()),
+    })
+      .pipe(takeUntil(this.destroy$), tap(resp => {
+        console.log(resp)
+        this.requestDetails = resp.requestDetails.data[0];
+        this.requestMasterHistory = resp.requestMasterHistory.data;
+        this.requestApprovalHistory = resp.requestApprovalHistory.data;
+      }))
+      .subscribe()
+  }
+
 }

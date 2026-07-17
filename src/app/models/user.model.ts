@@ -191,11 +191,11 @@ export interface UserPermissions {
 }
 
 export interface UpdatePermission {
-    mappingId: number;
-    userId: number;
-    groupId: number;
-    featureId: number;
-    featureActive: boolean;
+  mappingId: number;
+  userId: number;
+  groupId: number;
+  featureId: number;
+  featureActive: boolean;
 }
 
 
@@ -239,5 +239,24 @@ export interface IUserTransactionReport {
   remarks: string;
   customReason: string;
   paymentTxnNumber: string;
-  nextVisitDate: string | null; 
+  nextVisitDate: string | null;
+}
+
+
+
+export interface ValidateCitizenMobileResp {
+  id: number,
+  ownername: string,
+  otp: string,
+  mobile: string,
+  refreshToken: string,
+  accessToken: string
+}
+
+
+export interface ValidateCitizenOtpResp {
+  ownerName: string,
+  refreshtoken: string
+  accesstoken: string,
+  mobile: string
 }

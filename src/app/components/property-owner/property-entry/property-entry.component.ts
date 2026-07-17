@@ -27,6 +27,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogModule } from 'primeng/dialog';
 import { PermissionService } from '../../../services/permission.service';
 import { constructionAges, constructionType, floorNos, subUsageType, usageType, widthOfRoadOptions } from './property-entry-constants';
+import { CreateRequest, CreateRequestResponse } from '../../../models/request.model';
+import { RequestService } from '../../../services/request.service';
 
 @Component({
   selector: 'app-property-entry',
@@ -62,6 +64,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   isCorrespondenceSame: boolean = false;
   currentLoggedUserName: string = localStorage.getItem('username') || 'GESIL';
+  currentLoggedUserId: string = localStorage.getItem('loginUserId') || '0';
 
 
   property: Partial<PropertySearchResultType> = {};
@@ -216,6 +219,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   masterDataService: MasterDataService = inject(MasterDataService);
   ownerService: OwnerServiceService = inject(OwnerServiceService);
   permissionService: PermissionService = inject(PermissionService);
+  requestService: RequestService = inject(RequestService);
   private router = inject(Router);
 
 
@@ -447,7 +451,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       category: this.categories.find(c => c.categoryId === +(this.property.category || 0)),
 
 
-      widthOfRoad: this.widthOfRoadOptions.find(w => w.value === this.property.widthOfRoad) ,
+      widthOfRoad: this.widthOfRoadOptions.find(w => w.value === this.property.widthOfRoad),
       areaOfPlot: this.property.areaOfPlot,
 
       typeOfOwnership: OWNERSHIP_TYPE.find(opt => opt.value === this.property.typeOfOwnership),
@@ -585,7 +589,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   saveFloorData() {
     console.log(this.floorDataForm.value)
 
-    if(isNaN(this.totalOfFloorData.totalConstructedArea) || isNaN(this.totalOfFloorData.totalOwnedArea) || isNaN(this.totalOfFloorData.totalRentedArea)) {
+    if (isNaN(this.totalOfFloorData.totalConstructedArea) || isNaN(this.totalOfFloorData.totalOwnedArea) || isNaN(this.totalOfFloorData.totalRentedArea)) {
       this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Invalid Data', detail: 'Invalid data in construction area.', life: MessageDuaraion.STANDARD });
       return;
     }
@@ -925,6 +929,39 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       })
   }
 
+  onCreateUpdateRequest() {
+    console.log(this.propertyForm.value)
+
+    const payload: CreateRequest = {
+      propertyId: Number(this.propertyId() || 0),
+      requestId: 0,
+      requestType: 'UPDATE_PROPERTY',
+      updateJson: JSON.stringify(this.propertyForm.value),
+      createdBy: Number(this.currentLoggedUserId || 0),
+      reason: 'sample'
+    }
+    console.log(payload);
+
+    this.requestService.createRequestForPropUpdate(payload)
+      .pipe(takeUntil(this.$destroy), tap((resp: APIResponse<CreateRequestResponse>) => {
+        console.log(resp)
+        if (resp.code === 200 && resp.data.responseCode === 1) {
+          // success
+          this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data.responseMessage, life: MessageDuaraion.STANDARD });
+
+        } else if (resp.code === 200 && resp.data.responseCode === 0) {
+          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: resp.data.responseMessage, life: MessageDuaraion.STANDARD });
+
+        } else {
+          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: 'Error while creating request.', life: MessageDuaraion.STANDARD });
+
+        }
+      }))
+      .subscribe()
+
+
+
+  }
 
 
 
