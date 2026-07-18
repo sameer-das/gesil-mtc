@@ -95,6 +95,7 @@ export const environment = {
     propertyDocumentUpload: '/Master/propertyDocumentUpload',
     propertyDocumentList: '/Master/propertyDocumentList',
     userHierarchy: '/Master/userHierarchy',
+    usageType: '/Master/usageType',
 
     // ********************** OWNER DETAILS Related API URLs *****************
 

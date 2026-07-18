@@ -1,4 +1,4 @@
-import { CreateUpdateMohalla, ElectricityConnectionType, Fy, Mohalla, OwnershipType, PropertyType, SubCategory } from './../models/master-data.model';
+import { CreateUpdateMohalla, CreateUsageType, ElectricityConnectionType, Fy, Mohalla, OwnershipType, PropertyType, SubCategory, UsageType } from './../models/master-data.model';
 import { Observable } from 'rxjs';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -172,6 +172,15 @@ export class MasterDataService {
 
   searchMohalla(searchValue: string, pageNo: number = 0, pageSize: number = 0): Observable<APIResponse<{ mohallas: Mohalla[], totalCount: number }>> {
     return this.http.get<APIResponse<{ mohallas: Mohalla[], totalCount: number }>>(`${this.API_URL}${environment.searchMohalla}`, { params: { searchValue, pageNo, pageSize } })
+  }
+
+
+  getUsageType(usageTypeId: number = 0, pageNumber: number = 0, pageSize: number = 0): Observable<APIResponse<{ usageTypes: UsageType[], totalCount: number }>> {
+    return this.http.get<APIResponse<{ usageTypes: UsageType[], totalCount: number }>>(`${this.API_URL}${environment.usageType}`, { params: { usageTypeId, pageNumber, pageSize } });
+  }
+
+  updateCreateUsageType(payload: CreateUsageType): Observable<APIResponse<string>> {
+    return this.http.post<APIResponse<string>>(`${this.API_URL}${environment.usageType}`, payload);
   }
 
 

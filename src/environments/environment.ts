@@ -96,6 +96,9 @@ export const environment = {
     userHierarchy: '/Master/userHierarchy',
 
 
+    usageType: '/Master/usageType',
+
+
 
     // ********************** OWNER DETAILS Related API URLs *****************
 

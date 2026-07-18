@@ -69,6 +69,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   property: Partial<PropertySearchResultType> = {};
   readMode = true;
+  propertyFloorDetails:FloorData[] = [];
 
   genders = GENDER_OPTIONS;
   salutations = SALUTATION_OPTIONS;
@@ -398,15 +399,27 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       status: 'Success',
       data: []
     }
+
+    const fakeFloorDataAPIResp: APIResponse<FloorData[]> = {
+      code: 200,
+      status: 'Success',
+      data: []
+    }
     const propertyDetail = this.propertyId() ?
       this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId())) :
       of(fakeAPIResp)
 
-    forkJoin([propertyDetail, this.masterDataService.zoneList(),
+    const propertyFloorDetails = this.propertyId()?
+      this.ownerService.getFloorDetails(this.propertyId() || 0) :
+      of(fakeFloorDataAPIResp);
+
+    forkJoin([propertyDetail, 
+      this.masterDataService.zoneList(),
       this.masterDataService.propertyTypeList(),
-      this.masterDataService.categoryList()])
+      this.masterDataService.categoryList(),
+      propertyFloorDetails])
       .pipe(takeUntil(this.$destroy),
-        tap(([propertyDetailResp, zoneResp, propertyTypeResp, categoryResp]) => {
+        tap(([propertyDetailResp, zoneResp, propertyTypeResp, categoryResp, floorDetailsResp]) => {
           if (zoneResp.code === 200 && propertyTypeResp.code === 200) {
             this.masterDataFetched.set(true);
             this.zones = zoneResp.data.zones;
@@ -425,6 +438,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
                 this.property = {};
                 // this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
               }
+            }
+
+            if(floorDetailsResp.code === 200) {
+              this.propertyFloorDetails = floorDetailsResp.data;
+              this.constructFloorDataForm();
             }
 
           }
@@ -486,55 +504,52 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   }
 
+
+  constructFloorDataForm() {
+
+    this.propertyFloorDetails.forEach((curr: FloorData) => {
+
+      const floorNo = this.floorNos.find(f => f.value === curr.floorNo);
+      const usageType = this.usageType.find(u => u.value === curr.usageType);
+      const subUsageType = this.subUsageType.find(s => s.value === curr.subUsageType);
+      const constructionType = this.constructionType.find(c => c.value === curr.constructionType);
+      const constructionAge = this.constructionAges.find(c => c.value === curr.constructionAge);
+      const constructionYear = curr.constructionYear ? new Date(+curr.constructionYear, 0, 1) : '';
+
+      this.floorWiseDataFormArray.push(new FormGroup({
+        floorNo: new FormControl(floorNo || ''),
+        builtUpArea: new FormControl(curr.builtUpArea),
+        constructionType: new FormControl(constructionType || ''),
+        circleRate: new FormControl(curr.circleRate),
+        attribute0: new FormControl(curr.attribute0),
+        attribute1: new FormControl(curr.attribute1),
+        attribute2: new FormControl(curr.attribute2),
+        attribute3: new FormControl(curr.attribute3),
+        attribute4: new FormControl(curr.attribute4),
+
+        openArea: new FormControl(curr.openArea),
+        areaType: new FormControl(curr.areaType),
+        usageType: new FormControl(usageType || ''),
+        subUsageType: new FormControl(subUsageType || ''),
+        constructionYear: new FormControl(constructionYear),
+        constructionAge: new FormControl(constructionAge || ''),
+      }))
+    })
+
+
+    if (this.propertyFloorDetails.length === 0) {
+      this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
+    }
+  }
+
   showPopup() {
     this.floorWiseDataFormArray.clear();
-    this.ownerService.getFloorDetails(this.propertyId() || 0).pipe(
-      takeUntil(this.$destroy),
-      tap((resp) => {
-
-        console.log(resp);
-        if (resp.code === 200) {
-          resp.data.forEach((curr: FloorData) => {
-
-            const floorNo = this.floorNos.find(f => f.value === curr.floorNo);
-            const usageType = this.usageType.find(u => u.value === curr.usageType);
-            const subUsageType = this.subUsageType.find(s => s.value === curr.subUsageType);
-            const constructionType = this.constructionType.find(c => c.value === curr.constructionType);
-            const constructionAge = this.constructionAges.find(c => c.value === curr.constructionAge);
-            const constructionYear = curr.constructionYear ? new Date(+curr.constructionYear, 0, 1) : '';
-
-            this.floorWiseDataFormArray.push(new FormGroup({
-              floorNo: new FormControl(floorNo || ''),
-              builtUpArea: new FormControl(curr.builtUpArea),
-              constructionType: new FormControl(constructionType || ''),
-              circleRate: new FormControl(curr.circleRate),
-              attribute0: new FormControl(curr.attribute0),
-              attribute1: new FormControl(curr.attribute1),
-              attribute2: new FormControl(curr.attribute2),
-              attribute3: new FormControl(curr.attribute3),
-              attribute4: new FormControl(curr.attribute4),
-
-              openArea: new FormControl(curr.openArea),
-              areaType: new FormControl(curr.areaType),
-              usageType: new FormControl(usageType || ''),
-              subUsageType: new FormControl(subUsageType || ''),
-              constructionYear: new FormControl(constructionYear),
-              constructionAge: new FormControl(constructionAge || ''),
-            }))
-          })
-        }
-
-        if (resp.data.length === 0) {
-          this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
-        }
-
-        this.floorDataPopupVisible = true;
-      })
-    ).subscribe()
+    this.constructFloorDataForm();
+    this.floorDataPopupVisible = true;
   }
 
   calculateTotalDataOfFloorData(value: any[]) {
-    console.log(value);
+    // console.log(value);
     this.totalOfFloorData = value.reduce((acc, curr) => {
       return {
         totalConstructedArea: acc.totalConstructedArea += Number(curr.builtUpArea),
@@ -546,7 +561,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       totalOwnedArea: 0,
       totalRentedArea: 0
     })
-    console.log(this.totalOfFloorData);
+    // console.log(this.totalOfFloorData);
   }
 
   get floorWiseDataFormArray(): FormArray {
@@ -608,17 +623,6 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     })
     console.log(payload);
 
-    // this.ownerService.saveFloorData(payload).pipe(
-    //   tap((resp) => {
-    //     console.log(resp);
-    //     if (resp.code === 200 && resp.status === 'Success') {
-    //       this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: 'Floor details saved successfully.', life: MessageDuaraion.STANDARD });
-    //       this.floorDataPopupVisible = false;
-    //     } else {
-    //       this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'Floor details saved failed.', life: MessageDuaraion.STANDARD })
-    //     }
-    //   })
-    // ).subscribe()
 
     this.ownerService.saveFloorData(payload).pipe(
       switchMap((resp) => {
@@ -931,12 +935,18 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   onCreateUpdateRequest() {
     console.log(this.propertyForm.value)
+    console.log(this.floorDataForm.value)
 
     const payload: CreateRequest = {
       propertyId: Number(this.propertyId() || 0),
       requestId: 0,
       requestType: 'UPDATE_PROPERTY',
-      updateJson: JSON.stringify(this.propertyForm.value),
+      
+      updateJson: JSON.stringify({
+        propertyMasterDetails: this.propertyForm.value,
+        propertyFloorDetails: this.floorDataForm.value.floorWiseData
+      }),
+
       createdBy: Number(this.currentLoggedUserId || 0),
       reason: 'sample'
     }

@@ -184,6 +184,16 @@ export class SideBarComponent {
             }
           },
           {
+            label: 'Usage Type',
+            icon: 'pi pi-list',
+            routerLink: '/master/usage-type',
+            routerLinkActiveOptions: { exact: true },
+            command: (e: MenuItemCommandEvent) => {
+              // console.log(e)
+              // this.router.navigate([''])
+            }
+          },  
+          {
             label: 'Financial Years',
             icon: 'pi pi-list',
             routerLink: '/master/fy-list',
@@ -193,6 +203,7 @@ export class SideBarComponent {
               // this.router.navigate([''])
             }
           },
+          
           // {
           //   label: 'Ownership Type List',
           //   icon: 'pi pi-list',

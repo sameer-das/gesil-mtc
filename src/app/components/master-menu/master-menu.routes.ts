@@ -23,6 +23,8 @@ import { MohallaCreateComponent } from './mohalla/mohalla-create/mohalla-create.
 import { inject } from '@angular/core';
 import { PermissionService } from '../../services/permission.service';
 import { PERMISSIONS } from '../../models/constants';
+import { UsageTypeListComponent } from './usage-type/usage-type-list/usage-type-list.component';
+import { UsageTypeCreateComponent } from './usage-type/usage-type-create/usage-type-create.component';
 
 
 
@@ -190,6 +192,22 @@ export default [
             return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
         }]
     },
+    // 
+    {
+        path: 'usage-type', component: UsageTypeListComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.READ_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'usage-type-create', component: UsageTypeCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    },
+    {
+        path: 'usage-type-edit/:usageTypeId', component: UsageTypeCreateComponent, canActivate: [() => {
+            return inject(PermissionService).hasPermission(PERMISSIONS.MODIFY_MASTER_DATA)
+        }]
+    }
 
 
 ] as Routes;

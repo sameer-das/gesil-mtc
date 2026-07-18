@@ -115,3 +115,18 @@ export interface CreateUpdateMohalla {
 export type SelectType = { label: string; value: string | number };
 
 
+export interface UsageType {
+    usageTypeId: number;
+    usageTypeName: string;
+    chargesPerMonth: number;
+    chargesPerYear: number,
+    active: boolean;
+    createdDate: string;
+    attribute0: string;
+    attribute1: string;
+    attribute2: string;
+    attribute3: string;
+}
+
+export type  CreateUsageType = Omit<UsageType, 'createdDate'>;
+

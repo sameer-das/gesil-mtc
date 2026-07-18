@@ -629,10 +629,10 @@
             </div> -->
 
             <div class="gesil-card">
-                <div class="flex gap-2 justify-end">
-                    <div>
-                        <button pButton [disabled]="propertyForm.invalid" (click)="onSubmit()">Update Property Details</button>
-                         <!-- <button pButton [disabled]="propertyForm.invalid" (click)="onCreateUpdateRequest()">Create Update Request</button> -->
+                <div class="flex justify-end">
+                    <div class="flex gap-4">
+                        <button pButton [disabled]="propertyForm.invalid" (click)="onSubmit()">Update Property</button>
+                        <!-- <button pButton [disabled]="propertyForm.invalid" (click)="onCreateUpdateRequest()">Create Update Request</button> -->
                     </div>
 
 
@@ -664,7 +664,8 @@
                 <tr>
                     <th>Floor No</th>
                     <th>Const. Area </th>
-                    <th>Open Area </th>
+                    <!-- <th>Open Area </th> -->
+                    <th>Carpet Area </th>
                     <th>Usage Type</th>
                     <th>Sub-Usage Type</th>
                     <th>Const. Type</th>
@@ -683,9 +684,13 @@
                         <input pInputText [id]="'builtUpArea' + i" placeholder="Const. Area" type="text"
                             formControlName="builtUpArea" [style]="{'max-width': '100px', 'width': '100%'}" />
                     </td>
-                    <td class="">
+                    <!-- <td class="">
                         <input pInputText [id]="'openArea' + i" placeholder="Open Area" type="text"
                             formControlName="openArea" [style]="{'max-width': '100px', 'width': '100%'}" />
+                    </td> -->
+                    <td class="">
+                        <input pInputText [id]="'carpetArea' + i" placeholder="Carpet Area" type="text"
+                            formControlName="attribute0" [style]="{'max-width': '100px', 'width': '100%'}" />
                     </td>
                     <td class="">
                         <p-select id="usageType" [options]="usageType" optionLabel="label" placeholder="Usage Type"
