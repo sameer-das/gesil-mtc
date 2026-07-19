@@ -41,7 +41,7 @@ export class UsageTypeListComponent implements OnInit, OnDestroy {
 
 
   getAllUsageTypes(pageNumber = 0, pageSize = 0) {
-    this.masterDataService.getUsageType()
+    this.masterDataService.getUsageType(0, pageNumber, pageSize)
       .pipe(takeUntil(this.$destroy), tap(resp => {
         console.log(resp)
         if (resp.code === 200) {

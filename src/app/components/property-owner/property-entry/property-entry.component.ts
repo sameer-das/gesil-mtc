@@ -12,7 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
-import { Category, ElectricityConnectionType, Mohalla, OwnershipType, PropertyType, SelectType, SubCategory, Ward, Zone } from '../../../models/master-data.model';
+import { Category, ElectricityConnectionType, Mohalla, OwnershipType, PropertyType, SelectType, SubCategory, UsageType, Ward, Zone } from '../../../models/master-data.model';
 import { forkJoin, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FileSelectEvent, FileUpload, FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
@@ -26,7 +26,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DialogModule } from 'primeng/dialog';
 import { PermissionService } from '../../../services/permission.service';
-import { constructionAges, constructionType, floorNos, subUsageType, usageType, widthOfRoadOptions } from './property-entry-constants';
+import { constructionAges, constructionType, floorNos, subUsageType, widthOfRoadOptions } from './property-entry-constants';
 import { CreateRequest, CreateRequestResponse } from '../../../models/request.model';
 import { RequestService } from '../../../services/request.service';
 
@@ -69,7 +69,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   property: Partial<PropertySearchResultType> = {};
   readMode = true;
-  propertyFloorDetails:FloorData[] = [];
+  propertyFloorDetails: FloorData[] = [];
 
   genders = GENDER_OPTIONS;
   salutations = SALUTATION_OPTIONS;
@@ -82,7 +82,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
   gettingCurrentLocation = false;
 
   floorNos = floorNos;
-  usageType = usageType;
+  usageTypes: UsageType[] = [];
   subUsageType = subUsageType;
   constructionType = constructionType;
   constructionAges = constructionAges;
@@ -207,9 +207,6 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
   // electricityCagtegory: ElectricityConnectionType[] = [];
 
-  masterDataFetched = signal<boolean>(false);
-  propertyDetailFetched = signal<boolean>(false);
-  populateMasterFormsForEdit = computed(() => this.masterDataFetched() && this.propertyDetailFetched());
 
   $destroy: Subject<null> = new Subject();
   enableIndividualBuildingType = false;
@@ -259,7 +256,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     console.log(this.propertyId());
 
     this.propertyForm.get('typeOfOwnership')?.valueChanges.pipe(
-      takeUntil(this.$destroy),
+
       tap((propertyType: SelectType) => {
         console.log(propertyType);
         if (+propertyType?.value === 1) {
@@ -279,23 +276,12 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           this.propertyForm.patchValue({ 'noOfFloors': 0 }, { emitEvent: true });
           this.floorWiseDataFormArray.clear();
         }
-      })
+      }), takeUntil(this.$destroy)
     ).subscribe();
 
-    // this.propertyForm.get('noOfFloors')?.valueChanges.pipe(
-    //   takeUntil(this.$destroy),
-    //   tap((val: number) => {
-    //     if (this.propertyForm.value.propertyType?.propertyTypeId === 2 && !val) {
-    //       console.log('mark the form invalid')
-    //     }
-    //     this.floorWiseDataFormArray.clear();
-    //     for (let i = 1; i <= val; i++) {
-    //       this.floorWiseDataFormArray.push(this.createFloorWiseDataGroup())
-    //     }
-    //   })).subscribe();
 
     this.propertyForm.get('zone')?.valueChanges.pipe(
-      takeUntil(this.$destroy),
+
       switchMap((zone) => this.masterDataService.wardList(zone.zoneId, 0, 0)),
       tap((wardResp) => {
         if (wardResp.code === 200) {
@@ -309,10 +295,10 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             }
           }
         }
-      })).subscribe();
+      }),
+      takeUntil(this.$destroy)).subscribe();
 
     this.propertyForm.get('ward')?.valueChanges.pipe(
-      takeUntil(this.$destroy),
       tap(w => console.log(w)),
       switchMap((ward: Ward) => this.masterDataService.mohallaList(this.propertyForm.value.zone.zoneId, ward.wardId, 0, 0)),
       tap((mohallaResp) => {
@@ -327,12 +313,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             }
           }
         }
-      }
-      )
+      }),
+      takeUntil(this.$destroy)
     ).subscribe();
 
     this.propertyForm.get('category')?.valueChanges.pipe(
-      takeUntil(this.$destroy),
       tap(c => console.log(c)),
       switchMap((category: Category) => this.masterDataService.subCategoriesOfCategory(category.categoryId, 0, 0)),
       tap((subCategoryResp) => {
@@ -344,12 +329,11 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
             })
           }
         }
-      }
-      )
+      }),
+      takeUntil(this.$destroy)
     ).subscribe();
 
     this.propertyForm.get('isOwnerAddressSame')?.valueChanges.pipe(
-      takeUntil(this.$destroy),
       tap((val: boolean) => {
         console.log(val)
         if (val) {
@@ -374,12 +358,13 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
           })
           this.isCorrespondenceSame = false
         }
-      })).subscribe();
+      }),
+      takeUntil(this.$destroy)).subscribe();
 
     this.floorWiseDataFormArray.valueChanges
       .pipe(tap(value => {
         this.calculateTotalDataOfFloorData(value)
-      }))
+      }), takeUntil(this.$destroy))
       .subscribe()
   }
 
@@ -409,50 +394,57 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId())) :
       of(fakeAPIResp)
 
-    const propertyFloorDetails = this.propertyId()?
+    const propertyFloorDetails = this.propertyId() ?
       this.ownerService.getFloorDetails(this.propertyId() || 0) :
       of(fakeFloorDataAPIResp);
 
-    forkJoin([propertyDetail, 
-      this.masterDataService.zoneList(),
-      this.masterDataService.propertyTypeList(),
-      this.masterDataService.categoryList(),
-      propertyFloorDetails])
-      .pipe(takeUntil(this.$destroy),
-        tap(([propertyDetailResp, zoneResp, propertyTypeResp, categoryResp, floorDetailsResp]) => {
-          if (zoneResp.code === 200 && propertyTypeResp.code === 200) {
-            this.masterDataFetched.set(true);
+
+    forkJoin([this.masterDataService.zoneList(),
+    this.masterDataService.propertyTypeList(),
+    this.masterDataService.categoryList(),
+    this.masterDataService.getUsageType()])
+      .pipe(
+        switchMap(([zoneResp, propertyTypeResp, categoryResp, usageTypeResp]) => {
+          if (zoneResp.code === 200 && propertyTypeResp.code === 200 && categoryResp.code === 200 && usageTypeResp.code === 200) {
             this.zones = zoneResp.data.zones;
             this.propertyTypes = propertyTypeResp.data.propertyTypes;
             this.categories = categoryResp.data.categories;
-
-
-            if (propertyDetailResp.code === 200 && propertyDetailResp.status === 'Success') {
-              if (propertyDetailResp.data.length > 0) {
-                this.property = propertyDetailResp.data[0];
-                console.log(this.property);
-                this.patchFormData();
-              }
-              else {
-                // new mode
-                this.property = {};
-                // this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
-              }
-            }
-
-            if(floorDetailsResp.code === 200) {
-              this.propertyFloorDetails = floorDetailsResp.data;
-              this.constructFloorDataForm();
-            }
-
+            this.usageTypes = usageTypeResp.data.usageTypes;
+          } else {
+            this.zones = [];
+            this.propertyTypes = [];
+            this.categories = [];
+            this.usageTypes = [];
+            throw new Error('One of the master APIs returned unsuccessful status');
           }
-        }))
+
+          return forkJoin([propertyDetail, propertyFloorDetails])
+
+        }), // end of switchMap
+        tap(([propertyDetailResp, floorDetailsResp]) => {
+          if (propertyDetailResp.code === 200 && propertyDetailResp.status === 'Success') {
+            if (propertyDetailResp.data.length > 0) {
+              this.property = propertyDetailResp.data[0];
+              console.log(this.property);
+              this.patchPropertyForm();
+            } else {
+              this.property = {};
+            }
+          }
+
+          if (floorDetailsResp.code === 200) {
+            this.propertyFloorDetails = floorDetailsResp.data;
+            this.constructFloorDataForm();
+          }
+        }, // end of tap
+          takeUntil(this.$destroy)
+        ))
       .subscribe();
   }
 
 
 
-  patchFormData() {
+  patchPropertyForm() {
 
     this.propertyForm.patchValue({
       householdNo: this.property.householdNo,
@@ -510,7 +502,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     this.propertyFloorDetails.forEach((curr: FloorData) => {
 
       const floorNo = this.floorNos.find(f => f.value === curr.floorNo);
-      const usageType = this.usageType.find(u => u.value === curr.usageType);
+      const usageType = this.usageTypes.find(u => +u.usageTypeId === +curr.usageType);
       const subUsageType = this.subUsageType.find(s => s.value === curr.subUsageType);
       const constructionType = this.constructionType.find(c => c.value === curr.constructionType);
       const constructionAge = this.constructionAges.find(c => c.value === curr.constructionAge);
@@ -615,7 +607,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
         ...c,
         floorNo: c.floorNo.value,
         constructionType: c.constructionType.value,
-        usageType: c.usageType?.value,
+        usageType: String(c.usageType?.usageTypeId),
         subUsageType: c.subUsageType?.value,
         constructionYear: c.constructionYear ? String(new Date(c.constructionYear).getFullYear()) : '',
         constructionAge: c.constructionAge?.value,
@@ -909,13 +901,13 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
 
 
             this.ownerService.getPropertyMasterDetail('propertyId', String(this.propertyId()))
-              .pipe(takeUntil(this.$destroy),
+              .pipe(
                 tap(resp => {
                   if (resp.code === 200 && resp.status === 'Success') {
                     if (resp.data.length > 0) {
                       this.property = resp.data[0];
                       console.log(this.property);
-                      this.patchFormData();
+                      this.patchPropertyForm();
                       this.editPin = false;
                     }
                     else {
@@ -924,7 +916,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
                       // this.messageService.add({ severity: MessageSeverity.INFO, summary: 'Not Found', detail: `Property not found`, life: MessageDuaraion.STANDARD });
                     }
                   }
-                }))
+                }, takeUntil(this.$destroy)))
               .subscribe()
           } else {
             this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Failed', detail: 'PIN/Household no. update failed.', life: MessageDuaraion.STANDARD })
@@ -941,7 +933,7 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
       propertyId: Number(this.propertyId() || 0),
       requestId: 0,
       requestType: 'UPDATE_PROPERTY',
-      
+
       updateJson: JSON.stringify({
         propertyMasterDetails: this.propertyForm.value,
         propertyFloorDetails: this.floorDataForm.value.floorWiseData
@@ -953,20 +945,21 @@ export class PropertyEntryComponent implements OnInit, OnDestroy {
     console.log(payload);
 
     this.requestService.createRequestForPropUpdate(payload)
-      .pipe(takeUntil(this.$destroy), tap((resp: APIResponse<CreateRequestResponse>) => {
-        console.log(resp)
-        if (resp.code === 200 && resp.data.responseCode === 1) {
-          // success
-          this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data.responseMessage, life: MessageDuaraion.STANDARD });
+      .pipe(
+        tap((resp: APIResponse<CreateRequestResponse>) => {
+          console.log(resp)
+          if (resp.code === 200 && resp.data.responseCode === 1) {
+            // success
+            this.messageService.add({ severity: MessageSeverity.SUCCESS, summary: 'Success', detail: resp.data.responseMessage, life: MessageDuaraion.STANDARD });
 
-        } else if (resp.code === 200 && resp.data.responseCode === 0) {
-          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: resp.data.responseMessage, life: MessageDuaraion.STANDARD });
+          } else if (resp.code === 200 && resp.data.responseCode === 0) {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: resp.data.responseMessage, life: MessageDuaraion.STANDARD });
 
-        } else {
-          this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: 'Error while creating request.', life: MessageDuaraion.STANDARD });
+          } else {
+            this.messageService.add({ severity: MessageSeverity.ERROR, summary: 'Fail', detail: 'Error while creating request.', life: MessageDuaraion.STANDARD });
 
-        }
-      }))
+          }
+        }), takeUntil(this.$destroy))
       .subscribe()
 
 
